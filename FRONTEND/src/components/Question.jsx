@@ -1,14 +1,12 @@
-/* eslint-disable react/prop-types */
-export default function Question(props) {
+export default function Question({ question, setQuestion }) {
   return (
-    <>
-      <div>
-        <h2>Question</h2>
-        <p>Paste your question</p>
-        <textarea name="" id="" onChange={(value)=>{
-            props.setQuestion(value.target.value)
-        }} ></textarea>
-      </div>
-    </>
+    <div className="bg-white/10 rounded-lg p-6 border border-white/20 ">
+      <h2 className="text-white text-lg font-semibold mb-4">New Question</h2>
+      <textarea 
+        placeholder="Enter your question here..."
+        className="bg-white/10 text-white w-full h-32 p-2 border border-white/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
+        onChange={(e) => setQuestion(e.target.value)}
+      />
+    </div>
   );
 }

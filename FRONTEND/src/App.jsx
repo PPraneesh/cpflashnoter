@@ -1,12 +1,16 @@
-// import './App.css'
-import Routes from './routes/routes'
+import Routes from "./routes/Routes";
+import AuthProvider from "./context/AuthContext";
+import LoadingProvider from "./context/LoadingContext";
 function App() {
-  
   return (
     <>
-      <Routes />
+      <LoadingProvider>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </LoadingProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
