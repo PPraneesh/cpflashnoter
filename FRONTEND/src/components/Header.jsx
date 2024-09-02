@@ -1,48 +1,20 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
-import axios from "axios";
-import toast from "react-hot-toast";
+
 import { FaGoogle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
 
 export default function Header() {
-  const navigate = useNavigate();
-  const { loginWithGoogle } = useContext(AuthContext);
+  const { handleLogin } = useContext(AuthContext);
   const { userData } = useContext(UserContext);
-  const server_url = import.meta.env.VITE_SERVER_URL;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  function handleLogin() {
-    loginWithGoogle()
-      .then(async (u) => {
-        await axios
-          .post(`${server_url}/user_login`, {
-            name: u.user.displayName,
-            email: u.user.email,
-            photo: u.user.photoURL,
-          })
-          .then((res) => {
-            console.log(res);
-            if (res.data.status) {
-              toast.success("logged in successful : )");
-              navigate("/home");
-            } else {
-              navigate("/login");
-              toast.error("login failed : /");
-            }
-          });
-      })
-      .catch((error) => {
-        toast.error("login failed : )");
-        console.error("Error signing in with Google", error);
-      });
-  }
+
   const { logOut, user } = useContext(AuthContext);
 
   return (

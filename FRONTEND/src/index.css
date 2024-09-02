@@ -17,3 +17,6 @@ body{
 h1,h2,p,label,button {
     color: #fff;
 }
+html {
+    scroll-behavior: smooth;
+  }
