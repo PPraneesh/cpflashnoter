@@ -93,21 +93,22 @@ const llm_controller = async (req, res) => {
         await userRef.update({
           generations: userData.generations
         });
-
-        res.send({ status: true, result: result });
+        
+        res.send({ status: true, result: result , userData : userData });
       } else {
         // Calculate the next available generation time
         let nextGenTime = new Date(currentTime + timeRemaining);
-        res.send({ status: false, reason: `try at this time: ${nextGenTime.toLocaleString()}` });
+        res.send({ status: false, reason: `try at this time: ${nextGenTime.toLocaleString()}` , userData: userData });
       }
     } else {
-      res.send({ status: false, reason: "User does not exist" });
+      res.send({ status: false, reason: "User does not exist" , userData : null }); // work on this thing
     }
   } catch (error) {
     console.error("Error in LLM processing:", error);
     res.send({
       status: false,
       reason: "An error occurred while processing the code",
+      userData : null // work on this thing
     });
   }
 };

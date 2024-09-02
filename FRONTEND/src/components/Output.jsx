@@ -1,13 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { LoadingContext } from "../context/LoadingContext";
+import { UserContext } from "../context/UserContext";
 import Loader from "./Loader/Loader"
 export default function Output({ output }) {
   const { genNotes } = useContext(LoadingContext);
+  const {  userData } = useContext(UserContext);
 
   return (
     <div className="bg-[#0d1117] rounded-lg shadow-lg p-6 border border-white/20">
-      <h2 className="text-white text-lg font-semibold mb-4">Generated Notes</h2>
+      <div className="flex mb-2 pb-4 border-b border-white/20">
+        <h2 className="text-white text-lg font-semibold flex-grow">Generated Notes</h2>
+        <div className="flex justify-evenly">
+          <h1 className="bg-[#151b23] border border-white/20 px-2 mx-2 rounded-md">{userData?.generations?.count} generations left</h1>
+          <h1 className="bg-[#151b23] border border-white/20 px-2 rounded-md">{userData?.saves?.quests} saves left</h1>
+        </div>
+      </div>
       {genNotes ? (
         <Loader/>
       ) : (

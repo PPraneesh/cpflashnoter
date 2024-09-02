@@ -1,11 +1,11 @@
 const db = require('../config/db');
 
-function cp_controller(req, res) {
+async function cp_controller(req, res) {
     let user_email = req.body.email;
     const userRef = db.collection("users").doc(user_email);
 
-    userRef.get()
-        .then((doc) => {
+    await userRef.get()
+        .then(async (doc) => {
             if (doc.exists) {
                 let userData = doc.data();
                 let currentTime = Date.now();
@@ -24,29 +24,27 @@ function cp_controller(req, res) {
                         ...req.body.output
                     };
                     let cpRef = userRef.collection("cp").doc(cp.name);
-                    cpRef.get()
-                        .then((cpDoc) => {
+                    await cpRef.get()
+                        .then(async (cpDoc) => {
                             if (cpDoc.exists) {
                                 res.send({ status: false, reason: "already exists" });
                             } else {
-                                cpRef.set({
+                                await cpRef.set({
                                     cp: cp,
-                                }).then(() => {
-                                    // Update the user's saves count and last save time
+                                })
+                                .then(async () => {
                                     userData.saves.quests -= 1;
                                     userData.saves.last_save = currentTime;
-
-                                    userRef.update({
+                                    await userRef.update({
                                         saves: userData.saves
                                     });
-
                                     res.send({ status: true });
                                 });
                             }
                         })
                         .catch((error) => {
                             console.error("Error adding document: ", error);
-                            res.send({ status: false });
+                            res.send({ status: false , reason: "error in updating : /"});
                         });
                 } else {
                     

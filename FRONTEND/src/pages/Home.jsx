@@ -7,11 +7,12 @@ import Output from "../components/Output";
 import SavedQuestions from "../components/SavedQuestions";
 import toast from "react-hot-toast";
 import { LoadingContext } from "../context/LoadingContext";
+import { UserContext } from "../context/UserContext";
 
 export default function Home() {
   const { user } = useContext(AuthContext);
-  const { saveCp, setSaveCp, genNotes, setGenNotes } =
-    useContext(LoadingContext);
+  const {  setUserData } = useContext(UserContext);
+  const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
   const [savedQuests, setSavedQuests] = useState([]);
   const server_url = import.meta.env.VITE_SERVER_URL;
 
@@ -21,10 +22,16 @@ export default function Home() {
         email: email,
       })
       .then((response) => {
-        console.log(response);
-        setSavedQuests(response.data);
+        if (response.data.status) {
+          console.log(response);
+          setUserData(response.data.userData);
+          setSavedQuests(response.data.cp);
+        } else {
+          toast.error("some error, please logout and login");
+        }
       })
       .catch(() => {
+        toast.error("couldn't retrieve saved questions")
         console.error("Couldn't get saved questions");
       });
   }
@@ -50,7 +57,7 @@ export default function Home() {
         .then((response) => {
           if (response.data.status) {
             toast.success("saved your notes : )");
-            getUserCp(user.email);
+            getUserCp(user.email)
           } else {
             toast.error(response.data.reason);
           }
@@ -60,6 +67,7 @@ export default function Home() {
         });
     } catch (error) {
       console.error("Save error:", error);
+      toast.error("couldn't save : /")
     }
     setSaveCp(false);
   };
@@ -78,9 +86,10 @@ export default function Home() {
           if (response.data.status) {
             console.log("Process response:", response.data.result);
             setOutput(response.data.result);
+            setUserData(response.data.userData)
             toast.success("generated successfully");
           } else {
-            toast.error(response.data.reason); //reason
+            toast.error(response.data.reason); 
           }
         });
     } catch (error) {
@@ -105,8 +114,12 @@ export default function Home() {
             >
               {genNotes ? "Generating... " : "Generate Notes"}
             </button>
-            <button onClick={save} className="button bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]" disabled={saveCp}>
-              Save CP
+            <button
+              onClick={save}
+              className="button bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]"
+              disabled={saveCp}
+            >
+              Save it
             </button>
           </div>
         </div>
