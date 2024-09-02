@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FaGoogle } from "react-icons/fa";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -37,9 +38,9 @@ export default function Header() {
 
 
   return (
-    <header className="header border-b border-white/20 bg-black text-white/50 py-4 px-6 flex items-center justify-between">
+    <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <img src="logo.png" alt="" className="w-28 " />
+        <img src="logo.png" alt="" className="w-24 " />
       </div>
       {user ? (
         <div className="flex items-center gap-4">
@@ -54,7 +55,7 @@ export default function Header() {
           />
           <button
             onClick={() => logOut()}
-            className="button"
+            className="button text-[#a41727] bg-[#a4172768] hover:bg-[#a417277a] border-0"
           >
             Logout
           </button>
@@ -62,9 +63,9 @@ export default function Header() {
       ) : (
         <button
             onClick={handleLogin}
-            className="inline-block bg-cactus-500 text-white px-6 py-3 rounded-lg text-lg font-bold hover:bg-cactus-600 transition duration-300"
+            className=" bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3] px-6 py-3 rounded-lg text-lg font-bold transition duration-300 "
           >
-            Sign in with Google
+            Sign in with Google <FaGoogle className="inline" /> 
           </button>
       )}
     </header>

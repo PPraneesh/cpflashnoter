@@ -10,7 +10,8 @@ import { LoadingContext } from "../context/LoadingContext";
 
 export default function Home() {
   const { user } = useContext(AuthContext);
-  const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
+  const { saveCp, setSaveCp, genNotes, setGenNotes } =
+    useContext(LoadingContext);
   const [savedQuests, setSavedQuests] = useState([]);
   const server_url = import.meta.env.VITE_SERVER_URL;
 
@@ -37,7 +38,7 @@ export default function Home() {
 
   const save = async (e) => {
     e.preventDefault();
-    setSaveCp(true)
+    setSaveCp(true);
     try {
       await axios
         .post(`${server_url}/add_cp`, {
@@ -60,12 +61,12 @@ export default function Home() {
     } catch (error) {
       console.error("Save error:", error);
     }
-    setSaveCp(false)
+    setSaveCp(false);
   };
 
   const handleGeneration = async (e) => {
     e.preventDefault();
-    setGenNotes(true)
+    setGenNotes(true);
     try {
       await axios
         .post(`${server_url}/process_code`, {
@@ -86,21 +87,25 @@ export default function Home() {
       toast.error("some error occured");
       console.error("Process error:", error);
     }
-    setGenNotes(false)
+    setGenNotes(false);
   };
 
   return (
-    <div className="bg-black">
+    <div>
       <SavedQuestions savedQuests={savedQuests} />
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         <div className="space-y-6">
           <Question question={question} setQuestion={setQuestion} />
           <Code code={code} setCode={setCode} />
           <div className="flex gap-4">
-            <button onClick={handleGeneration} className="button" disabled={genNotes}>
-              { genNotes ? "Generating... ":"Generate Notes"}
+            <button
+              onClick={handleGeneration}
+              className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0"
+              disabled={genNotes}
+            >
+              {genNotes ? "Generating... " : "Generate Notes"}
             </button>
-            <button onClick={save} className="button" disabled={saveCp}>
+            <button onClick={save} className="button bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]" disabled={saveCp}>
               Save CP
             </button>
           </div>

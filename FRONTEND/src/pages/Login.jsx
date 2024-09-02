@@ -5,14 +5,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-cactus-50">
-      <header className="bg-cactus-600 text-white py-6 text-center">
+      <header className="bg-black text-white py-6 text-center">
         <h1 className="text-4xl font-bold">CodeNotes</h1>
         <p className="mt-2 text-lg">
           Supercharge Your DSA Learning and Interview Prep
         </p>
       </header>
 
-      <main className="flex-grow p-6 max-w-4xl mx-auto">
+      <main className="bg-black">
         <section className="mb-8 text-center">
           <h2 className="text-3xl font-semibold text-cactus-700">
             Master Data Structures and Algorithms with Ease

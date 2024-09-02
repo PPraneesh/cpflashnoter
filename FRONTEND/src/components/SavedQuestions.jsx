@@ -17,7 +17,7 @@
                   key={index}
                   className="block"
                 >
-                  <div className="bg-white/10 text-white/70 rounded-lg duration-300 overflow-hidden border border-white/20">
+                  <div className="bg-[#0d1117] text-white/70 rounded-lg duration-300 overflow-hidden border border-white/20">
                     <div className="p-6">
                       <h3 className="text-xl font-semibold mb-2 truncate">
                         {quest.name}
@@ -26,7 +26,7 @@
                         {quest.description}
                       </p>
                       <div className="flex justify-between items-center">
-                        <span className="px-2 py-1 bg-white/20 text-white text-xs font-medium rounded">
+                        <span className="px-2 py-1 bg-[#151b23] border border-white/20 text-white text-xs font-medium rounded">
                           {quest.language || "N/A"}
                         </span>
                         <span className="text-sm text-white ">
@@ -35,7 +35,7 @@
                         </span>
                       </div>
                     </div>
-                    <div className="bg-white/20 px-6 py-4">
+                    <div className="bg-[#151b23] px-6 py-4">
                       <p className="text-sm text-white  font-medium">Question:</p>
                       <p className="text-sm text-white  line-clamp-2">
                         {quest.question}
