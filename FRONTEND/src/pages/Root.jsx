@@ -6,11 +6,13 @@ import AuthProvider from "../context/AuthContext";
 export default function Root() {
     return (<>
     <AuthProvider>
-        <Header />
-            <div>
-                <Outlet />
-            </div>
-        <Footer />
+        <div className='flex flex-col min-h-screen'>
+            <Header />
+                <div className='flex-grow'>
+                    <Outlet />
+                </div>
+            <Footer />
+    </div>
     </AuthProvider>
     </>);
 }

@@ -4,6 +4,7 @@ import Root from "../pages/Root.jsx";
 import QuestionPage from "../pages/QuestionPage.jsx";
 import PrivateRoute from "../context/PrivateRoute.jsx";
 import LandingPage from "../pages/Landing.jsx";
+import SavedQuestions from "../components/SavedQuestions.jsx";
 const Routes = () => {
   const router = createBrowserRouter([
     {
@@ -21,9 +22,16 @@ const Routes = () => {
               <Home />
             </PrivateRoute>
           ),
+        },{
+          path:"/home/questions",
+          element:(
+            <PrivateRoute>
+              <SavedQuestions />
+            </PrivateRoute>
+          )
         },
         {
-          path:"/home/question/:id",
+          path:"/home/questions/:id",
           element:(
             <PrivateRoute>
               <QuestionPage />

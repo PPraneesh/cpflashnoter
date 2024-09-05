@@ -4,6 +4,7 @@
 
 .square {
   background: white;
+  border-radius: 1px;
   width: 15px;
   height: 15px;
   float: left;

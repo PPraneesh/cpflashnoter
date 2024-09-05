@@ -1,4 +1,4 @@
-const db = require('../config/db');  // Assuming you're using Firebase
+const db = require("../config/db"); // Assuming you're using Firebase
 const { ChatGroq } = require("@langchain/groq");
 const { z } = require("zod");
 
@@ -8,19 +8,99 @@ const model = new ChatGroq({
 });
 
 const code_subunit = z.object({
-  name: z.string().describe("Provide a concise, descriptive name for this code subunit that reflects its main function or purpose."),
-  content: z.string().describe("Insert the exact same code content of this subunit, preserving all formatting and comments. "),
-  description: z.string().describe("Explain in detail: 1) What this subunit does, 2) How it contributes to solving the overall problem, 3) Any key algorithms or data structures used, 4) Its inputs and outputs, and 5) Any potential optimizations or limitations."),
+  name: z
+    .string()
+    .describe(
+      "Provide a concise, descriptive name for this code subunit that reflects its main function or purpose."
+    ),
+  content: z
+    .string()
+    .describe(
+      "Insert the exact same code content of this subunit, preserving all formatting and comments. "
+    ),
+  description: z
+    .string()
+    .describe(
+      "Explain in detail: 1) What this subunit does, 2) How it contributes to solving the overall problem, 3) Any key algorithms or data structures used, 4) Its inputs and outputs, and 5) Any potential optimizations or limitations."
+    ),
 });
 
 const code_unit = z.object({
-  name: z.string().describe("Create a clear, informative title for the entire code solution that reflects the problem it solves."),
-  language: z.string().describe("Specify the programming language used, including version if relevant (e.g., 'Python 3.8', 'C++17')."),
-  description: z.string().describe("Provide a comprehensive overview of the entire code: 1) The problem it solves, 2) The overall approach or algorithm used, 3) Time and space complexity analysis, 4) Any assumptions made, and 5) Potential areas for improvement or alternative approaches."),
-  subunits: z.array(code_subunit).describe("Break down the code into logical, self-contained subunits. Each subunit should represent a distinct step or function in the overall solution."),
+  name: z
+    .string()
+    .describe(
+      "Create a clear, informative title for the entire code solution that reflects the problem it solves."
+    ),
+  language: z
+    .string()
+    .describe(
+      "Specify the programming language used, including version if relevant (e.g., 'Python 3.8', 'C++17')."
+    ),
+  description: z
+    .string()
+    .describe(
+      "Provide a comprehensive overview of the entire code: 1) The problem it solves, 2) The overall approach or algorithm used, 3) Time and space complexity analysis, 4) Any assumptions made, and 5) Potential areas for improvement or alternative approaches."
+    ),
+  subunits: z
+    .array(code_subunit)
+    .describe(
+      "Break down the code into logical, self-contained subunits. Each subunit should represent a distinct step or function in the overall solution."
+    ),
 });
 
-const structuredLlm = model.withStructuredOutput(code_unit);
+const structuredLlm = model.withStructuredOutput({
+  name: "code_analysis",
+  description:
+    "Analyze and explain the given code in relation to the provided question.",
+  parameters: {
+    title: "Code Analysis",
+    type: "object",
+    properties: {
+      name: {
+        type: "string",
+        description:
+          "Create a clear, informative title for the entire code solution that reflects the problem it solves.",
+      },
+      language: {
+        type: "string",
+        description:
+          "Specify the programming language used, including version if relevant (e.g., 'Python 3.8', 'C++17').",
+      },
+      description: {
+        type: "string",
+        description:
+          "Provide a comprehensive overview of the entire code: 1) The problem it solves, 2) The overall approach or algorithm used, 3) Time and space complexity analysis, 4) Any assumptions made, and 5) Potential areas for improvement or alternative approaches.",
+      },
+      subunits: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description:
+                "Provide a concise, descriptive name for this code subunit that reflects its main function or purpose.",
+            },
+            content: {
+              type: "string",
+              description:
+                "Insert the exact same code content of this subunit, preserving all formatting and comments. make sure that give output code has \n so that it can be displayed nicely",
+            },
+            description: {
+              type: "string",
+              description:
+                "Explain in detail: 1) What this subunit does, 2) How it contributes to solving the overall problem, 3) Any key algorithms or data structures used, 4) Its inputs and outputs, and 5) Any potential optimizations or limitations.",
+            },
+          },
+          required: ["name", "content", "description"],
+        },
+        description:
+          "Break down the code into logical, self-contained subunits. Each subunit should represent a distinct step or function in the overall solution.",
+      },
+    },
+    required: ["name", "language", "description", "subunits"],
+  },
+});
 
 const llm_controller = async (req, res) => {
   const { code, question } = req.body;
@@ -74,24 +154,32 @@ const llm_controller = async (req, res) => {
         userData.generations.last_gen = currentTime;
 
         await userRef.update({
-          generations: userData.generations
+          generations: userData.generations,
         });
-        
-        res.send({ status: true, result: result , userData : userData });
+
+        res.send({ status: true, result: result, userData: userData });
       } else {
         // Calculate the next available generation time
         let nextGenTime = new Date(currentTime + timeRemaining);
-        res.send({ status: false, reason: `try at this time: ${nextGenTime.toLocaleString()}` , userData: userData });
+        res.send({
+          status: false,
+          reason: `try at this time: ${nextGenTime.toLocaleString()}`,
+          userData: userData,
+        });
       }
     } else {
-      res.send({ status: false, reason: "User does not exist" , userData : null }); // work on this thing
+      res.send({
+        status: false,
+        reason: "User does not exist",
+        userData: null,
+      }); // work on this thing
     }
   } catch (error) {
     console.error("Error in LLM processing:", error);
     res.send({
       status: false,
       reason: "An error occurred while processing the code",
-      userData : null // work on this thing
+      userData: null, // work on this thing
     });
   }
 };
