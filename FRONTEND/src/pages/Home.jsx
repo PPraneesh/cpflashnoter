@@ -119,7 +119,7 @@ export default function Home() {
               className="button bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]"
               disabled={saveCp}
             >
-              Save it
+              {saveCp? "saving.." :"Save it"}
             </button>
           </div>
         </div>

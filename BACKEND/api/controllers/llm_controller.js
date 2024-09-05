@@ -9,7 +9,7 @@ const model = new ChatGroq({
 
 const code_subunit = z.object({
   name: z.string().describe("Provide a concise, descriptive name for this code subunit that reflects its main function or purpose."),
-  content: z.string().describe("Insert the exact code content of this subunit, preserving all formatting and comments."),
+  content: z.string().describe("Insert the exact same code content of this subunit, preserving all formatting and comments. "),
   description: z.string().describe("Explain in detail: 1) What this subunit does, 2) How it contributes to solving the overall problem, 3) Any key algorithms or data structures used, 4) Its inputs and outputs, and 5) Any potential optimizations or limitations."),
 });
 
@@ -43,7 +43,7 @@ const llm_controller = async (req, res) => {
       if (userData.generations.count > 0) {
         const prompt = `
           You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes.
-
+          
           <given_question>  
           The following is a question from a competitive programming platform:
           ${question}
@@ -63,23 +63,6 @@ const llm_controller = async (req, res) => {
           6. Include insights on algorithm choice, time/space complexity, and any clever techniques used.
           7. If applicable, mention potential optimizations or alternative approaches.
           </instructions>
-
-          <output_format>
-          Strictly adhere to the following output structure:
-          {
-            "name": "Overall solution title",
-            "language": "Programming language used",
-            "description": "Comprehensive description of the entire solution",
-            "subunits": [
-              {
-                "name": "Subunit name",
-                "content": "Exact code of the subunit",
-                "description": "Detailed explanation of the subunit"
-              },
-              // ... more subunits as needed
-            ]
-          }
-          </output_format>
 
           Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.
         `;
