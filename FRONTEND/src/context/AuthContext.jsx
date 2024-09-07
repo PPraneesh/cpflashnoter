@@ -10,10 +10,12 @@ import { auth } from "../services/Auth";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const {setUserData } = useContext(UserContext);
   const server_url = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -34,7 +36,6 @@ const AuthProvider = ({ children }) => {
             photo: u.user.photoURL,
           })
           .then((res) => {
-            console.log(res);
             if (res.data.status) {
               toast.success("logged in successful : )");
               navigate("/home");
@@ -51,6 +52,8 @@ const AuthProvider = ({ children }) => {
   }
   const logOut = () => {
     setLoading(true);
+    setUserData(null);
+    localStorage.removeItem("userData");
     toast.success("You logged out : (");
     return signOut(auth);
   };

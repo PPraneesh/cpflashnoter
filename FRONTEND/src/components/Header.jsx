@@ -1,12 +1,13 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 // import { FaChevronLeft } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
 
 export default function Header() {
+  const navigate = useNavigate();
   const { handleLogin } = useContext(AuthContext);
   const { userData } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,15 @@ export default function Header() {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
+  
+  useEffect(()=>{
+    if(userData){
+      navigate("/home");
+    }else{
+      navigate("/");
+    }
+  },[])
+  
   let location = useLocation();
 
   const { logOut, user } = useContext(AuthContext);
@@ -25,7 +34,7 @@ export default function Header() {
         <img src="/logo.png" alt="" className="w-24" />
       </div>
 
-      {user ? (
+      {(userData?.userData) ? (
         <>
           <div className="flex items-center justify-center order-3 md:order-2 px-2 py-4 mt-6 mx-auto sm:m-0 w-full sm:w-fit border-white/20 sm:border-0">
             <nav>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Link,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { LoadingContext } from "../context/LoadingContext";
 import { UserContext } from "../context/UserContext";
@@ -15,11 +15,12 @@ import { FaInfoCircle } from "react-icons/fa";
 export default function Home() {
   const [genCount, setGenCount] = useState(0);
   const { user } = useContext(AuthContext);
-  const { setUserData } = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
   const location = useLocation();
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
   const server_url = import.meta.env.VITE_SERVER_URL;
 
+  // this function handles the retrieval of saved questions also sets the userData in the userContext
   function getUserCp(email) {
     axios
       .post(`${server_url}/get_cp`, {
@@ -27,14 +28,12 @@ export default function Home() {
       })
       .then((response) => {
         if (response.data.status) {
-          console.log(response);
           const tempUserData = {
             userData: response.data.userData,
             cp: response.data.cp,
           };
           setUserData(tempUserData);
           localStorage.setItem("userData", JSON.stringify(tempUserData));
-          console.log(tempUserData);
         } else {
           toast.error("some error, please logout and login");
         }
@@ -43,25 +42,29 @@ export default function Home() {
         toast.error("couldn't retrieve saved questions");
         console.error("Couldn't get saved questions");
       });
-    }
-    
-  useEffect(() => {
-    getUserCp(user.email);
-  }, [user.email]);
+  }
 
+  useEffect(() => {
+    getUserCp(user?.email);
+  }, [user?.email]);
+
+  // handles element scroll to view
+  
   useEffect(() => {
     if (location.hash === "#generate") {
       document.getElementById("generate")?.scrollIntoView();
     }
   }, [location]);
-  
+
   const [question, setQuestion] = useState("");
   const [code, setCode] = useState("// type your code...");
   const [output, setOutput] = useState(null);
 
+  // save the notes to the database and update the saved questions by calling getUserCp
+
   const save = async (e) => {
     e.preventDefault();
-    if (genCount > 0 ) {
+    if (genCount > 0) {
       setSaveCp(true);
       try {
         await axios
@@ -92,12 +95,11 @@ export default function Home() {
     }
   };
 
+  // handles the generation of notes by calling the server and updating the output and userData
+
   const handleGeneration = async (e) => {
     e.preventDefault();
-    if (
-      question != "" &&
-      code != "// type your code..."
-    ) {
+    if (question != "" && code != "// type your code...") {
       setGenCount(genCount + 1);
       setGenNotes(true);
 
@@ -112,7 +114,13 @@ export default function Home() {
             if (response.data.status) {
               console.log("Process response:", response.data.result);
               setOutput(response.data.result);
-              setUserData(response.data.userData);
+              const tempUserData = {
+                userData: response.data.userData,
+                cp: userData.cp,
+              };
+              setUserData(tempUserData);
+              localStorage.setItem("userData", JSON.stringify(tempUserData));
+    
               toast.success("generated successfully");
             } else {
               toast.error(response.data.reason);

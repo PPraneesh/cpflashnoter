@@ -25,7 +25,6 @@ function SavedQuestions(props) {
         {userData?.cp?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
             {questionsToDisplay?.map((quest, index) => (
-              <>
                 <div
                   key={index}
                   className="bg-[#0d1117] text-white/70 rounded-lg duration-300 overflow-hidden border border-white/20"
@@ -67,8 +66,7 @@ function SavedQuestions(props) {
                     </Link>
                   </div>
                 </div>
-              </>
-            ))}
+              ))}
           </div>
         ) : (
           <div>

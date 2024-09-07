@@ -37,9 +37,15 @@ const Routes = () => {
               <QuestionPage />
             </PrivateRoute>
           )
-        }
+        },
       ],
     },
+    {
+      path:"*",
+      element: (<>
+        <h1>Mess with this application its a beta version, and report it at dumb13305@gmail.com</h1>
+      </>)
+    }
   ]);
   return <RouterProvider router={router} />;
 };
