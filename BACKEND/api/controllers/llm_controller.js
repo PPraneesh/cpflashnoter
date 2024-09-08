@@ -91,7 +91,7 @@ const llm_controller = async (req, res) => {
           generations: userData.generations,
         });
 
-        res.send({ status: true, result: result, userData: userData });
+        res.send({ status: true, result: result, userDataStats: userData });
       } else {
         // Calculate the next available generation time
         let nextGenTime = new Date(currentTime + timeRemaining);

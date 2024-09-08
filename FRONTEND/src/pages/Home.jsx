@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import { LoadingContext } from "../context/LoadingContext";
 import { UserContext } from "../context/UserContext";
 
@@ -14,46 +13,12 @@ import { FaInfoCircle } from "react-icons/fa";
 
 export default function Home() {
   const [genCount, setGenCount] = useState(0);
-  const { user } = useContext(AuthContext);
   const { userData, setUserData } = useContext(UserContext);
   const location = useLocation();
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
   const server_url = import.meta.env.VITE_SERVER_URL;
 
   // this function handles the retrieval of saved questions also sets the userData in the userContext
-  function getUserCp(email) {
-    axios
-      .post(`${server_url}/get_cp`, {
-        email: email,
-      })
-      .then((response) => {
-        if (response.data.status) {
-          const tempUserData = {
-            userData: response.data.userData,
-            cp: response.data.cp,
-          };
-          setUserData(tempUserData);
-          localStorage.setItem("userData", JSON.stringify(tempUserData));
-        } else {
-          toast.error("some error, please logout and login");
-        }
-      })
-      .catch(() => {
-        toast.error("couldn't retrieve saved questions");
-        console.error("Couldn't get saved questions");
-      });
-  }
-
-
-  //for adsense
-  useEffect(() => {
-    getUserCp("parshipraneesh8@gmail.com")
-  },[])
-  //for adsense uncomment below
-
-  // useEffect(() => {
-  //   getUserCp(user?.email);
-  // }, [user?.email]);
 
   // handles element scroll to view
   
@@ -67,7 +32,7 @@ export default function Home() {
   const [code, setCode] = useState("// type your code...");
   const [output, setOutput] = useState(null);
 
-  // save the notes to the database and update the saved questions by calling getUserCp
+  // save the notes to the database and update the saved questions by calling getUserData
 
   const save = async (e) => {
     e.preventDefault();
@@ -75,7 +40,7 @@ export default function Home() {
       setSaveCp(true);
       try {
         await axios
-          .post(`${server_url}/add_cp`, {
+          .post(`${server_url}/save_cp`, {
             question,
             code,
             output,
@@ -84,7 +49,7 @@ export default function Home() {
           .then((response) => {
             if (response.data.status) {
               toast.success("saved your notes : )");
-              getUserCp(userData?.userData?.email);
+              setUserData(response.data.userData);
             } else {
               toast.error(response.data.reason);
             }
@@ -122,7 +87,7 @@ export default function Home() {
               console.log("Process response:", response.data.result);
               setOutput(response.data.result);
               const tempUserData = {
-                userData: response.data.userData,
+                userData: response.data.userDataStats,
                 cp: userData.cp,
               };
               setUserData(tempUserData);
