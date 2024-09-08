@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import { FaInfoCircle } from "react-icons/fa";
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -26,35 +28,60 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, provider);
   }
   
-  function handleLogin() {
-    loginWithGoogle()
-      .then(async (u) => {
-        await axios
-          .post(`${server_url}/user_login`, {
-            name: u.user.displayName,
-            email: u.user.email,
-            photo: u.user.photoURL,
-          })
-          .then((res) => {
-            if (res.data.status) {
-              toast.success("logged in successful : )");
-              navigate("/home");
-            } else {
-              navigate("/login");
-              toast.error("login failed : /");
-            }
-          });
-      })
-      .catch((error) => {
-        toast.error("login failed : )");
-        console.error("Error signing in with Google", error);
-      });
+async function handleLogin() {
+
+  //for adsense
+    await axios
+    .post(`${server_url}/user_login`, {
+      name: "Praneesh Parshi",
+      email: "parshipraneesh8@gmail.com",
+      photo: `https://lh3.googleusercontent.com/a/ACg8ocKpZRDLyG_rAHDLutbFr41uJmkZ8JOk-Cp2gi98BqFqRiUajS907A=s96-c`,
+    })
+    .then((res) => {
+      if (res.data.status) {
+        toast.success("logged in successful : )");
+        toast("temporarily disabled auth to get Adsense.. You can only use this account!!", { icon: <FaInfoCircle /> })
+        navigate("/home");
+      } else {
+        navigate("/login");
+        toast.error("login failed : /");
+      }
+    });
+  //for adsense uncomment below
+
+    // loginWithGoogle()
+    //   .then(async (u) => {
+    //     await axios
+    //       .post(`${server_url}/user_login`, {
+    //         name: u.user.displayName,
+    //         email: u.user.email,
+    //         photo: u.user.photoURL,
+    //       })
+    //       .then((res) => {
+    //         if (res.data.status) {
+    //           toast.success("logged in successful : )");
+    //           navigate("/home");
+    //         } else {
+    //           navigate("/login");
+    //           toast.error("login failed : /");
+    //         }
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     toast.error("login failed : )");
+    //     console.error("Error signing in with Google", error);
+    //   });
+
   }
   const logOut = () => {
     setLoading(true);
     setUserData(null);
     localStorage.removeItem("userData");
     toast.success("You logged out : (");
+    //for adsense
+    navigate("/");
+    //for adsense
+    
     return signOut(auth);
   };
 

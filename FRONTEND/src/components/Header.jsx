@@ -68,8 +68,8 @@ export default function Header() {
                 onClick={toggleDropdown}
               /> */}
               <img
-                src={user?.photoURL}
-                alt={user?.displayName}
+                src={userData?.userData?.photo}
+                alt={userData?.userData?.name}
                 className="w-8 h-8 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
               />

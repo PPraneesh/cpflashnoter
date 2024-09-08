@@ -44,9 +44,16 @@ export default function Home() {
       });
   }
 
+
+  //for adsense
   useEffect(() => {
-    getUserCp(user?.email);
-  }, [user?.email]);
+    getUserCp("parshipraneesh8@gmail.com")
+  },[])
+  //for adsense uncomment below
+
+  // useEffect(() => {
+  //   getUserCp(user?.email);
+  // }, [user?.email]);
 
   // handles element scroll to view
   
@@ -72,12 +79,12 @@ export default function Home() {
             question,
             code,
             output,
-            email: user.email,
+            email: userData?.userData.email,
           })
           .then((response) => {
             if (response.data.status) {
               toast.success("saved your notes : )");
-              getUserCp(user.email);
+              getUserCp(userData?.userData?.email);
             } else {
               toast.error(response.data.reason);
             }
@@ -108,7 +115,7 @@ export default function Home() {
           .post(`${server_url}/process_code`, {
             question,
             code,
-            email: user.email,
+            email: userData?.userData?.email,
           })
           .then((response) => {
             if (response.data.status) {
