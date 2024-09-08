@@ -43,10 +43,8 @@ export default function Output({ output }) {
                         {subunit.description}
                       </p>
                       <div className="bg-[#151b23] rounded-lg p-4">
-                        <pre>
-                          <code className="text-white text-sm whitespace-pre">
+                        <pre className="text-sm text-white overflow-x-auto ">
                             {subunit.content}
-                          </code>
                         </pre>
                       </div>
                     </div>
