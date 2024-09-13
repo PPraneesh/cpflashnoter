@@ -121,20 +121,12 @@ export default function Header() {
           </div>
         </>
       ) : (
-        //for adsense
         <button
           onClick={handleLogin}
           className=" bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3] px-6 py-3 rounded-lg text-md font-bold transition duration-300 order-last"
         >
-          Get started
+          Sign in with Google <FaGoogle className="inline" />
         </button>
-        //for adsense uncomment the below code
-        // <button
-        //   onClick={handleLogin}
-        //   className=" bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3] px-6 py-3 rounded-lg text-md font-bold transition duration-300 order-last"
-        // >
-        //   Sign in with Google <FaGoogle className="inline" />
-        // </button>
       )}
     </header>
   );

@@ -10,15 +10,11 @@ const PrivateRoute = ({ children }) => {
     return <span className="loading loading-dots loading-lg"></span>;
   }
 
-  //for adsense
-  return children;
-  //for adsense uncomment below
-
-  // if (user) {
-  //   return children;
-  // }else{
-  //   navigate("/")
-  // } 
+  if (user) {
+    return children;
+  }else{
+    navigate("/")
+  } 
 };
 
 

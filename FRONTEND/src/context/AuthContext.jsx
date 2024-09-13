@@ -29,50 +29,31 @@ const AuthProvider = ({ children }) => {
   }
 
   async function handleLogin() {
-    //for adsense
-    await axios
-      .post(`${server_url}/user_login`, {
-        name: "Praneesh Parshi",
-        email: "parshipraneesh8@gmail.com",
-        photo: `https://lh3.googleusercontent.com/a/ACg8ocKpZRDLyG_rAHDLutbFr41uJmkZ8JOk-Cp2gi98BqFqRiUajS907A=s96-c`,
-      })
-      .then((res) => {
-        if (res.data.status) {
-          setUserData(res.data.userData);
-          navigate("/home");
-          localStorage.setItem("userData", JSON.stringify(res.data.userData));
-          toast.success("logged in successful : )");
-        } else {
-          navigate("/");
-          toast.error("login failed : /");
-        }
-      });
-    //for adsense uncomment below
 
-    // loginWithGoogle()
-    //   .then(async (u) => {
-    //     await axios
-    //       .post(`${server_url}/user_login`, {
-    //         name: u.user.displayName,
-    //         email: u.user.email,
-    //         photo: u.user.photoURL,
-    //       })
-    //       .then((res) => {
-    //         if (res.data.status) {
-    //           setUserData(res.data.userData);
-    //           navigate("/home");
-    //           localStorage.setItem("userData", JSON.stringify(res.data.userData));
-    //           toast.success("logged in successful : )");
-    //         } else {
-    //           navigate("/");
-    //           toast.error("login failed : /");
-    //         }
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     toast.error("login failed : /");
-    //     console.error("Error signing in with Google", error);
-    //   });
+    loginWithGoogle()
+      .then(async (u) => {
+        await axios
+          .post(`${server_url}/user_login`, {
+            name: u.user.displayName,
+            email: u.user.email,
+            photo: u.user.photoURL,
+          })
+          .then((res) => {
+            if (res.data.status) {
+              setUserData(res.data.userData);
+              navigate("/home");
+              localStorage.setItem("userData", JSON.stringify(res.data.userData));
+              toast.success("logged in successful : )");
+            } else {
+              navigate("/");
+              toast.error("login failed : /");
+            }
+          });
+      })
+      .catch((error) => {
+        toast.error("login failed : /");
+        console.error("Error signing in with Google", error);
+      });
   }
 
   const logOut = () => {
@@ -80,10 +61,7 @@ const AuthProvider = ({ children }) => {
     setUserData(null);
     localStorage.removeItem("userData");
     toast.success("You logged out : (");
-    //for adsense
-    navigate("/");
-    //for adsense
-    // return signOut(auth);
+    return signOut(auth);
   };
 
   useEffect(() => {

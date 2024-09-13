@@ -48,18 +48,6 @@ const LandingPage = () => {
           <button onClick={()=> handleLogin()} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition">
             Get Started
           </button>
-           {/* for adsense remove below */}
-          <div className="mt-8 max-w-2xl mx-auto bg-[#1c2128] border border-yellow-600 rounded-lg p-4 text-left">
-            <div className="flex items-center mb-2">
-              <FaInfoCircle className="text-yellow-500 mr-2" />
-              <h4 className="text-lg font-semibold">Important Notice</h4>
-            </div>
-            <p className="text-gray-300">
-              Auth is disabled temporarily for Adsense. You can only use the admin account.
-              Please feel free to explore. Click on {"Get Started"} to check the website.
-            </p>
-          </div>
-          {/* for adsense */}
         </div>
       </section>
 
