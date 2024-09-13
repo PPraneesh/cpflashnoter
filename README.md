@@ -11,14 +11,29 @@ Visit the website: [cpflashnoter.vercel.app](https://cpflashnoter.vercel.app/)
 - **Explanations**: Generates detailed explanations for each code segment.
 - **Save for Future**: Store your generated notes for future reference and revision.
 
-## Technologies Used
+## Tech Stack
 
-- Frontend: React, TailwindCSS
-- Authentication: Firebase Auth
-- Storage: Firestore
-- Language Model: LLaMA 3.1 70B
-- Backend: Node.js
-- LLM Framework: LangChain (for generating structured output from LLM)
+Our application leverages a modern and robust technology stack:
+
+### Frontend
+- **React**: A powerful JavaScript library for building user interfaces
+- **TailwindCSS**: A utility-first CSS framework for rapid UI development
+
+### Backend
+- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine
+
+### Authentication & Database
+- **Firebase Authentication**: Secure and easy-to-use authentication service
+- **Firestore**: Flexible, scalable NoSQL cloud database to store and sync data
+
+### AI & Machine Learning
+- **LLaMA 3.1 70B**: State-of-the-art language model for generating human-like text
+- **LangChain**: Framework for developing applications powered by language models
+
+### Deployment
+- **Vercel**: Cloud platform for static and serverless deployment
+
+This carefully selected stack ensures high performance, scalability, and a smooth user experience.
 
 ## Prerequisites
 
@@ -55,4 +70,3 @@ For more information about the developer, visit [parshipraneesh.me](https://pars
 
 
 We hope cpflashnoter helps you in your DSA learning journey and interview preparation. Happy coding!
-****
