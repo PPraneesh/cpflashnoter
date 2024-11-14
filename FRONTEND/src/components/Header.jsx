@@ -18,10 +18,10 @@ export default function Header() {
   
   let location = useLocation();
   useEffect(()=>{
-    if(userData){
-      navigate("/home");
-    }else if(location.pathname.slice(0,6) === "/share"){
+    if(location.pathname.slice(0,6) === "/share"){
       return;
+    }else if(userData){
+      navigate("/home");
     }else{
       navigate("/");
     }
