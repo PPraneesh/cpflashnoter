@@ -26,22 +26,14 @@ async function handleUser(req, res) {
       res.send({ status: true });
     } else {
       // Retrieve user data
-      const [userDoc, cpSnapshot] = await Promise.all([
-        userRef.get(),
-        userRef.collection("cp").get()
-      ]);
+      const userDoc = await userRef.get();
 
       if (!userDoc.exists) {
         return res.send({ status: false, reason: "User not found" });
       }
 
       const userDataStats = userDoc.data();
-      const cp = cpSnapshot.docs.map(doc => doc.data().cp);
-      const userData = {
-        "userData": userDataStats,
-        "cp": cp
-      };
-      res.send({ status: true, userData: userData });
+      res.send({ status: true, userData: userDataStats });
     }
   } catch (error) {
     console.error("Error in handleUser:", error);

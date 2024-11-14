@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { v4: uuidv4 } = require("uuid");
 
 async function cp_controller(req, res) {
   let user_email = req.body.email;
@@ -19,44 +20,28 @@ async function cp_controller(req, res) {
         }
 
         if (userData.saves.quests > 0) {
+          let uuid_code = uuidv4();
           let cp = {
+            id: uuid_code,
             question: req.body.question,
             code: req.body.code,
+            isPublic: false,
             ...req.body.output,
           };
-          let cpRef = userRef.collection("cp").doc(cp.name);
-          await cpRef
-            .get()
-            .then(async (cpDoc) => {
-              if (cpDoc.exists) {
-                res.send({ status: false, reason: "already exists" });
-              } else {
-                await cpRef
-                  .set({
-                    cp: cp,
-                  })
-                  .then(async () => {
-                    userData.saves.quests -= 1;
-                    userData.saves.last_save = currentTime;
-                    await userRef.update({
-                      saves: userData.saves,
-                    });
 
-                    //
-                    const cpSnapshot = await userRef.collection("cp").get();
-                    const cpList = cpSnapshot.docs.map((doc) => doc.data().cp);
-                    const updatedUserData = {
-                      userData: userData,
-                      cp: cpList,
-                    };
-                    res.send({ "status": true, "userData": updatedUserData });
-                  });
-              }
-            })
-            .catch((error) => {
-              console.error("Error adding document: ", error);
-              res.send({ status: false, reason: "error in updating : /" });
-            });
+          let cpRef = userRef.collection("cp").doc(uuid_code);
+          try {
+            await cpRef.set(cp);
+            userData.saves.quests -= 1;
+            userData.saves.last_save = currentTime;
+
+            await userRef.update({ saves: userData.saves });
+
+            res.send({ status: true, userData: userData });
+          } catch (error) {
+            console.error("Error updating user data:", error);
+            res.status(500).send({ status: false, reason: error.message });
+          }
         } else {
           let nextSaveTime = new Date(currentTime + timeRemaining);
           res.send({
@@ -76,5 +61,108 @@ async function cp_controller(req, res) {
       });
     });
 }
+async function get_cp(req, res) {
+  let user_email = req.body.email;
+  if (user_email) {
+    const userRef = db.collection("users").doc(user_email);
+    const cpSnapshot = await userRef.collection("cp").get();
+    const cpList = cpSnapshot.docs.map((doc) => doc.data());
+    return res.send({
+      status: true,
+      cp_docs: cpList,
+    });
+  }
+}
+async function delete_cp_controller(req, res) {
+  let user_email = req.body.email;
+  let cp_id = req.body.cp_id;
+  const userRef = db.collection("users").doc(user_email);
+  const cpRef = userRef.collection("cp").doc(cp_id);
+  await cpRef
+    .delete()
+    .then(() => {
+      res.send({ status: true });
+    })
+    .catch((error) => {
+      res.send({ status: false, reason: error });
+    });
+}
 
-module.exports = { cp_controller };
+async function share_cp_controller(req, res) {
+  let user_email = req.body.email;
+  let cp_id = req.body.cp_id;
+
+  const userRef = db.collection("users").doc(user_email);
+  const cpRef = userRef.collection("cp").doc(cp_id);
+  const publicCpRef = db.collection("public_cp").doc(cp_id);
+  cpRef
+    .get()
+    .then(async (doc) => {
+      let cp = doc.data();
+      cp.isPublic = true;
+      await publicCpRef
+        .set(cp)
+        .then(async () => {
+          await cpRef
+            .set(cp)
+            .then(() => {
+              res.send({ status: true });
+            })
+            .catch((error) => {
+              res.send({ status: false, reason: error });
+            });
+        })
+        .catch((error) => {
+          res.send({ status: false, reason: error });
+        });
+    })
+    .catch(() => {
+      res.send({ status: false, reason: "cp not found" });
+    });
+}
+
+async function get_public_cp_controller(req, res) {
+  let cp_id = req.body.cp_id;
+  const publicCpRef = db.collection("public_cp").doc(cp_id);
+  await publicCpRef.get().then((doc) => {
+    if (doc.exists) {
+      res.send({ status: true, cp: doc.data() });
+    } else {
+      res.send({ status: false, reason: "cp not found" });
+    }
+  });
+}
+
+async function delete_public_cp_controller(req, res) {
+  let cp_id = req.body.cp_id;
+  let user_email = req.body.email;
+  const userRef = db.collection("users").doc(user_email);
+  const cpRef = userRef.collection("cp").doc(cp_id);
+  cpRef.get()
+  .then(async (doc)=>{
+    if (doc.exists){
+      const publicCpRef = db.collection("public_cp").doc(cp_id);
+      let cp = doc.data();
+      cp.isPublic = false;
+      cpRef.set(cp);
+      await publicCpRef
+        .delete()
+        .then(() => {
+          res.send({ status: true });
+        })
+        .catch((error) => {
+          res.send({ status: false, reason: error });
+        });
+    }else{
+      res.send({ status: false, reason: "cp not found" });
+    }
+  })
+}
+module.exports = {
+  cp_controller,
+  get_cp,
+  delete_cp_controller,
+  share_cp_controller,
+  get_public_cp_controller,
+  delete_public_cp_controller
+};

@@ -16,17 +16,19 @@ export default function Header() {
     setIsOpen(!isOpen);
   };
   
+  let location = useLocation();
   useEffect(()=>{
     if(userData){
       navigate("/home");
+    }else if(location.pathname.slice(0,6) === "/share"){
+      return;
     }else{
       navigate("/");
     }
   },[])
   
-  let location = useLocation();
 
-  const { logOut, user } = useContext(AuthContext);
+  const { logOut } = useContext(AuthContext);
 
   return (
     <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between flex-wrap">
@@ -34,7 +36,7 @@ export default function Header() {
         <img src="/logo.png" alt="" className="w-24" />
       </div>
 
-      {(userData?.userData) ? (
+      {(userData) ? (
         <>
           <div className="flex items-center justify-center order-3 md:order-2 px-2 py-4 mt-6 mx-auto sm:m-0 w-full sm:w-fit border-white/20 sm:border-0">
             <nav>
@@ -68,8 +70,8 @@ export default function Header() {
                 onClick={toggleDropdown}
               /> */}
               <img
-                src={userData?.userData?.photo}
-                alt={userData?.userData?.name}
+                src={userData?.photo}
+                alt={userData?.name}
                 className="w-8 h-8 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
               />
@@ -87,25 +89,25 @@ export default function Header() {
                     </button>
                   </div>
                   <h1 className="font-medium pt-1">
-                    {userData?.userData?.name}
+                    {userData?.name}
                   </h1>
                   <h1 className="pb-1">{userData?.userData?.email}</h1>
                   <h1 className="border-t border-white/20 pt-1">
-                    Generations left: {userData.userData?.generations?.count}
+                    Generations left: {userData?.generations?.count}
                   </h1>
                   <h1 className="pb-1">
                     Revives at{" "}
                     {new Date(
-                      userData?.userData?.generations?.last_gen
+                      userData?.generations?.last_gen
                     ).toLocaleString()}
                   </h1>
                   <h1 className="border-t border-white/20 pt-1">
-                    Saves left: {userData?.userData?.saves?.quests}
+                    Saves left: {userData?.saves?.quests}
                   </h1>
                   <h1 className="pb-1">
                     Revives at{" "}
                     {new Date(
-                      userData?.userData?.saves?.last_save
+                      userData?.saves?.last_save
                     ).toLocaleString()}
                   </h1>
                 </div>

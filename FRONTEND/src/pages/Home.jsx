@@ -18,10 +18,8 @@ export default function Home() {
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
   const server_url = import.meta.env.VITE_SERVER_URL;
 
-  // this function handles the retrieval of saved questions also sets the userData in the userContext
-
-  // handles element scroll to view
   
+  // handles element scroll to view
   useEffect(() => {
     if (location.hash === "#generate") {
       document.getElementById("generate")?.scrollIntoView();
@@ -35,7 +33,7 @@ export default function Home() {
   // save the notes to the database and update the saved questions by calling getUserData
 
   const save = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     if (genCount > 0) {
       setSaveCp(true);
       try {
@@ -44,12 +42,13 @@ export default function Home() {
             question,
             code,
             output,
-            email: userData?.userData.email,
+            email: userData?.email,
           })
           .then((response) => {
             if (response.data.status) {
               toast.success("saved your notes : )");
               setUserData(response.data.userData);
+              console.log(response.data)
             } else {
               toast.error(response.data.reason);
             }
@@ -80,19 +79,13 @@ export default function Home() {
           .post(`${server_url}/process_code`, {
             question,
             code,
-            email: userData?.userData?.email,
+            email: userData?.email,
           })
           .then((response) => {
             if (response.data.status) {
-              console.log("Process response:", response.data.result);
               setOutput(response.data.result);
-              const tempUserData = {
-                userData: response.data.userDataStats,
-                cp: userData.cp,
-              };
-              setUserData(tempUserData);
-              localStorage.setItem("userData", JSON.stringify(tempUserData));
-    
+              setUserData(response.data.userDataStats);
+              localStorage.setItem("userData", JSON.stringify(response.data.userDataStats));
               toast.success("generated successfully");
             } else {
               toast.error(response.data.reason);

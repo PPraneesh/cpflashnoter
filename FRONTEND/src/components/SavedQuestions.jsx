@@ -4,12 +4,23 @@ import toast from "react-hot-toast";
 import { VscEye } from "react-icons/vsc";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 
 function SavedQuestions(props) {
+  const server_url = import.meta.env.VITE_SERVER_URL;
   const { userData } = useContext(UserContext);
+  const [userDataCp, setUserDataCp] = useState([])
+  useEffect(()=>{
+    axios.post(`${server_url}/get_cp`,{
+      email: userData?.email
+    }).then((res)=>{
+        setUserDataCp(res.data.cp_docs)
+    })
+  },[server_url,userData?.saves,userData?.email])
   const questionsToDisplay = props.short
-    ? userData?.cp?.slice().reverse().slice(0, 3)
-    : userData?.cp?.slice().reverse();
+    ? userDataCp?.slice().reverse().slice(0, 3)
+    : userDataCp?.slice().reverse();
 
   const handleLinkClick = (event) => {
     if (event.button === 1 || event.ctrlKey || event.metaKey) {
@@ -22,7 +33,7 @@ function SavedQuestions(props) {
     <>
       <div className="px-6 pb-8">
         <h1 className="text-3xl py-4 text-white">Saved questions:</h1>
-        {userData?.cp?.length > 0 ? (
+        {userDataCp.length>0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
             {questionsToDisplay?.map((quest, index) => (
                 <div
@@ -57,7 +68,7 @@ function SavedQuestions(props) {
                     </div>
                     <Link
                       to={`/home/questions/${index}`}
-                      state={userData?.cp[index]}
+                      state={userDataCp[index]}
                       className="text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border border-[#247ce889] py-1 px-2 rounded-md w-fit"
                       onClick={handleLinkClick}
                       onAuxClick={handleLinkClick}

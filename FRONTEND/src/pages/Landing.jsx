@@ -1,7 +1,6 @@
 import { Code, BookOpen, Save, Brain, RefreshCcw } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
-import { FaInfoCircle } from "react-icons/fa";
 
 const LandingPage = () => {
   const { handleLogin } = useContext(AuthContext);

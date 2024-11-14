@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
-import { FaInfoCircle } from "react-icons/fa";
 
 export const AuthContext = createContext();
 
@@ -47,6 +46,8 @@ const AuthProvider = ({ children }) => {
             } else {
               navigate("/");
               toast.error("login failed : /");
+              toast.error(res.data.reason)
+              console.log(res.data)
             }
           });
       })
