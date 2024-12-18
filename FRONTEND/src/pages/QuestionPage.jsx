@@ -5,11 +5,17 @@ import { UserContext } from "../context/UserContext";
 import { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => {
+const PublicMaking = ({
+  isPublic,
+  cp_id,
+  makePublic,
+  onClose,
+  makePrivate,
+}) => {
   const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
-  
+
   const handleCopyLink = () => {
     toast.success("Link copied to clipboard");
     navigator.clipboard.writeText(`${FRONTEND_URL}/share/${cp_id}`);
@@ -18,11 +24,14 @@ const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
       {/* Modal */}
       <div className="relative bg-[#151b23] p-6 rounded-lg border border-white/20 w-full max-w-md">
-        <button 
+        <button
           onClick={onClose}
           className="absolute right-4 top-4 text-white/60 hover:text-white"
         >
@@ -30,7 +39,7 @@ const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => 
         </button>
 
         <h2 className="text-2xl font-bold text-white mb-6">Share Notes</h2>
-        
+
         {isPublic ? (
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
@@ -42,7 +51,7 @@ const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => 
                   value={`${FRONTEND_URL}/share/${cp_id}`}
                   className="flex-1 bg-[#0d1117] text-white p-2 rounded border border-white/20 text-sm"
                 />
-              
+
                 <button
                   onClick={handleCopyLink}
                   className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] px-4 py-2 rounded border border-[#247ce889]"
@@ -50,8 +59,9 @@ const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => 
                   Copy
                 </button>
               </div>
-              <button 
+              <button
                 onClick={makePrivate}
+                className="w-full button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] px-4 py-2 rounded border border-[#247ce889]"
               >
                 Make Private
               </button>
@@ -74,7 +84,7 @@ const PublicMaking = ({ isPublic, cp_id, makePublic, onClose, makePrivate }) => 
         )}
       </div>
     </div>
-  )
+  );
 };
 
 PublicMaking.propTypes = {
@@ -89,88 +99,163 @@ const Question = () => {
   const { userData } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const questionData = location.state
-  const [isPublic, setIsPublic] = useState(questionData?.isPublic)
+  const questionData = location.state;
+  const [isPublic, setIsPublic] = useState(questionData?.isPublic);
   const [showShareModal, setShowShareModal] = useState(false);
-  const deleteAction = async ()=>{
-    await axios.post(`${import.meta.env.VITE_SERVER_URL}/delete_cp`,{
-      email: userData?.email,
-      cp_id: questionData.id
-    })
-    .then((response)=>{
-      if(response.data.status){
-        toast.success("Question deleted successfully")
-        navigate("/home/questions")
-      }
-      else{
-        toast.error("couldn't delete")
-        console.log(response.data.reason)
-      }
-    })
-  }
-  const makePrivate = async ()=>{
-    axios.post(`${import.meta.env.VITE_SERVER_URL}/delete_public_cp`,{
-      cp_id: questionData.id,
-      email: userData?.email
-    })
-    .then((response)=>{
-      if(response.data.status){
-        setIsPublic(false)
-        toast.success("Public link deleted successfully")
-      }
-      else{
-        toast.error("couldn't delete")
-        console.log(response.data.reason)
-      }
-    })
-    .catch(()=>{
-      toast.error("couldn't delete")
-    })
-  }
-  const makePublic = async ()=>{
-    await axios.post(`${import.meta.env.VITE_SERVER_URL}/share_cp`,{
-      email: userData?.email,
-      cp_id: questionData.id
-    })
-    .then((response)=>{
-      if(response.data.status){
-        setIsPublic(true)
-        toast.success("Public link created successfully")
-      }
-      else{
-        toast.error("couldn't share")
-        console.log(response.data.reason)
-      }
-    }
-    )
-  }
+  const [isEditing, setIsEditing] = useState(false);
+  const [save, setSave] = useState(false)
+  const [formData, setFormData] = useState({
+    name: questionData?.name,
+    description: questionData?.description,
+    question: questionData?.question,
+    code: questionData?.code,
+    subunits: questionData?.subunits || [],
+  });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleInputChangeForSubunits = (e, index, field) => {
+    const { value } = e.target;
+    setFormData((prevData) => {
+      const updatedSubunits = [...prevData.subunits];
+      updatedSubunits[index][field] = value;
+      return {
+        ...prevData,
+        subunits: updatedSubunits,
+      };
+    });
+  };
+
+  const deleteAction = async () => {
+    await axios
+      .post(`${import.meta.env.VITE_SERVER_URL}/delete_cp`, {
+        email: userData?.email,
+        cp_id: questionData.id,
+      })
+      .then((response) => {
+        if (response.data.status) {
+          toast.success("Question deleted successfully");
+          navigate("/home/questions");
+        } else {
+          toast.error("Couldn't delete");
+          console.log(response.data.reason);
+        }
+      });
+  };
+
+  const makePrivate = async () => {
+    axios
+      .post(`${import.meta.env.VITE_SERVER_URL}/delete_public_cp`, {
+        cp_id: questionData.id,
+        email: userData?.email,
+      })
+      .then((response) => {
+        if (response.data.status) {
+          setIsPublic(false);
+          toast.success("Public link deleted successfully");
+        } else {
+          toast.error("Couldn't delete");
+          console.log(response.data.reason);
+        }
+      })
+      .catch(() => {
+        toast.error("Couldn't delete");
+      });
+  };
+
+  const makePublic = async () => {
+    await axios
+      .post(`${import.meta.env.VITE_SERVER_URL}/share_cp`, {
+        email: userData?.email,
+        cp_id: questionData.id,
+      })
+      .then((response) => {
+        if (response.data.status) {
+          setIsPublic(true);
+          toast.success("Public link created successfully");
+        } else {
+          toast.error("Couldn't share");
+          console.log(response.data.reason);
+        }
+      });
+  };  
+
+  const saveCP = async()=>{
+    setSave(true);
+    setIsEditing(false)
+    await axios.post(`${import.meta.env.VITE_SERVER_URL}/edit_cp`, {
+      email: userData?.email,
+      cp_id: questionData.id,
+      cp_data : formData
+    })
+    .then((response)=>{
+      if(response.data.status){
+        toast.success("edited successfully");
+      }else{
+        toast.error("aw! there's an error");
+        console.log(response.data.reason)
+      }
+    })
+    setSave(false)
+  }
   const { name, description, question, code, language, subunits } =
     questionData;
 
   return (
-    <div >
-        <button
-          className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] flex items-center m-4 fixed bottom-0 right-0 border border-[#247ce889]"
-          onClick={() => {
-            navigate("/home");
-          }}
-        >
-          <FaChevronLeft />
-          <span className="whitespace-pre">{`  home`}</span>
-        </button>
+    <div>
+      <button
+        className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] flex items-center m-4 fixed bottom-0 right-0 border border-[#247ce889]"
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        <FaChevronLeft />
+        <span className="whitespace-pre">{`  home`}</span>
+      </button>
 
       <div className="p-6">
         <div className="flex justify-between pb-2">
-          <h1 className="text-2xl font-bold text-white mb-2">{name}</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            {isEditing ? (
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="bg-[#151b23] text-white p-2 rounded border border-white/20 h-fit"
+              />
+            ) : (
+              name
+            )}
+          </h1>
           <div>
-          <button 
-        className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mr-2" 
-        onClick={() => setShowShareModal(true)}
-      >
-        Share
-      </button>
-            <button className="button text-[#de2036] bg-[#a417274b] hover:bg-[#a4172769] border-0" onClick={deleteAction}>Delete</button>
+            <button
+              className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mr-2"
+              onClick={() => setShowShareModal(true)}
+            >
+              Share
+            </button>
+            <button
+              className="button text-[#de2036] bg-[#a417274b] hover:bg-[#a4172769] border-0 mr-2"
+              onClick={deleteAction}
+            >
+              Delete
+            </button>
+            <button
+              className={`button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 ${isEditing && "rounded-tr-none rounded-br-none mr-[2px]"}`}
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              {isEditing ? "Cancel" : "Edit"}
+            </button>
+            {isEditing && <button className="button rounded-tl-none rounded-bl-none bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]"
+            onClick={saveCP}
+            >{save? "saving.." :"Save"}</button>}
           </div>
         </div>
         <p className="text-white mb-4">{description}</p>
@@ -197,24 +282,58 @@ const Question = () => {
 
         <div>
           <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
-          {subunits.map((subunit, index) => (
-            <div
-              key={index}
-              className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
-            >
-              <h3 className="text-lg font-semibold text-white mb-2">
-                {subunit.name}
-              </h3>
-              <p className="text-white mb-2">{subunit.description}</p>
-              <div className="bg-[#151b23] p-4 rounded-lg ">
-                <pre className="text-sm text-white overflow-x-auto">
-                  {subunit.content}
-                </pre>
-              </div>
-            </div>
-          ))}
+          {isEditing
+            ? formData.subunits.map((subunit, index) => (
+                <div
+                  key={index}
+                  className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
+                >
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    <input
+                      type="text"
+                      value={subunit.name}
+                      onChange={(e) =>
+                        handleInputChangeForSubunits(e, index, "name")
+                      }
+                      className="bg-[#151b23] text-white p-2 rounded border border-white/20 w-full"
+                    />
+                  </h3>
+                  <textarea
+                    value={subunit.description}
+                    onChange={(e) =>
+                      handleInputChangeForSubunits(e, index, "description")
+                    }
+                    className="bg-[#151b23] text-white p-2 rounded border border-white/20 w-full min-h-[100px] mb-2"
+                  />
+
+                  <textarea
+                    value={subunit.content}
+                    onChange={(e) =>
+                      handleInputChangeForSubunits(e, index, "content")
+                    }
+                    className="bg-[#151b23] text-white p-2 rounded border border-white/20 w-full"
+                  />
+                </div>
+              ))
+            : subunits.map((subunit, index) => (
+                <div
+                  key={index}
+                  className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
+                >
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {subunit.name}
+                  </h3>
+                  <p className="text-white mb-2">{subunit.description}</p>
+                  <div className="bg-[#151b23] p-4 rounded-lg">
+                    <pre className="text-sm text-white overflow-x-auto">
+                      {subunit.content}
+                    </pre>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
+
       {showShareModal && (
         <PublicMaking
           isPublic={isPublic}
@@ -224,7 +343,6 @@ const Question = () => {
           onClose={() => setShowShareModal(false)}
         />
       )}
-
     </div>
   );
 };

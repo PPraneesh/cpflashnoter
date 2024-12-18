@@ -60,7 +60,7 @@ const structuredLlm = model.withStructuredOutput({
   },
 });
 
-const llm_controller = async (req, res) => {
+const   llm_controller = async (req, res) => {
   const { code, question } = req.body;
   const user_email = req.body.email; // User's email from response data
   const userRef = db.collection("users").doc(user_email);
@@ -79,7 +79,8 @@ const llm_controller = async (req, res) => {
       }
 
       if (userData.generations.count > 0) {
-        const prompt = ` You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n The following is a question from a competitive programming platform: \n<given_question>\n ${question} \n</given_question> Analyze the following code solution: <given_code> ${code} </given_code> <instructions> 1. Carefully read the question and the code.\n 2. Analyze how the code solves the given problem. \n3. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.\n 4. Focus on clarity, accuracy, and educational value in your explanations. \n5. Include insights on algorithm choice, time/space complexity, and any clever techniques used. </instructions> Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.`;
+        const prompt = ` You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n 
+        The following is a question from a competitive programming platform: \n<given_question>\n ${question} \n</given_question> Analyze the following code solution: <given_code> ${code} </given_code> <instructions> 1. Carefully read the question and the code.\n 2. Analyze how the code solves the given problem. \n3. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.\n 4. Focus on clarity, accuracy, and educational value in your explanations. \n5. Include insights on algorithm choice, time/space complexity, and any clever techniques used. </instructions> Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.`;
 
         const result = await structuredLlm.invoke(prompt);
 

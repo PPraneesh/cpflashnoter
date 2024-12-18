@@ -158,9 +158,33 @@ async function delete_public_cp_controller(req, res) {
     }
   })
 }
+
+async function edit_cp(req,res){
+  let cp_id = req.body.cp_id;
+  let user_email = req.body.email;
+  let cp_data = req.body.cp_data;
+  const userRef = db.collection("users").doc(user_email);
+  const cpRef = userRef.collection("cp").doc(cp_id);
+  await cpRef.get()
+    .then(async (doc) => {
+      if (doc.exists) {
+        await cpRef.update(cp_data)
+          .then(() => {
+            return res.send({ status: true });
+          })
+          .catch((error) => {
+            console.log(error)
+            res.send({ status: false, reason: error });
+          });
+      } else {
+        res.send({ status: false, reason: "cp not found" });
+      }
+    })
+}
 module.exports = {
   cp_controller,
   get_cp,
+  edit_cp,
   delete_cp_controller,
   share_cp_controller,
   get_public_cp_controller,
