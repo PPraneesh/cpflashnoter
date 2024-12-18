@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LoadingContext } from "../context/LoadingContext";
 import { UserContext } from "../context/UserContext";
 import Loader from "./Loader/Loader"
 export default function Output({ output }) {
   const { genNotes } = useContext(LoadingContext);
   const {  userData } = useContext(UserContext);
+  const [showCategories, setShowCategories] = useState(false);
 
   return (
     <div className="bg-[#0d1117] rounded-lg shadow-lg p-6 border border-white/20">
@@ -31,7 +32,28 @@ export default function Output({ output }) {
                   <span className="px-2 py-1 bg-[#151b23] border border-white/20 text-white text-xs font-medium rounded">
                     {output.language}
                   </span>
+                  <button
+            onClick={() => setShowCategories(!showCategories)}
+            className="button text-xs font-medium border-white/20 text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 m-2 ml-0"
+          >
+            Categories
+          </button>
                 </div>
+               
+          {showCategories && (
+            <div className="absolute mt-2 bg-[#151b23] border border-white/20 rounded-lg p-2 z-10 shadow-xl">
+              <div className="flex flex-col flex-wrap gap-2">
+                {output.categories?.map((cat, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-[#2240646d] text-[#247ce8] rounded block "
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
                 <p className="text-sm text-white">{output.description}</p>
                 <div className="space-y-4 mt-4">
                   {output.subunits?.map((subunit, index) => (

@@ -20,7 +20,7 @@ const PublicMaking = ({
     toast.success("Link copied to clipboard");
     navigator.clipboard.writeText(`${FRONTEND_URL}/share/${cp_id}`);
   };
-
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
@@ -104,6 +104,8 @@ const Question = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [save, setSave] = useState(false)
+  const [showCategories, setShowCategories] = useState(false);
+
   const [formData, setFormData] = useState({
     name: questionData?.name,
     description: questionData?.description,
@@ -204,7 +206,7 @@ const Question = () => {
     })
     setSave(false)
   }
-  const { name, description, question, code, language, subunits } =
+  const { name, description, question, code, language, subunits, categories } =
     questionData;
 
   return (
@@ -234,7 +236,29 @@ const Question = () => {
               name
             )}
           </h1>
+          
+          
           <div>
+          <button
+            onClick={() => setShowCategories(!showCategories)}
+            className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mr-2"
+          >
+            Categories
+          </button>
+          {showCategories && (
+            <div className="absolute mt-2 bg-[#151b23] border border-white/20 rounded-lg p-2 z-10">
+              <div className="flex flex-col flex-wrap gap-2">
+                {categories?.map((cat, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-[#2240646d] text-[#247ce8] rounded block"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
             <button
               className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mr-2"
               onClick={() => setShowShareModal(true)}

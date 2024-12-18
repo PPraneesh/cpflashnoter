@@ -84,6 +84,7 @@ export default function Home() {
           .then((response) => {
             if (response.data.status) {
               setOutput(response.data.result);
+              console.log(response.data.result)
               setUserData(response.data.userDataStats);
               localStorage.setItem("userData", JSON.stringify(response.data.userDataStats));
               toast.success("generated successfully");

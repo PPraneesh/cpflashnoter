@@ -55,12 +55,34 @@ const structuredLlm = model.withStructuredOutput({
         description:
           "Break down the code into logical, self-contained subunits. Each subunit should represent a distinct step or function in the overall solution.",
       },
+      categories: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: [
+            "Arrays",
+            "Two Pointers", 
+            "Sliding Windows",
+            "Binary Search",
+            "Strings", 
+            "Linked List",
+            "Recursion & Backtracking",
+            "Stacks & Queues",
+            "Heaps",
+            "Greedy Algorithms", 
+            "Binary Trees",
+            "Binary Search Trees",
+            "Dynamic Programming"
+          ]
+        },
+        description: "The categories of algorithms or data structures that this problem focuses on."
+      }
     },
     required: ["name", "language", "description", "subunits"],
   },
 });
 
-const   llm_controller = async (req, res) => {
+const llm_controller = async (req, res) => {
   const { code, question } = req.body;
   const user_email = req.body.email; // User's email from response data
   const userRef = db.collection("users").doc(user_email);
