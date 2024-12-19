@@ -3,9 +3,19 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
 const LandingPage = () => {
-  const { handleLogin } = useContext(AuthContext);
+  const { handleLogin, loadLogin } = useContext(AuthContext);
   return (
     <div className="min-h-screen bg-[#0d1117] text-white font-sans">
+       {/* Overlay for loader */}
+       {loadLogin != 0 && (
+        <div className="fixed inset-0 bg-[#0d1117]/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+          <span className="loader-login"></span>
+          {loadLogin == 1 && <><h1 className="text-xl text-white">Complete the login</h1>
+          <p className="text-xs text-white">If you are unable to login reload the page</p></>}
+          {loadLogin == 2 && <><h1 className="text-xl text-white">Redirecting you in a sec</h1>
+            <p className="text-xs text-white">If you are not redirected to home, reload the page</p></>}
+        </div>
+      )}
         <header className="py-6 px-4 border-b border-white/20 sticky top-0 bg-[#0d1117] z-10">
           <div className="flex justify-center">
             <nav>
@@ -32,6 +42,7 @@ const LandingPage = () => {
             </nav>
           </div>
         </header>
+
 
         {/* Hero Section */}
       <section className="py-20 px-4">

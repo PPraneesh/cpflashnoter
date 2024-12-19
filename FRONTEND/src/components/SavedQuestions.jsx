@@ -11,11 +11,13 @@ function SavedQuestions(props) {
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { userData } = useContext(UserContext);
   const [userDataCp, setUserDataCp] = useState([])
+  const [initialLoad, setInitialLoad] = useState(true);
   useEffect(()=>{
     axios.post(`${server_url}/get_cp`,{
       email: userData?.email
     }).then((res)=>{
-        setUserDataCp(res.data.cp_docs)
+      setUserDataCp(res.data.cp_docs)
+      setInitialLoad(false)
     })
   },[server_url,userData?.saves,userData?.email])
   const questionsToDisplay = props.short
@@ -33,6 +35,7 @@ function SavedQuestions(props) {
     <>
       <div className="px-6 pb-8">
         <h1 className="text-3xl py-4 text-white">Saved questions:</h1>
+        {initialLoad ? <div className="text-lg text-white">Fetching the questions...</div>:<div>
         {userDataCp.length>0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
             {questionsToDisplay?.map((quest, index) => (
@@ -84,6 +87,7 @@ function SavedQuestions(props) {
             <h1 className="text-white">No saved quests : )</h1>
           </div>
         )}
+        </div>}
         {!props?.short &&<Link to="/home#generate">
            <h1 className="mt-8 p-2 rounded-md text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mx-auto block w-fit">
                     Generate new notes

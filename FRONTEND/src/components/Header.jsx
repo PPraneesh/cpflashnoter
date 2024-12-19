@@ -8,7 +8,7 @@ import { RxCrossCircled } from "react-icons/rx";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { handleLogin } = useContext(AuthContext);
+  const { handleLogin,logOut } = useContext(AuthContext);
   const { userData } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,14 +21,12 @@ export default function Header() {
     if(location.pathname.slice(0,6) === "/share"){
       return;
     }else if(userData){
-      navigate("/home");
+      // navigate("/home");
     }else{
       navigate("/");
     }
-  },[])
+  },[location.pathname, navigate, userData])
   
-
-  const { logOut } = useContext(AuthContext);
 
   return (
     <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between flex-wrap">

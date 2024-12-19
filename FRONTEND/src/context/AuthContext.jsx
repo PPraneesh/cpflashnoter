@@ -21,6 +21,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadLogin, setLoadLogin] = useState(0);
 
   function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
@@ -28,16 +29,17 @@ const AuthProvider = ({ children }) => {
   }
 
   async function handleLogin() {
-
-    loginWithGoogle()
+    setLoadLogin(1);
+    await loginWithGoogle()
       .then(async (u) => {
+        setLoadLogin(2)
         await axios
           .post(`${server_url}/user_login`, {
             name: u.user.displayName,
             email: u.user.email,
             photo: u.user.photoURL,
           })
-          .then((res) => {
+          .then(async (res) => {
             if (res.data.status) {
               setUserData(res.data.userData);
               navigate("/home");
@@ -55,6 +57,7 @@ const AuthProvider = ({ children }) => {
         toast.error("login failed : /");
         console.error("Error signing in with Google", error);
       });
+      setLoadLogin(0)
   }
 
   const logOut = () => {
@@ -87,6 +90,7 @@ const AuthProvider = ({ children }) => {
     user,
     logOut,
     loading,
+    loadLogin
   };
 
   return (
