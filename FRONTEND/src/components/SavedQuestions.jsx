@@ -4,11 +4,11 @@ import toast from "react-hot-toast";
 import { VscEye } from "react-icons/vsc";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
-import { useState } from "react";
+// import { useState } from "react";
 
 function SavedQuestions({short}) {
-  const [initialLoad, setInitialLoad] = useState(false);
-
+  // const [initialLoad, setInitialLoad] = useState(false);
+const initialLoad = false;
   const {userDataCp} = useContext(UserContext);
   const questionsToDisplay = short
     ? userDataCp?.slice().reverse().slice(0, 3)

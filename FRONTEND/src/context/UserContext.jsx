@@ -6,7 +6,7 @@ const UserProvider = ({children})=>{
         return savedUserData ? JSON.parse(savedUserData) : null;
       });
     const [userDataCp, setUserDataCp] = useState([])
-
+    const [deleteActionState, setDeleteActionState] = useState(true);
       useEffect(() => {
         if (userData) {
           localStorage.setItem("userData", JSON.stringify(userData));
@@ -19,7 +19,9 @@ const UserProvider = ({children})=>{
         userData,
         setUserData,
         userDataCp,
-        setUserDataCp
+        setUserDataCp,
+        deleteActionState,
+        setDeleteActionState
     }
     return <UserContext.Provider value={userDataValue}>{children}</UserContext.Provider>;
 }

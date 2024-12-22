@@ -2,8 +2,35 @@ import { RxCrossCircled } from "react-icons/rx";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { UserContext } from "../context/UserContext";
+
 export default function Profile({ userData, onClose }) {
   const { logOut } = useContext(AuthContext);
+  const {setUserData} = useContext(UserContext)
+console.log(userData)
+  const makePrivate = async (questionId) => {
+    axios
+      .post(`${import.meta.env.VITE_SERVER_URL}/delete_public_cp`, {
+        cp_id: questionId,
+        email: userData?.email,
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.status) {
+          setUserData(response.data.userDataStats);
+          toast.success("Public link deleted successfully");
+        } else {
+          toast.error("Couldn't delete");
+          console.log(response.data.reason);
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error("Couldn't delete heheh", error);
+      });
+  };
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex justify-end">
       <div className="w-72 h-full bg-[#151b23] p-2 rounded-l-lg border border-white/20 transition-transform transform translate-x-0">
@@ -30,6 +57,27 @@ export default function Profile({ userData, onClose }) {
         <h1 className="pb-1">
           Revives at {new Date(userData?.saves?.last_save).toLocaleString()}
         </h1>
+        <div className="border-t border-white/20 pt-1"></div>
+        {userData?.publicLinks?.length === 0 ? (
+          <h1 className="mb-2">No Shared Links</h1>
+        ) : (
+          userData?.publicLinks && (
+            <>
+              <h1 className="mb-2">Manage Shared Links:</h1>
+              {userData?.publicLinks.map((link) => (
+          <div key={link.cp_id} className="flex justify-between items-center mb-2">
+            <span className="text-sm truncate text-white">{link.name}</span>
+            <button
+              onClick={() => makePrivate(link.cp_id)}
+              className="text-xs text-red-500 hover:text-red-400 bg-red-500/10 px-2 py-1 rounded"
+            >
+              Remove
+            </button>
+          </div>
+              ))}
+            </>
+          )
+        )}
         <button
           onClick={() => {
             onClose();
@@ -39,14 +87,15 @@ export default function Profile({ userData, onClose }) {
         >
           Logout
         </button>
+          </div>
       </div>
-    </div>
   );
 }
 
 Profile.propTypes = {
   userData: PropTypes.shape({
     name: PropTypes.string,
+    email: PropTypes.string,
     userData: PropTypes.shape({
       email: PropTypes.string,
       photo: PropTypes.string,
@@ -59,6 +108,12 @@ Profile.propTypes = {
       quests: PropTypes.number,
       last_save: PropTypes.string,
     }),
+    publicLinks: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+      })
+    ),
   }),
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };

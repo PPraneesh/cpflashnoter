@@ -11,7 +11,7 @@ export default function Header() {
   const navigate = useNavigate();
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { handleLogin } = useContext(AuthContext);
-  const { userData,setUserDataCp } = useContext(UserContext);
+  const { userData,setUserDataCp,deleteActionState } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(false);
 
@@ -28,11 +28,11 @@ export default function Header() {
     }else{
       navigate("/");
     }
-  },[userData])
+  },[userData.email])
   
   useEffect(()=>{
     setInitialLoad(true);
-  },[server_url,userData.saves])
+  },[server_url,userData?.saves, userData?.publicLinks,deleteActionState])
 
   useEffect(() => {
     if (initialLoad) {

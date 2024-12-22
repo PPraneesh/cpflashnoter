@@ -103,15 +103,19 @@ async function share_cp_controller(req, res) {
     cp.isPublic = true;
     const data = await userRef.get();
     const userData = data.data();
+
+    let publicLinks = userData.publicLinks || [];
+    publicLinks = [...publicLinks, {cp_id: cp_id, name: cp.name}];
+    userData.publicLinks = publicLinks;
      // Update both documents and user data in parallel
     await Promise.all([
       publicCpRef.set(cp),
       cpRef.set(cp),
       userRef.update({
-        publicLinks: [...(userData.publicLinks || []), cp_id]
+        publicLinks: publicLinks
       })
     ]);
-     return res.send({ status: true });
+     return res.send({ status: true, userDataStats:userData });
   } catch (error) {
     return res.send({ status: false, reason: error.message });
   }
@@ -145,22 +149,20 @@ async function delete_public_cp_controller(req, res) {
       const userDoc = await userRef.get();
       const userData = userDoc.data();
       let publicLinks = userData.publicLinks || [];
-      let index = publicLinks.indexOf(cp_id);
-      
-      if (index > -1) {
-        publicLinks.splice(index, 1);
-        await userRef.update({ publicLinks: publicLinks });
-      }
-
+      publicLinks = publicLinks.filter((link) => link.cp_id !== cp_id);
+      await userRef.update({ publicLinks: publicLinks });
+      userData.publicLinks = publicLinks;
       await publicCpRef
         .delete()
         .then(() => {
-          res.send({ status: true });
+          res.send({ status: true, userDataStats:userData });
         })
         .catch((error) => {
+          console.log(error)
           res.send({ status: false, reason: error });
         });
     }else{
+      console.log("cp not found")
       res.send({ status: false, reason: "cp not found" });
     }
   })

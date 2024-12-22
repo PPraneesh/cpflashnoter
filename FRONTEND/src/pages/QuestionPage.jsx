@@ -96,7 +96,7 @@ PublicMaking.propTypes = {
 };
 
 const Question = () => {
-  const { userData } = useContext(UserContext);
+  const { userData, setUserData, setDeleteActionState, deleteActionState } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
   const questionData = location.state;
@@ -142,6 +142,7 @@ const Question = () => {
       })
       .then((response) => {
         if (response.data.status) {
+          setDeleteActionState(!deleteActionState);
           toast.success("Question deleted successfully");
           navigate("/home/questions");
         } else {
@@ -160,6 +161,7 @@ const Question = () => {
       .then((response) => {
         if (response.data.status) {
           setIsPublic(false);
+          setUserData(response.data.userDataStats);
           toast.success("Public link deleted successfully");
         } else {
           toast.error("Couldn't delete");
@@ -181,6 +183,7 @@ const Question = () => {
         if (response.data.status) {
           setIsPublic(true);
           toast.success("Public link created successfully");
+          setUserData(response.data.userDataStats);
         } else {
           toast.error("Couldn't share");
           console.log(response.data.reason);
@@ -308,7 +311,7 @@ const Question = () => {
         <div>
           <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
           {isEditing
-            ? formData.subunits.map((subunit, index) => (
+            ? formData?.subunits?.map((subunit, index) => (
                 <div
                   key={index}
                   className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
@@ -340,7 +343,7 @@ const Question = () => {
                   />
                 </div>
               ))
-            : subunits.map((subunit, index) => (
+            : subunits?.map((subunit, index) => (
                 <div
                   key={index}
                   className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
