@@ -4,23 +4,13 @@ import toast from "react-hot-toast";
 import { VscEye } from "react-icons/vsc";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
-import { useState,useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 
-function SavedQuestions(props) {
-  const server_url = import.meta.env.VITE_SERVER_URL;
-  const { userData } = useContext(UserContext);
-  const [userDataCp, setUserDataCp] = useState([])
-  const [initialLoad, setInitialLoad] = useState(true);
-  useEffect(()=>{
-    axios.post(`${server_url}/get_cp`,{
-      email: userData?.email
-    }).then((res)=>{
-      setUserDataCp(res.data.cp_docs)
-      setInitialLoad(false)
-    })
-  },[server_url,userData?.saves,userData?.email])
-  const questionsToDisplay = props.short
+function SavedQuestions({short}) {
+  const [initialLoad, setInitialLoad] = useState(false);
+
+  const {userDataCp} = useContext(UserContext);
+  const questionsToDisplay = short
     ? userDataCp?.slice().reverse().slice(0, 3)
     : userDataCp?.slice().reverse();
 
@@ -88,7 +78,7 @@ function SavedQuestions(props) {
           </div>
         )}
         </div>}
-        {!props?.short &&<Link to="/home#generate">
+        {!short &&<Link to="/home#generate">
            <h1 className="mt-8 p-2 rounded-md text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mx-auto block w-fit">
                     Generate new notes
                   </h1>

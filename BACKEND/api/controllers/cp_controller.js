@@ -91,35 +91,31 @@ async function delete_cp_controller(req, res) {
 async function share_cp_controller(req, res) {
   let user_email = req.body.email;
   let cp_id = req.body.cp_id;
-
-  const userRef = db.collection("users").doc(user_email);
+   const userRef = db.collection("users").doc(user_email);
   const cpRef = userRef.collection("cp").doc(cp_id);
   const publicCpRef = db.collection("public_cp").doc(cp_id);
-  cpRef
-    .get()
-    .then(async (doc) => {
-      let cp = doc.data();
-      cp.isPublic = true;
-      await publicCpRef
-        .set(cp)
-        .then(async () => {
-          await cpRef
-            .set(cp)
-            .then(() => {
-              res.send({ status: true });
-            })
-            .catch((error) => {
-              res.send({ status: false, reason: error });
-            });
-        })
-        .catch((error) => {
-          res.send({ status: false, reason: error });
-        });
-    })
-    .catch(() => {
-      res.send({ status: false, reason: "cp not found" });
-    });
-}
+   try {
+    const doc = await cpRef.get();
+    if (!doc.exists) {
+      return res.send({ status: false, reason: "cp not found" });
+    }
+     let cp = doc.data();
+    cp.isPublic = true;
+    const data = await userRef.get();
+    const userData = data.data();
+     // Update both documents and user data in parallel
+    await Promise.all([
+      publicCpRef.set(cp),
+      cpRef.set(cp),
+      userRef.update({
+        publicLinks: [...(userData.publicLinks || []), cp_id]
+      })
+    ]);
+     return res.send({ status: true });
+  } catch (error) {
+    return res.send({ status: false, reason: error.message });
+  }
+} 
 
 async function get_public_cp_controller(req, res) {
   let cp_id = req.body.cp_id;
@@ -145,6 +141,17 @@ async function delete_public_cp_controller(req, res) {
       let cp = doc.data();
       cp.isPublic = false;
       cpRef.set(cp);
+      
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+      let publicLinks = userData.publicLinks || [];
+      let index = publicLinks.indexOf(cp_id);
+      
+      if (index > -1) {
+        publicLinks.splice(index, 1);
+        await userRef.update({ publicLinks: publicLinks });
+      }
+
       await publicCpRef
         .delete()
         .then(() => {

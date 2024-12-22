@@ -4,13 +4,16 @@ import { UserContext } from "../context/UserContext";
 // import { FaChevronLeft } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import { RxCrossCircled } from "react-icons/rx";
+import Profile from "./Profile";
+import axios from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { handleLogin,logOut } = useContext(AuthContext);
-  const { userData } = useContext(UserContext);
+  const server_url = import.meta.env.VITE_SERVER_URL;
+  const { handleLogin } = useContext(AuthContext);
+  const { userData,setUserDataCp } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -21,12 +24,29 @@ export default function Header() {
     if(location.pathname.slice(0,6) === "/share"){
       return;
     }else if(userData){
-      // navigate("/home");
+      navigate("/home");
     }else{
       navigate("/");
     }
-  },[location.pathname, navigate, userData])
+  },[userData])
   
+  useEffect(()=>{
+    setInitialLoad(true);
+  },[server_url,userData.saves])
+
+  useEffect(() => {
+    if (initialLoad) {
+      axios.post(`${server_url}/get_cp`, {
+        email: userData?.email
+      }).then((res) => {
+        console.log("got em")
+        setUserDataCp(res.data.cp_docs);
+      })
+      .finally(()=>{
+        setInitialLoad(false);
+      });
+    }
+  }, [initialLoad, server_url, userData, setUserDataCp]);
 
   return (
     <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between flex-wrap">
@@ -59,65 +79,15 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-4 sm:order-3 order-2">
-            <div className="relative flex items-center transition-all duration-100 ease-in-out">
-              {/* <FaChevronLeft
-                size={24}
-                className={`cursor-pointer transition-all duration-100 ease-in-out ${
-                  isOpen ? "mr-1" : ""
-                }`}
-                onClick={toggleDropdown}
-              /> */}
+            <div className="relative flex items-center transition-all duration-100 ease-in-out"> 
               <img
                 src={userData?.photo}
                 alt={userData?.name}
                 className="w-8 h-8 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
               />
-              {isOpen && (
-                <div className="w-72 absolute right-0 top-10 flex flex-col p-2 rounded-lg bg-[#151b23] border border-white/20">
-                  <div className="flex flex-row justify-between">
-                    <h1 className="font-bold text-xl text-center bg-blue-500/10 rounded-md px-1 my-1 text-[#247ce8]">
-                      Profile
-                    </h1>
-                    <button
-                      onClick={toggleDropdown}
-                      className="text-sm font-bold text-red-500"
-                    >
-                      <RxCrossCircled size={24} />
-                    </button>
-                  </div>
-                  <h1 className="font-medium pt-1">
-                    {userData?.name}
-                  </h1>
-                  <h1 className="pb-1">{userData?.userData?.email}</h1>
-                  <h1 className="border-t border-white/20 pt-1">
-                    Generations left: {userData?.generations?.count}
-                  </h1>
-                  <h1 className="pb-1">
-                    Revives at{" "}
-                    {new Date(
-                      userData?.generations?.last_gen
-                    ).toLocaleString()}
-                  </h1>
-                  <h1 className="border-t border-white/20 pt-1">
-                    Saves left: {userData?.saves?.quests}
-                  </h1>
-                  <h1 className="pb-1">
-                    Revives at{" "}
-                    {new Date(
-                      userData?.saves?.last_save
-                    ).toLocaleString()}
-                  </h1>
-                </div>
-              )}
+              {isOpen && <Profile userData={userData} onClose={toggleDropdown} />}
             </div>
-
-            <button
-              onClick={() => logOut()}
-              className="button text-[#de2036] bg-[#a417274b] hover:bg-[#a4172769] border-0"
-            >
-              Logout
-            </button>
           </div>
         </>
       ) : (
