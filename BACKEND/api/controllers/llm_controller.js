@@ -2,7 +2,7 @@ const db = require("../config/db"); // Assuming you're using Firebase
 const { ChatGroq } = require("@langchain/groq");
 
 const model = new ChatGroq({
-  model: "llama-3.1-70b-versatile",
+  model: "llama-3.3-70b-versatile",
   groq_api_key: process.env.GROQ_API_KEY,
 });
 
@@ -75,7 +75,7 @@ const structuredLlm = model.withStructuredOutput({
             "Dynamic Programming"
           ]
         },
-        description: "The categories of algorithms or data structures that this problem focuses on."
+        description: "The categories of algorithms or data structures that this problem focuses on. Take only from enum values, don't deviate from the list."
       }
     },
     required: ["name", "language", "description", "subunits"],

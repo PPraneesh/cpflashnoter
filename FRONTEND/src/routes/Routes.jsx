@@ -7,7 +7,7 @@ import LandingPage from "../pages/Landing.jsx";
 import SavedQuestions from "../components/SavedQuestions.jsx";
 import PageNotFound from "../pages/PageNotFound.jsx";
 import SharedQuestionPage from "../pages/SharedQuestionPage.jsx";
-
+import Preparation from "../pages/Preparation.jsx";
 const Routes = () => {
   const router = createBrowserRouter([
     {
@@ -46,6 +46,14 @@ const Routes = () => {
             </PrivateRoute>
           ),
         },
+        {
+          path:"/prep",
+          element: (
+            <PrivateRoute>
+              <Preparation />
+            </PrivateRoute>
+          ),
+        }
       ],
     },
     {

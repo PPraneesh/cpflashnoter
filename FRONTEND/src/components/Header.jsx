@@ -28,7 +28,7 @@ export default function Header() {
     }else{
       navigate("/");
     }
-  },[userData.email])
+  },[userData?.email])
   
   useEffect(()=>{
     setInitialLoad(true);
