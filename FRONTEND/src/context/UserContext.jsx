@@ -6,6 +6,7 @@ const UserProvider = ({children})=>{
         return savedUserData ? JSON.parse(savedUserData) : null;
       });
     const [userDataCp, setUserDataCp] = useState([])
+    const [initialLoad, setInitialLoad] = useState(false);
     const [deleteActionState, setDeleteActionState] = useState(true);
     const [category, setCategory] = useState("all");
 
@@ -22,6 +23,8 @@ const UserProvider = ({children})=>{
         setUserData,
         userDataCp,
         setUserDataCp,
+        initialLoad,
+        setInitialLoad,
         category,
         setCategory,
         deleteActionState,

@@ -11,9 +11,8 @@ export default function Header() {
   const navigate = useNavigate();
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { handleLogin } = useContext(AuthContext);
-  const { userData,setUserDataCp,deleteActionState, category } = useContext(UserContext);
+  const { userData,setUserDataCp,deleteActionState, category,initialLoad, setInitialLoad } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
