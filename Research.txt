@@ -6,3 +6,11 @@ In CP or DSA remembering the critical part is necessary ()
 / demo mode for it
 
 by tonight 
+- active sessions (free tier tho 1)
+- premium tier tho (3 sessions)
+/prep route 
+for this to work implement filtering based on categories
+timer (0:0:0)
+start button [fetches some random question]
+Questions 
+Code editor for pseudo code

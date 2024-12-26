@@ -11,7 +11,7 @@ export default function Header() {
   const navigate = useNavigate();
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { handleLogin } = useContext(AuthContext);
-  const { userData,setUserDataCp,deleteActionState } = useContext(UserContext);
+  const { userData,setUserDataCp,deleteActionState, category } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(false);
 
@@ -32,10 +32,12 @@ export default function Header() {
   
   useEffect(()=>{
     setInitialLoad(true);
-  },[server_url,userData?.saves, userData?.publicLinks,deleteActionState])
+  },[server_url,userData?.saves, userData?.publicLinks,deleteActionState, category])
 
   useEffect(() => {
+    console.log("fetching cp", initialLoad)
     if (initialLoad) {
+      if (category === "all") {
       axios.post(`${server_url}/get_cp`, {
         email: userData?.email
       }).then((res) => {
@@ -43,10 +45,24 @@ export default function Header() {
         setUserDataCp(res.data.cp_docs);
       })
       .finally(()=>{
+        console.log("done") 
+        setInitialLoad(false);
+      });
+    }else{
+      axios.post(`${server_url}/get_cp_category`, {
+        email: userData?.email,
+        category
+      })
+      .then((res) => {
+        console.log("got em")
+        setUserDataCp(res.data.cp_docs);
+      })
+      .finally(()=>{
         setInitialLoad(false);
       });
     }
-  }, [initialLoad, server_url, userData, setUserDataCp]);
+    }
+  }, [initialLoad, server_url, userData, setUserDataCp, category]);
 
   return (
     <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between flex-wrap">

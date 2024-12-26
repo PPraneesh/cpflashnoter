@@ -7,6 +7,8 @@ const UserProvider = ({children})=>{
       });
     const [userDataCp, setUserDataCp] = useState([])
     const [deleteActionState, setDeleteActionState] = useState(true);
+    const [category, setCategory] = useState("all");
+
       useEffect(() => {
         if (userData) {
           localStorage.setItem("userData", JSON.stringify(userData));
@@ -20,6 +22,8 @@ const UserProvider = ({children})=>{
         setUserData,
         userDataCp,
         setUserDataCp,
+        category,
+        setCategory,
         deleteActionState,
         setDeleteActionState
     }

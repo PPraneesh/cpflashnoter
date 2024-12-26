@@ -61,11 +61,26 @@ async function cp_controller(req, res) {
       });
     });
 }
+
 async function get_cp(req, res) {
   let user_email = req.body.email;
   if (user_email) {
     const userRef = db.collection("users").doc(user_email);
     const cpSnapshot = await userRef.collection("cp").get();
+    const cpList = cpSnapshot.docs.map((doc) => doc.data());
+    return res.send({
+      status: true,
+      cp_docs: cpList,
+    });
+  }
+}
+
+async function get_cp_category(req, res) {
+  let user_email = req.body.email;
+  let category = req.body.category;
+  if (user_email) {
+    const userRef = db.collection("users").doc(user_email);
+    const cpSnapshot = await userRef.collection("cp").where("categories", "array-contains", category).get();
     const cpList = cpSnapshot.docs.map((doc) => doc.data());
     return res.send({
       status: true,
@@ -190,9 +205,11 @@ async function edit_cp(req,res){
       }
     })
 }
+
 module.exports = {
   cp_controller,
   get_cp,
+  get_cp_category,
   edit_cp,
   delete_cp_controller,
   share_cp_controller,
