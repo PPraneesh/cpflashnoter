@@ -201,6 +201,12 @@ const Question = () => {
     })
     .then((response)=>{
       if(response.data.status){
+        questionData.name = formData.name;
+        questionData.description = formData.description;
+        questionData.question = formData.question;
+        questionData.code = formData.code;
+        questionData.subunits = formData.subunits;
+          
         toast.success("edited successfully");
       }else{
         toast.error("aw! there's an error");
@@ -290,9 +296,18 @@ const Question = () => {
 
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
-          <p className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20">
-            {question}
-          </p>
+          {isEditing ? (
+            <textarea
+              name="question"
+              value={formData.question}
+              onChange={handleInputChange}
+              className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20 w-full min-h-[100px]"
+            />
+          ) : (
+            <p className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20 whitespace-pre-wrap">
+              {question}
+            </p>
+          )}
         </div>
 
         <div className="mb-6">
