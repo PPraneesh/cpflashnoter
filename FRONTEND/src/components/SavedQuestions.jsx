@@ -7,11 +7,10 @@ import { useContext } from "react";
 
 function SavedQuestions({short}) {
 // const initialLoad = false;
-  const {userDataCp, setCategory,category, initialLoad} = useContext(UserContext);
+  const {userData,userDataCp, setCategory,category, initialLoad} = useContext(UserContext);
   const questionsToDisplay = short
     ? userDataCp?.slice().reverse().slice(0, 3)
     : userDataCp?.slice().reverse();
-
   const handleLinkClick = (event) => {
     if (event.button === 1 || event.ctrlKey || event.metaKey) {
       event.preventDefault();
@@ -33,19 +32,11 @@ function SavedQuestions({short}) {
         defaultValue={category}
         >
         <option value="all">All</option>
-        <option value="Arrays">Arrays</option>
-        <option value="Two Pointers">Two Pointers</option>
-        <option value="Sliding Windows">Sliding Windows</option>
-        <option value="Binary Search">Binary Search</option>
-        <option value="Strings">Strings</option>
-        <option value="Linked List">Linked List</option>
-        <option value="Recursion & Backtracking">Recursion & Backtracking</option>
-        <option value="Stacks & Queues">Stacks & Queues</option>
-        <option value="Heaps">Heaps</option>
-        <option value="Greedy Algorithms">Greedy Algorithms</option>
-        <option value="Binary Trees">Binary Trees</option>
-        <option value="Binary Search Trees">Binary Search Trees</option>
-        <option value="Dynamic Programming">Dynamic Programming</option>
+        {userData?.categories?.map((cat, index) => (
+          <option key={index} value={cat}>
+          {cat}
+          </option>
+        ))}
         </select>
       </div>
       {initialLoad ? <div className="text-lg text-white">Fetching the questions...</div>:<div>
@@ -83,8 +74,8 @@ function SavedQuestions({short}) {
               </p>
             </div>
             <Link
-              to={`/home/questions/${index}`}
-              state={userDataCp[index]}
+              to={`/home/questions/${quest.id}`}
+              state={quest}
               className="text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border border-[#247ce889] py-1 px-2 rounded-md w-fit"
               onClick={handleLinkClick}
               onAuxClick={handleLinkClick}

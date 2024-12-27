@@ -8,9 +8,17 @@ In CP or DSA remembering the critical part is necessary ()
 by tonight 
 - active sessions (free tier tho 1)
 - premium tier tho (3 sessions)
+
 /prep route 
-for this to work implement filtering based on categories
 timer (0:0:0)
-start button [fetches some random question]
+start button [fetches some random question from a selected category or all]
+then question and its explanation is shown now user should take the test seriously 
 Questions 
 Code editor for pseudo code
+
+
+
+questions by gemini :
+1) coding experience level (on a scale of 1 to 5)
+2) preferred programming language
+3) when learning a new coding concept do you prefer reading docs, watching tutorial, diving right into code

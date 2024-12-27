@@ -49,13 +49,25 @@ console.log(userData)
         </h1>
         <h1 className="pb-1">
           Revives at{" "}
-          {new Date(userData?.generations?.last_gen).toLocaleString()}
+          {new Date(userData?.generations?.last_gen).toLocaleString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
         </h1>
         <h1 className="border-t border-white/20 pt-1">
           Saves left: {userData?.saves?.quests}
         </h1>
         <h1 className="pb-1">
-          Revives at {new Date(userData?.saves?.last_save).toLocaleString()}
+          Revives at {new Date(userData?.saves?.last_save).toLocaleString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
         </h1>
         <div className="border-t border-white/20 pt-1"></div>
         {userData?.publicLinks?.length === 0 ? (

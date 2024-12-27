@@ -28,14 +28,19 @@ async function cp_controller(req, res) {
             isPublic: false,
             ...req.body.output,
           };
-
-          let cpRef = userRef.collection("cp").doc(uuid_code);
-          try {
+            let categories = cp.categories || []; // Add default empty array
+            // update categories in user data without duplicates
+            userData.categories = Array.from(new Set([...(userData.categories || []), ...categories]));
+            let cpRef = userRef.collection("cp").doc(uuid_code);
+            try {
             await cpRef.set(cp);
             userData.saves.quests -= 1;
             userData.saves.last_save = currentTime;
-
-            await userRef.update({ saves: userData.saves });
+            
+            await userRef.update({ 
+              saves: userData.saves, 
+              categories: userData.categories 
+            });
 
             res.send({ status: true, userData: userData });
           } catch (error) {
@@ -88,6 +93,7 @@ async function get_cp_category(req, res) {
     });
   }
 }
+
 async function delete_cp_controller(req, res) {
   let user_email = req.body.email;
   let cp_id = req.body.cp_id;
