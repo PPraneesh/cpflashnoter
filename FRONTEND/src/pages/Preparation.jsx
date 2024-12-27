@@ -76,7 +76,7 @@ export default function Preparation() {
           onChange={handleCategoryChange}
           className="w-full p-2 border rounded-md shadow-sm bg-[#151b23] text-white  border-white/20"
         >
-          <option value="">Select a category</option>
+          <option value="all">All categories</option>
           {userData?.categories?.map((category) => (
             <option key={category} value={category}>
               {category}
@@ -104,7 +104,7 @@ export default function Preparation() {
             <h2 className="text-xl font-semibold mb-2">{questionData.name}</h2>
             <div className="p-4 rounded-md">
               <p className="font-medium">Question:</p>
-              <p className="mt-2">{questionData.question}</p>
+              <p className="mt-2 whitespace-pre-wrap">{questionData.question}</p>
             </div>
           </div>
 
@@ -172,11 +172,11 @@ export default function Preparation() {
                         {questionData.name}
                     </h1>
                 </div>
-                <p className="text-white mb-4">{questionData.description}</p>
+                <p className="text-white mb-4 whitespace-pre-wrap">{questionData.description}</p>
 
                 <div className="mb-6">
                     <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
-                    <p className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20">
+                    <p className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20 whitespace-pre-wrap">
                         {questionData.question}
                     </p>
                 </div>
