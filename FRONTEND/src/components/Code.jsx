@@ -1,9 +1,10 @@
 import Editor from '@monaco-editor/react';
+import PropTypes from 'prop-types';
 
-export default function Code({ code, setCode }) {
+export default function Code({ code, setCode, title = "code" }) {
   return (
     <div className="bg-[#0d1117] rounded-lg shadow-lg p-6 border border-white/20">
-      <h2 className="text-white text-lg font-semibold mb-4">Code</h2>
+      <h2 className="text-white text-lg font-semibold mb-4">{title}</h2>
       <div className="border border-white/20 rounded-md">
         <Editor
           height="50vh"
@@ -20,3 +21,9 @@ export default function Code({ code, setCode }) {
     </div>
   );
 }
+
+Code.propTypes = {
+  code: PropTypes.string.isRequired,
+  setCode: PropTypes.func.isRequired,
+  title: PropTypes.string
+};

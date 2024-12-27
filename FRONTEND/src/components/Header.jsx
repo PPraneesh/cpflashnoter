@@ -91,6 +91,15 @@ export default function Header() {
               >
                 <Link to="/home/questions">Questions</Link>
               </button>
+              <button
+                className={
+                  location.pathname !== "/prep"
+                    ? "text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-[#247ce889] py-1 px-2 rounded-md w-fit mx-1"
+                    : "text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border border-[#247ce889] py-1 px-2 rounded-md w-fit mx-1"
+                }
+              >
+                <Link to="/prep">Prep</Link>
+              </button>
             </nav>
           </div>
           <div className="flex items-center gap-4 sm:order-3 order-2">
