@@ -19,15 +19,18 @@ export default function Header() {
   };
   
   let location = useLocation();
-  useEffect(()=>{
-    if(location.pathname.slice(0,6) === "/share"){
-      return;
-    }else if(userData){
-      navigate("/home");
-    }else{
-      navigate("/");
-    }
-  },[userData?.email])
+  useEffect(() => {
+    const initialNavigation = () => {
+      if (location.pathname.slice(0, 6) === "/share") {
+        return;
+      } else if (userData) {
+        navigate("/home");
+      } else {
+        navigate("/");
+      }
+    };
+    initialNavigation();
+  }, []); // Empty dependency array ensures it only runs once
   
   useEffect(()=>{
     setInitialLoad(true);

@@ -22,7 +22,7 @@ const structuredLlm = model.withStructuredOutput({
       language: {
         type: "string",
         description:
-          "Specify the programming language used, including version if relevant (e.g., 'Python 3.8', 'C++17').",
+          "Specify the programming language used, including version if relevant (e.g., 'Python', 'C++').",
       },
       description: {
         type: "string",
@@ -61,29 +61,30 @@ const structuredLlm = model.withStructuredOutput({
           type: "string",
           enum: [
             "Arrays",
-            "Two Pointers", 
+            "Two Pointers",
             "Sliding Windows",
             "Binary Search",
-            "Strings", 
+            "Strings",
             "Linked List",
             "Recursion & Backtracking",
             "Stacks & Queues",
             "Heaps",
-            "Greedy Algorithms", 
+            "Greedy Algorithms",
             "Binary Trees",
             "Binary Search Trees",
-            "Dynamic Programming"
-          ]
+            "Dynamic Programming",
+          ],
         },
-        description: "The categories of algorithms or data structures that this problem focuses on. Take only from enum values, don't deviate from the list."
-      }
+        description:
+          "The categories of algorithms or data structures that this problem focuses on. Take only from enum values, don't deviate from the list.",
+      },
     },
     required: ["name", "language", "description", "subunits"],
   },
 });
 
 const llm_controller = async (req, res) => {
-  const { code, question } = req.body;
+  const { code, question, personalisedNotes } = req.body;
   const user_email = req.body.email; // User's email from response data
   const userRef = db.collection("users").doc(user_email);
 
@@ -99,13 +100,62 @@ const llm_controller = async (req, res) => {
       if (timeDiff >= 24 * 60 * 60 * 1000) {
         userData.generations.count = 5;
       }
+      let userPreferences = "";
+      if (userData.userPreferences) {
+        Object.entries(userData.userPreferences).forEach(([key, value]) => {
+          userPreferences += value + ".\n";
+        });
+      }
 
       if (userData.generations.count > 0) {
-        const prompt = ` You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n 
-        The following is a question from a competitive programming platform: \n<given_question>\n ${question} \n</given_question> Analyze the following code solution: <given_code> ${code} </given_code> <instructions> 1. Carefully read the question and the code.\n 2. Analyze how the code solves the given problem. \n3. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.\n 4. Focus on clarity, accuracy, and educational value in your explanations. \n5. Include insights on algorithm choice, time/space complexity, and any clever techniques used. </instructions> Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.`;
+        const prompt = `You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n 
+        The following is a question from a competitive programming platform: \n
+        <given_question>
+        ${question}
+        </given_question> 
+        Analyze the following code solution:
+         <given_code>
+          ${code} 
+          </given_code> 
+        <instructions> 
+        1. Carefully read the question and the code. 
+        2. Analyze how the code solves the given problem.
+        3. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.
+        4. Focus on clarity, accuracy, and educational value in your explanations.
+        5. Include insights on algorithm choice, time/space complexity, and any clever techniques used. 
+        </instructions>
+         Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.`;
 
-        const result = await structuredLlm.invoke(prompt);
+        const personalisedPrompt = `You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes tailored to the user's learning preferences. \n 
 
+The following is a question from a competitive programming platform: \n
+<given_question>
+${question}
+</given_question>
+
+<user_preferences>
+${userPreferences}
+</user_preferences>
+
+Analyze the following code solution:
+<given_code>
+${code}
+</given_code>
+
+<instructions>
+1. Carefully read the question, code, and user preferences.
+2. Adapt your explanation style based on the user's preferences (e.g., level of detail, preferred learning methods, areas of focus).
+3. Analyze how the code solves the given problem.
+4. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.
+5. Focus on clarity, accuracy, and educational value in your explanations.
+6. Include insights on algorithm choice, time/space complexity, and any clever techniques used.
+7. Highlight specific aspects that align with the user's interests and learning goals.
+</instructions>
+
+Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly, while ensuring the explanations resonate with the user's learning style and preferences.`;
+
+        const finalPrompt = personalisedNotes? personalisedPrompt : prompt;
+        const result = await structuredLlm.invoke(finalPrompt);
         // Update the user's generations count and last generation time
         userData.generations.count -= 1;
         userData.generations.last_gen = currentTime;

@@ -8,6 +8,8 @@ import SavedQuestions from "../components/SavedQuestions.jsx";
 import PageNotFound from "../pages/PageNotFound.jsx";
 import SharedQuestionPage from "../pages/SharedQuestionPage.jsx";
 import Preparation from "../pages/Preparation.jsx";
+import Onboarding from "../pages/Onboarding.jsx";
+
 const Routes = () => {
   const router = createBrowserRouter([
     {
@@ -27,6 +29,14 @@ const Routes = () => {
           element: (
             <PrivateRoute>
               <Home />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path:"/onboarding",
+          element: (
+            <PrivateRoute>
+              <Onboarding />
             </PrivateRoute>
           ),
         },

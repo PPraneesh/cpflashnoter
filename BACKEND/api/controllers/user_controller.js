@@ -10,7 +10,7 @@ async function handleUser(req, res) {
 
     if (!doc.exists) {
       // Create new user
-      await userRef.set({
+      const newUser = {
         name,
         email,
         photo,
@@ -22,8 +22,10 @@ async function handleUser(req, res) {
           count: 5,
           last_gen: currentTime,
         },
-      });
-      res.send({ status: true });
+      };
+      await userRef.set(newUser);
+      res.send({ status: true, userData: newUser, newUser: true });
+
     } else {
       // Retrieve user data
       const userDoc = await userRef.get();
@@ -45,11 +47,11 @@ async function handleUser(req, res) {
         userDataStats.saves.last_save = currentTime;
         userDataStats.generations.last_gen = currentTime;
       }
-
-      // Update the document in Firestore
       await userRef.update(userDataStats);
+    let userOnboarded = userDataStats.userPreferences === undefined
+    console.log(userDataStats.userPreferences)
 
-      res.send({ status: true, userData: userDataStats });
+      res.send({ status: true, userData: userDataStats, newUser: userOnboarded });
     }
   } catch (error) {
     console.error("Error in handleUser:", error);
@@ -57,4 +59,33 @@ async function handleUser(req, res) {
   }
 }
 
-module.exports = { handleUser };
+async function onboarding(req,res){
+  const {email, userPreferences} = req.body;
+  const userRef = db.collection("users").doc(email);
+  try {
+    await userRef.update({
+      userPreferences: userPreferences
+    });
+    res.send({status: true});
+  } catch (error) {
+    console.error("Error in onboarding:", error);
+    res.send({ status: false, reason: "Error in onboarding" });
+  }
+}
+
+async function getUpdatedData(req,res){
+  const {email} = req.body;
+  const userRef = db.collection("users").doc(email);
+  try {
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
+      return res.send({ status: false, reason: "User not found" });
+    }
+    const userDataStats = userDoc.data();
+    res.send({ status: true, userData: userDataStats });
+  } catch (error) {
+    console.error("Error in getUpdatedData:", error);
+    res.send({ status: false, reason: "Error in getUpdatedData" });
+  }
+}
+module.exports = { handleUser, onboarding, getUpdatedData };

@@ -32,7 +32,7 @@ function SavedQuestions({short}) {
         defaultValue={category}
         >
         <option value="all">All</option>
-        {userData?.categories?.map((cat, index) => (
+        {Array.isArray(userData.categories) && userData?.categories?.map((cat, index) => (
           <option key={index} value={cat}>
           {cat}
           </option>

@@ -90,6 +90,17 @@ console.log(userData)
             </>
           )
         )}
+        {userData?.userPreferences && (
+          <div className="border-t border-white/20 pt-1 mb-2">
+            <h1 className="my-2">Your Preferences:</h1>
+            {Object.entries(userData?.userPreferences).map(([key, value]) => (
+              <div key={key} className="flex justify-between items-center mb-1">
+                {/* <span className="text-sm capitalize">{key.replace('_', ' ')}</span> */}
+                <span className="text-sm text-gray-400">{value.toString()}</span>
+              </div>
+            ))}
+          </div>
+        )}
         <button
           onClick={() => {
             onClose();

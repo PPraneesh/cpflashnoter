@@ -26,10 +26,28 @@ export default function Home() {
     }
   }, [location]);
 
+  useEffect(() => {
+    if (userData?.email) {
+      axios.post(`${server_url}/get_user_data`, { email: userData?.email })
+      .then((response) => {
+        if (response.data.status) {
+          setUserData(response.data.userData);
+          localStorage.setItem("userData", JSON.stringify(response.data.userData));
+        }else{
+          toast.error(response.data.reason);
+        }
+      })
+      .catch((error) => {
+        console.error("User data fetch error:", error);
+        toast.error("Couldn't fetch user data");
+      });
+    }
+  }, [userData?.email]);
+
   const [question, setQuestion] = useState("");
   const [code, setCode] = useState("// type your code...");
   const [output, setOutput] = useState(null);
-
+  const [personalisedNotes, setPersonalisedNotes] = useState(true);
   // save the notes to the database and update the saved questions by calling getUserData
 
   const save = async (e) => {
@@ -80,6 +98,7 @@ export default function Home() {
             question,
             code,
             email: userData?.email,
+            personalisedNotes: personalisedNotes
           })
           .then((response) => {
             if (response.data.status) {
@@ -120,7 +139,7 @@ export default function Home() {
       </h1>
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         <div className="space-y-6">
-          <Question question={question} setQuestion={setQuestion} />
+          <Question question={question} setQuestion={setQuestion} personalisedNotes={personalisedNotes} setPersonalisedNotes={setPersonalisedNotes} />
           <Code code={code} setCode={setCode} />
           <div className="flex gap-4">
             <button

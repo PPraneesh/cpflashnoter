@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const { setUserData } = useContext(UserContext);
@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
     setLoadLogin(1);
     await loginWithGoogle()
       .then(async (u) => {
-        setLoadLogin(2)
+        setLoadLogin(2);
         await axios
           .post(`${server_url}/user_login`, {
             name: u.user.displayName,
@@ -41,15 +41,27 @@ const AuthProvider = ({ children }) => {
           })
           .then(async (res) => {
             if (res.data.status) {
+              // set the user data in the context
               setUserData(res.data.userData);
-              navigate("/home");
-              localStorage.setItem("userData", JSON.stringify(res.data.userData));
-              toast.success("logged in successful : )");
+              localStorage.setItem(
+                "userData",
+                JSON.stringify(res.data.userData)
+              );
+
+              // navigate based on the new user or not
+              if (res.data.newUser) {
+                toast.success("Welcome to CPFlashNoter : )");
+                navigate("/onboarding");
+              } else {
+                navigate("/home");
+                toast.success("logged in successful : )");
+              }
             } else {
+              // failed login
               navigate("/");
               toast.error("login failed : /");
-              toast.error(res.data.reason)
-              console.log(res.data)
+              toast.error(res.data.reason);
+              console.log(res.data);
             }
           });
       })
@@ -57,7 +69,7 @@ const AuthProvider = ({ children }) => {
         toast.error("login failed : /");
         console.error("Error signing in with Google", error);
       });
-      setLoadLogin(0)
+    setLoadLogin(0);
   }
 
   const logOut = () => {
@@ -90,7 +102,7 @@ const AuthProvider = ({ children }) => {
     user,
     logOut,
     loading,
-    loadLogin
+    loadLogin,
   };
 
   return (
@@ -98,4 +110,5 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+
+export {AuthProvider, AuthContext};
