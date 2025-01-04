@@ -1,48 +1,27 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { LoadingContext } from "../context/LoadingContext";
 import { UserContext } from "../context/UserContext";
-
 import Code from "../components/Code";
 import Question from "../components/Question";
 import Output from "../components/Output";
 import SavedQuestions from "../components/SavedQuestions";
 import toast from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
+import { api } from "../api/axios";
 
 export default function Home() {
-  const [genCount, setGenCount] = useState(0);
-  const { userData, setUserData } = useContext(UserContext);
   const location = useLocation();
+  const [genCount, setGenCount] = useState(0);
+  const { setUserData } = useContext(UserContext);
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
-  const server_url = import.meta.env.VITE_SERVER_URL;
 
-  
   // handles element scroll to view
   useEffect(() => {
     if (location.hash === "#generate") {
       document.getElementById("generate")?.scrollIntoView();
     }
   }, [location]);
-
-  useEffect(() => {
-    if (userData?.email) {
-      axios.post(`${server_url}/get_user_data`, { email: userData?.email })
-      .then((response) => {
-        if (response.data.status) {
-          setUserData(response.data.userData);
-          localStorage.setItem("userData", JSON.stringify(response.data.userData));
-        }else{
-          toast.error(response.data.reason);
-        }
-      })
-      .catch((error) => {
-        console.error("User data fetch error:", error);
-        toast.error("Couldn't fetch user data");
-      });
-    }
-  }, [userData?.email]);
 
   const [question, setQuestion] = useState("");
   const [code, setCode] = useState("// type your code...");
@@ -55,12 +34,11 @@ export default function Home() {
     if (genCount > 0) {
       setSaveCp(true);
       try {
-        await axios
-          .post(`${server_url}/save_cp`, {
+        await api
+          .post("/save_cp", {
             question,
             code,
             output,
-            email: userData?.email,
           })
           .then((response) => {
             if (response.data.status) {
@@ -93,11 +71,10 @@ export default function Home() {
       setGenNotes(true);
 
       try {
-        await axios
-          .post(`${server_url}/process_code`, {
+        await api
+          .post(`/process_code`, {
             question,
             code,
-            email: userData?.email,
             personalisedNotes: personalisedNotes
           })
           .then((response) => {

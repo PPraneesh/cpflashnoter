@@ -2,19 +2,16 @@ import { RxCrossCircled } from "react-icons/rx";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
+import { api } from "../api/axios";
 import toast from "react-hot-toast";
 import { UserContext } from "../context/UserContext";
 
 export default function Profile({ userData, onClose }) {
   const { logOut } = useContext(AuthContext);
   const {setUserData} = useContext(UserContext)
-console.log(userData)
   const makePrivate = async (questionId) => {
-    axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/delete_public_cp`, {
+    api.post("/delete_public_cp", {
         cp_id: questionId,
-        email: userData?.email,
       })
       .then((response) => {
         console.log(response.data);
@@ -125,18 +122,19 @@ Profile.propTypes = {
     }),
     generations: PropTypes.shape({
       count: PropTypes.number,
-      last_gen: PropTypes.string,
+      last_gen: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     saves: PropTypes.shape({
       quests: PropTypes.number,
-      last_save: PropTypes.string,
+      last_save: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     publicLinks: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        cp_id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
       })
     ),
+    userPreferences: PropTypes.object,
   }),
   onClose: PropTypes.func.isRequired
 };

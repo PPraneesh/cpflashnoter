@@ -3,7 +3,7 @@ import { FaChevronLeft } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { UserContext } from "../context/UserContext";
 import { useContext, useState } from "react";
-import axios from "axios";
+import { api } from "../api/axios";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 
@@ -96,7 +96,7 @@ PublicMaking.propTypes = {
 };
 
 const Question = () => {
-  const { userData, setUserData, setDeleteActionState, deleteActionState } = useContext(UserContext);
+  const {  setUserData, setDeleteActionState, deleteActionState } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
   const questionData = location.state;
@@ -135,10 +135,11 @@ const Question = () => {
   };
 
   const deleteAction = async () => {
-    await axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/delete_cp`, {
-        email: userData?.email,
-        cp_id: questionData.id,
+    await api
+      .delete(`/delete_cp`, {
+        data: {
+          cp_id: questionData.id,
+        }
       })
       .then((response) => {
         if (response.data.status) {
@@ -147,16 +148,15 @@ const Question = () => {
           navigate("/home/questions");
         } else {
           toast.error("Couldn't delete");
-          console.log(response.data.reason);
+          console.log(response.data);
         }
       });
   };
 
   const makePrivate = async () => {
-    axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/delete_public_cp`, {
+    api
+      .put(`/delete_public_cp`, {
         cp_id: questionData.id,
-        email: userData?.email,
       })
       .then((response) => {
         if (response.data.status) {
@@ -174,9 +174,8 @@ const Question = () => {
   };
 
   const makePublic = async () => {
-    await axios
-      .post(`${import.meta.env.VITE_SERVER_URL}/share_cp`, {
-        email: userData?.email,
+    await api
+      .post(`/share_cp`, {
         cp_id: questionData.id,
       })
       .then((response) => {
@@ -194,8 +193,7 @@ const Question = () => {
   const saveCP = async()=>{
     setSave(true);
     setIsEditing(false)
-    await axios.post(`${import.meta.env.VITE_SERVER_URL}/edit_cp`, {
-      email: userData?.email,
+    await api.put(`/edit_cp`, {
       cp_id: questionData.id,
       cp_data : formData
     })

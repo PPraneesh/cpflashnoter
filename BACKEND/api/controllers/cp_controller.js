@@ -2,7 +2,7 @@ const db = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
 
 async function cp_controller(req, res) {
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   const userRef = db.collection("users").doc(user_email);
 
   await userRef
@@ -68,7 +68,7 @@ async function cp_controller(req, res) {
 }
 
 async function get_cp(req, res) {
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   if (user_email) {
     const userRef = db.collection("users").doc(user_email);
     const cpSnapshot = await userRef.collection("cp").get();
@@ -81,7 +81,7 @@ async function get_cp(req, res) {
 }
 
 async function get_cp_category(req, res) {
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   let category = req.body.category;
   if (user_email) {
     const userRef = db.collection("users").doc(user_email);
@@ -95,22 +95,25 @@ async function get_cp_category(req, res) {
 }
 
 async function delete_cp_controller(req, res) {
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   let cp_id = req.body.cp_id;
-  const userRef = db.collection("users").doc(user_email);
-  const cpRef = userRef.collection("cp").doc(cp_id);
-  await cpRef
-    .delete()
-    .then(() => {
-      res.send({ status: true });
-    })
-    .catch((error) => {
-      res.send({ status: false, reason: error });
-    });
+  
+  if (!user_email || !cp_id) {
+    return res.status(400).send({ status: false, reason: "Missing required parameters" });
+  }
+
+  try {
+    const userRef = db.collection("users").doc(user_email);
+    const cpRef = userRef.collection("cp").doc(cp_id);
+    await cpRef.delete();
+    res.send({ status: true });
+  } catch (error) {
+    res.send({ status: false, reason: error });
+  }
 }
 
 async function share_cp_controller(req, res) {
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   let cp_id = req.body.cp_id;
    const userRef = db.collection("users").doc(user_email);
   const cpRef = userRef.collection("cp").doc(cp_id);
@@ -156,7 +159,7 @@ async function get_public_cp_controller(req, res) {
 
 async function delete_public_cp_controller(req, res) {
   let cp_id = req.body.cp_id;
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   const userRef = db.collection("users").doc(user_email);
   const cpRef = userRef.collection("cp").doc(cp_id);
   cpRef.get()
@@ -191,7 +194,7 @@ async function delete_public_cp_controller(req, res) {
 
 async function edit_cp(req,res){
   let cp_id = req.body.cp_id;
-  let user_email = req.body.email;
+  let user_email = req.user.email;
   let cp_data = req.body.cp_data;
   const userRef = db.collection("users").doc(user_email);
   const cpRef = userRef.collection("cp").doc(cp_id);

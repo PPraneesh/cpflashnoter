@@ -1,7 +1,8 @@
 const db = require("../config/db");
 
 async function handleUser(req, res) {
-  const { name, email, photo } = req.body;
+  const email = req.body.email;
+  const { name,  photo } = req.body;
   const currentTime = Date.now();
   const userRef = db.collection("users").doc(email);
 
@@ -60,7 +61,8 @@ async function handleUser(req, res) {
 }
 
 async function onboarding(req,res){
-  const {email, userPreferences} = req.body;
+  const email = req.user.email;
+  const { userPreferences} = req.body;
   const userRef = db.collection("users").doc(email);
   try {
     await userRef.update({
@@ -73,8 +75,8 @@ async function onboarding(req,res){
   }
 }
 
-async function getUpdatedData(req,res){
-  const {email} = req.body;
+async function getUserData(req,res){
+  const {email} = req.user
   const userRef = db.collection("users").doc(email);
   try {
     const userDoc = await userRef.get();
@@ -88,4 +90,4 @@ async function getUpdatedData(req,res){
     res.send({ status: false, reason: "Error in getUpdatedData" });
   }
 }
-module.exports = { handleUser, onboarding, getUpdatedData };
+module.exports = { handleUser, onboarding, getUserData };

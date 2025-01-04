@@ -22,3 +22,12 @@ questions by gemini :
 1) coding experience level (on a scale of 1 to 5)
 2) preferred programming language
 3) when learning a new coding concept do you prefer reading docs, watching tutorial, diving right into code
+
+____________________________
+priority | task		        |
+---------|------------------|
+4 	     | metadata         |
+2 	     | notifications    |
+3        | revise feature   |
+1   	 | browser extension|
+____________________________|

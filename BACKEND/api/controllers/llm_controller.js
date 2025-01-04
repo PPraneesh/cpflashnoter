@@ -85,7 +85,7 @@ const structuredLlm = model.withStructuredOutput({
 
 const llm_controller = async (req, res) => {
   const { code, question, personalisedNotes } = req.body;
-  const user_email = req.body.email; // User's email from response data
+  const user_email = req.user.email;
   const userRef = db.collection("users").doc(user_email);
 
   try {

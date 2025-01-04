@@ -5,14 +5,16 @@ import { UserContext } from "../context/UserContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import Profile from "./Profile";
-import axios from "axios";
+import { api } from "../api/axios";
+import { toast } from "react-hot-toast";
 
 export default function Header() {
   const navigate = useNavigate();
-  const server_url = import.meta.env.VITE_SERVER_URL;
-  const { handleLogin } = useContext(AuthContext);
-  const { userData,setUserDataCp,deleteActionState, category,initialLoad, setInitialLoad } = useContext(UserContext);
+
+  const { handleLogin, idToken } = useContext(AuthContext);
+  const { userData,setUserData,setUserDataCp,deleteActionState, category,initialLoad, setInitialLoad } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -34,37 +36,56 @@ export default function Header() {
   
   useEffect(()=>{
     setInitialLoad(true);
-  },[server_url,userData?.saves, userData?.publicLinks,deleteActionState, category])
+  },[userData?.saves, userData?.publicLinks,deleteActionState, category])
 
   useEffect(() => {
-    console.log("fetching cp", initialLoad)
-    if (initialLoad) {
-      if (category === "all") {
-      axios.post(`${server_url}/get_cp`, {
-        email: userData?.email
-      }).then((res) => {
-        console.log("got em")
-        setUserDataCp(res.data.cp_docs);
+    if (initialLoad && idToken) {
+      console.info("fetching CP")
+      const fetchCp = async () => {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          };
+          if (category === "all") {
+            const res = await api.get(`/get_cp`, config);
+            setUserDataCp(res.data.cp_docs);
+          } else {
+            const res = await api.post(`/get_cp_category`, {
+              email: userData?.email,
+              category,
+            }, config);
+            setUserDataCp(res.data.cp_docs);
+          }
+        } catch (error) {
+          console.error("Error fetching CP:", error);
+        } finally {
+          setInitialLoad(false);
+        }
+      };
+      fetchCp();
+    }
+  }, [initialLoad, category,idToken, setInitialLoad]);
+
+  useEffect(() => {
+    if (userData?.email && idToken) {
+      console.info("fetching your data")
+      api.get(`/get_user_data`)
+      .then((response) => {
+        if (response.data.status) {
+          setUserData(response.data.userData);
+          localStorage.setItem("userData", JSON.stringify(response.data.userData));
+        }else{
+          toast.error(response.data.reason);
+        }
       })
-      .finally(()=>{
-        console.log("done") 
-        setInitialLoad(false);
-      });
-    }else{
-      axios.post(`${server_url}/get_cp_category`, {
-        email: userData?.email,
-        category
-      })
-      .then((res) => {
-        console.log("got em")
-        setUserDataCp(res.data.cp_docs);
-      })
-      .finally(()=>{
-        setInitialLoad(false);
+      .catch((error) => {
+        console.error("User data fetch error:", error);
+        toast.error("Couldn't fetch your data");
       });
     }
-    }
-  }, [initialLoad, server_url, userData, setUserDataCp, category]);
+  }, [userData?.email,idToken]);
 
   return (
     <header className="header border-b border-white/20 bg-[#010409] text-white/50 py-4 px-6 flex items-center justify-between flex-wrap">
