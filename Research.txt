@@ -31,3 +31,75 @@ priority | task		        |
 3        | revise feature   |
 1   	 | browser extension|
 ____________________________|
+
+
+browser extension needs a research on service workers which will take time, probably by tomorrow i will figure it out 
+now for today i want to figure out the notifs and revise part 
+
+
+1st review: 1 day after learning
+2nd review: 3 days after first review
+3rd review: 7 days after second review
+
+so, based on this i need to also show stats to user
+{
+  preferredRevTime: [time],
+  qID: ["","",""]
+},
+{
+  revision:{
+	nextRev: DATE
+	nthRev : [The number of revision]
+  }
+}
+
+STATS
+- how much time spent for revising?
+- how many questions are revised?
+- in which topics user is stronger?
+- Days spent for revising? (github greener)
+- share the stats feature
+
+
+When user visits and starts revising
+Each question to be revised shud go into next state 
+
+So array of question ids revised when next revision is scheduled 
+
+So i shud write a efficient db to fetch the questions with revision date less than or equal to user visiting's date and pass it down to llm to format it into revision notes and return it to user
+
+When user reads it in the backend schedule this to next rev cycle
+
+Also stats...
+/rev must be a special route
+That monitors user's activity closely
+How much time did user spent on each rev-quest does he want to rev it again
+Which topic is it
+
+
+Coming to user profile 
+Which topics did he do
+Which are revised in some graph
+
+
+
+
+visit /rev  ----> run algo ----> show you quests which are for rev
+         rev object ={
+              nextRev : date
+              revNum  : nth rev
+         }
+algo ---> when the question is created (date is enough) 
+
+goes through all the question's rev object 
+uses current date to get all the questions which need to be revised 
+simple currentDate > revObj.nextRev (gets all the questions)
+
+when user revs a particular question successfully (make a req to backend)
+this part update the revNum to revNum + 1 and also update the date (this date is based on the revNum)
+
+if revNum is 1 (is waiting for first rev) revise it on next day 
+if revNum becomes 2 (is waiting for second rev) so, revise after + 3 days from that day
+if revNum becomes 3 (revise it after days)
+if revNum becomes 4 (revise it after a month) 
+if 4+ revnum revise it after a month again over and over 

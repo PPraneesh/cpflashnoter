@@ -44,9 +44,6 @@ export default function Profile({ userData, onClose }) {
             alt={userData?.name}
             className="w-16 h-16 rounded-full mb-2"
           />
-          <h1 className="font-bold text-xl text-center bg-blue-500/10 rounded-md px-1 my-1 text-[#247ce8]">
-            Profile
-          </h1>
           <h1 className="font-medium pt-1">{userData?.name}</h1>
           <h1 className="pb-1">{userData?.email}</h1>
         </div>

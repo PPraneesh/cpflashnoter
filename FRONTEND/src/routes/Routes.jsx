@@ -9,7 +9,7 @@ import PageNotFound from "../pages/PageNotFound.jsx";
 import SharedQuestionPage from "../pages/SharedQuestionPage.jsx";
 import Preparation from "../pages/Preparation.jsx";
 import Onboarding from "../pages/Onboarding.jsx";
-
+import Revision from "../pages/Revision.jsx"
 const Routes = () => {
   const router = createBrowserRouter([
     {
@@ -63,6 +63,14 @@ const Routes = () => {
               <Preparation />
             </PrivateRoute>
           ),
+        },
+        {
+          path:"/rev",
+          element:(
+            <PrivateRoute>
+              <Revision />
+            </PrivateRoute>
+          )
         }
       ],
     },
