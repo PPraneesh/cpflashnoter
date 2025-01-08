@@ -21,13 +21,22 @@ async function cp_controller(req, res) {
 
         if (userData.saves.quests > 0) {
           let uuid_code = uuidv4();
-          let cp = {
+            let nextDay = new Date();
+            nextDay.setDate(nextDay.getDate() + 1);
+            nextDay.setHours(0, 0, 0, 0);
+
+            let cp = {
             id: uuid_code,
             question: req.body.question,
             code: req.body.code,
             isPublic: false,
             ...req.body.output,
-          };
+            revObj:{
+              revNum: 1,
+              nextRev: nextDay,
+              lastRev: new Date()
+            }
+            };
             let categories = cp.categories || []; // Add default empty array
             // update categories in user data without duplicates
             userData.categories = Array.from(new Set([...(userData.categories || []), ...categories]));
