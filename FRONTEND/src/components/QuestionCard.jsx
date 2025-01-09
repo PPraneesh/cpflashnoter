@@ -10,6 +10,7 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
   const isDragging = useRef(false);
   const startScrollTop = useRef(0);
   const isScrolling = useRef(false);
+  const animationFrameRef = useRef(null);
 
   const resetDragState = () => {
     setDragStart({ x: 0, y: 0 });
@@ -19,7 +20,7 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
   };
 
   const handleStart = (clientX, clientY) => {
-    if (isExiting) return; // Prevent new drag while card is exiting
+    if (isExiting) return;
     startScrollTop.current = contentRef.current?.scrollTop || 0;
     isDragging.current = true;
     setDragStart({ x: clientX, y: clientY });
@@ -27,10 +28,10 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
 
   const handleMove = (clientX, clientY) => {
     if (!isDragging.current || isExiting) return;
-    
+
     const deltaX = clientX - dragStart.x;
     const deltaY = clientY - dragStart.y;
-    
+
     if (!isScrolling.current && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
       isScrolling.current = Math.abs(deltaY) > Math.abs(deltaX);
     }
@@ -42,49 +43,58 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
       return;
     }
 
-    // Prevent default to avoid scroll interference
     event?.preventDefault();
 
-    const maxDrag = window.innerWidth * 0.8;
-    const boundedDeltaX = Math.max(Math.min(deltaX, maxDrag), -maxDrag);
-    
-    setDragOffset({ x: boundedDeltaX, y: 0 });
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
 
-    const progress = Math.abs(boundedDeltaX) / (window.innerWidth * 0.35); // Threshold at 35% of screen width
-    const direction = boundedDeltaX > 0 ? 'right' : 'left';
-    onDragProgress(direction, Math.min(progress, 1));
+    animationFrameRef.current = requestAnimationFrame(() => {
+      const maxDrag = window.innerWidth * 0.8;
+      const boundedDeltaX = Math.max(Math.min(deltaX, maxDrag), -maxDrag);
+
+      setDragOffset({ x: boundedDeltaX, y: 0 });
+
+      const progress = Math.abs(boundedDeltaX) / (window.innerWidth * 0.35);
+      const direction = boundedDeltaX > 0 ? 'right' : 'left';
+      onDragProgress(direction, Math.min(progress, 1));
+    });
   };
 
   const handleEnd = () => {
     if (!isDragging.current || isExiting) return;
-    
+
     if (!isScrolling.current) {
-      // Lower threshold - card will swipe away at 35% of screen width
       const threshold = window.innerWidth * 0.35;
-      
+
       if (Math.abs(dragOffset.x) > threshold) {
         setIsExiting(true);
         const direction = dragOffset.x > 0 ? 'right' : 'left';
+
+        // Immediately notify parent to update card
+        onSwipe(direction);
+
         const exitDistance = direction === 'right' ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
-        
-        // Animate the card off screen
-        setDragOffset(prev => ({ ...prev, x: exitDistance }));
-        
-        // Notify parent of swipe with slight delay to allow animation to start
-        setTimeout(() => {
-          onSwipe(direction);
-        }, 50);
-        
-        // Reset state after animation completes
-        setTimeout(() => {
-          setIsExiting(false);
-          resetDragState();
-        }, 300);
+
+        requestAnimationFrame(() => {
+          setDragOffset(prev => ({ ...prev, x: exitDistance }));
+
+          // Reset state after animation
+          setTimeout(() => {
+            setIsExiting(false);
+            resetDragState();
+          }, 300);
+        });
       } else {
-        // Spring back animation
-        setDragOffset({ x: 0, y: 0 });
-        setTimeout(resetDragState, 300);
+        requestAnimationFrame(() => {
+          setDragOffset({ x: 0, y: 0 });
+          setTimeout(resetDragState, 300);
+        });
       }
+    }
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
     }
 
     isDragging.current = false;
@@ -98,7 +108,7 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
   };
 
   const handleTouchMove = (e) => {
-    e.preventDefault(); // Prevent scroll while swiping
+    e.preventDefault();
     const touch = e.touches[0];
     handleMove(touch.clientX, touch.clientY);
   };
@@ -118,6 +128,9 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
       document.removeEventListener('mouseup', handleEnd);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleEnd);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
 
     if (isDragging.current) {
@@ -128,19 +141,24 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
     }
 
     return cleanup;
-  }, [isDragging.current, dragOffset.x]); // Added dragOffset.x as dependency
+  }, [isDragging.current, dragOffset.x]);
 
-  const rotation = (dragOffset.x / window.innerWidth) * 12; // Slightly reduced rotation
+  const rotation = (dragOffset.x / window.innerWidth) * 12;
+
+  // Calculate next card scale and opacity
+  const nextCardScale = 0.98 + Math.abs(dragOffset.x / window.innerWidth) * 0.02;
+  const nextCardOpacity = 0.5 + Math.abs(dragOffset.x / window.innerWidth) * 0.5;
 
   return (
     <div className="relative w-full h-[80vh] mx-auto">
-      {/* Stacked card effect */}
-      {nextQuestion && !isExiting && (
-        <div 
+      {nextQuestion && (
+        <div
           className="absolute inset-x-2 top-4 h-[75vh] bg-white rounded-2xl shadow-xl transform-gpu transition-transform duration-300"
           style={{
             zIndex: 1,
-            transform: `scale(${0.98}) translateY(10px)`,
+            transform: `scale(${Math.min(nextCardScale, 1)}) translateY(10px)`,
+            opacity: Math.min(nextCardOpacity, 1),
+            willChange: 'transform, opacity',
           }}
         >
           <div className="p-6 opacity-50">
@@ -149,27 +167,26 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
         </div>
       )}
 
-      {/* Current card */}
       <div
         ref={cardRef}
         className={`absolute inset-x-2 top-4 h-[75vh] bg-white rounded-2xl shadow-2xl touch-pan-y transform-gpu ${
-          isExiting ? 'transition-transform duration-300 ease-out' : 
-          isDragging.current ? '' : 'transition-transform duration-300 ease-out'
+          isExiting ? 'transition-all duration-300 ease-out' : 
+          isDragging.current ? '' : 'transition-all duration-300 ease-out'
         }`}
         style={{
           zIndex: 2,
-          transform: `translate(${dragOffset.x}px, 0px) rotate(${rotation}deg)`,
+          transform: `translate3d(${dragOffset.x}px, 0px, 0) rotate(${rotation}deg)`,
           opacity: isExiting ? 0 : 1,
+          willChange: 'transform, opacity'
         }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
-        {/* Card content remains the same */}
         <div 
           ref={contentRef}
           className="h-full overflow-y-auto scrollable-content overscroll-contain"
-        >
-          <div className="p-6">
+        >          
+        <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <Code className="w-6 h-6 text-indigo-600" />
               <h2 className="text-2xl font-bold text-gray-900">{question.name}</h2>
@@ -215,6 +232,7 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
           </div>
         </div>
       </div>
+      
     </div>
   );
 }
