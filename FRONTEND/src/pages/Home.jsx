@@ -16,7 +16,6 @@ export default function Home() {
   const { setUserData } = useContext(UserContext);
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
 
-  // handles element scroll to view
   useEffect(() => {
     if (location.hash === "#generate") {
       document.getElementById("generate")?.scrollIntoView();
@@ -27,7 +26,6 @@ export default function Home() {
   const [code, setCode] = useState("// type your code...");
   const [output, setOutput] = useState(null);
   const [personalisedNotes, setPersonalisedNotes] = useState(true);
-  // save the notes to the database and update the saved questions by calling getUserData
 
   const save = async (e) => {
     e.preventDefault(); 
@@ -61,8 +59,6 @@ export default function Home() {
       toast.error("first generate notes");
     }
   };
-
-  // handles the generation of notes by calling the server and updating the output and userData
 
   const handleGeneration = async (e) => {
     e.preventDefault();
@@ -99,18 +95,18 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <SavedQuestions short={true} />
       <Link
         to="/home/questions"
-        className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0 mx-auto block w-fit"
+        className="button bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/50 shadow-lg shadow-blue-500/20 rounded-lg px-4 py-2 mx-auto block w-fit transition-all duration-200"
       >
-        <button>Show all questions</button>
+        Show all questions
       </Link>
       <div id="generate"></div>
       <h1
         onClick={() => toast("scroll down", { icon: <FaInfoCircle /> })}
-        className="text-xl ml-6 w-fit mt-4 border border-white/30 p-2 rounded-md"
+        className="text-xl ml-6 w-fit mt-4 text-gray-200 border border-gray-700/50 p-2 rounded-lg bg-gray-800/50"
       >
         Generate new notes
       </h1>
@@ -121,14 +117,14 @@ export default function Home() {
           <div className="flex gap-4">
             <button
               onClick={handleGeneration}
-              className="button text-[#247ce8] bg-[#2240646d] hover:bg-[#22406493] border-0"
+              className="px-4 py-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/50 shadow-lg shadow-blue-500/20 rounded-lg transition-all duration-200 disabled:opacity-50"
               disabled={genNotes}
             >
               {genNotes ? "Generating... " : "Generate Notes"}
             </button>
             <button
               onClick={save}
-              className="button bg-[#113023b7] text-[#1c9f5b]  hover:bg-[#113023f3]"
+              className="px-4 py-2 bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/50 shadow-lg shadow-emerald-500/20 rounded-lg transition-all duration-200 disabled:opacity-50"
               disabled={saveCp}
             >
               {saveCp ? "saving.." : "Save it"}

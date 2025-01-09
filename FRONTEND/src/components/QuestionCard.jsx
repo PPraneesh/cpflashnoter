@@ -90,7 +90,7 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
     <div className="relative w-full h-[80vh] mx-auto">
       {nextQuestion && (
         <div
-          className="absolute inset-x-2 top-4 h-[75vh] bg-white rounded-2xl shadow-xl transition-transform duration-300"
+          className="select-none absolute inset-x-2 top-4 h-[75vh] bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-xl transition-transform duration-300 border border-gray-700/50"
           style={{
             zIndex: 1,
             transform: `scale(${Math.min(nextCardScale, 1)}) translateY(10px)`,
@@ -98,14 +98,14 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
           }}
         >
           <div className="p-6 opacity-50">
-            <h2 className="text-2xl font-bold text-gray-900">{nextQuestion.name}</h2>
+            <h2 className="text-2xl font-bold text-gray-200">{nextQuestion.name}</h2>
           </div>
         </div>
       )}
 
       <div
         ref={cardRef}
-        className={`absolute inset-x-2 top-4 h-[75vh] bg-white rounded-2xl shadow-2xl touch-pan-y transform-gpu ${
+        className={`select-none absolute inset-x-2 top-4 h-[75vh] bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl touch-pan-y transform-gpu border border-gray-700/50 ${
           isExiting ? 'transition-all duration-300 ease-out' : 'transition-transform duration-300 ease-out'
         }`}
         style={{
@@ -126,18 +126,19 @@ export function QuestionCard({ question, nextQuestion, onSwipe, onDragProgress }
         <div ref={contentRef} className="h-full overflow-y-auto scrollable-content overscroll-contain">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Code className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-2xl font-bold text-gray-900">{question.name}</h2>
+              <Code className="w-6 h-6 text-blue-400" />
+              <h2 className="text-2xl font-bold text-gray-200">{question.name}</h2>
             </div>
             <div className="space-y-6">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-700 mb-2">Problem</h3>
-                <p className="whitespace-pre-wrap text-gray-600">{question.question}</p>
+              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-4 border border-blue-500/20 shadow-lg shadow-blue-500/5">
+                <h3 className="font-semibold text-blue-400 mb-2">Problem</h3>
+                <p className="whitespace-pre-wrap text-gray-300">{question.question}</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-600">{question.description}</p>
+              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-4 border border-blue-500/20 shadow-lg shadow-blue-500/5">
+                <h3 className="font-semibold text-blue-400 mb-2">Description</h3>
+                <p className="text-gray-300">{question.description}</p>
               </div>
+              
             </div>
           </div>
         </div>
