@@ -1,20 +1,22 @@
 import { AuthContext } from "./AuthContext";
 import PropTypes from "prop-types";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
   const { loading, user } =useContext(AuthContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/");
+    }
+  }, [loading, user, navigate]);
+
   if (loading) {
     return <span className="loading loading-dots loading-lg"></span>;
   }
 
-  if (user) {
-    return children;
-  }else{
-    navigate("/")
-  } 
+  return user ? children : null;
 };
 
 

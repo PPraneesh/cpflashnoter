@@ -9,6 +9,7 @@ import SavedQuestions from "../components/SavedQuestions";
 import toast from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
 import { api } from "../api/axios";
+import Analytics from "../components/Analytics";
 
 export default function Home() {
   const location = useLocation();
@@ -96,13 +97,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <SavedQuestions short={true} />
-      <Link
-        to="/home/questions"
-        className="button bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/50 shadow-lg shadow-blue-500/20 rounded-lg px-4 py-2 mx-auto block w-fit transition-all duration-200"
-      >
-        Show all questions
-      </Link>
+      <Analytics />
+
       <div id="generate"></div>
       <h1
         onClick={() => toast("scroll down", { icon: <FaInfoCircle /> })}

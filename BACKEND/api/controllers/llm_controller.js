@@ -78,8 +78,16 @@ const structuredLlm = model.withStructuredOutput({
         description:
           "The categories of algorithms or data structures that this problem focuses on. Take only from enum values, don't deviate from the list.",
       },
+      hints:{
+        type: "array",
+        items: {
+          type: "string",
+          description:
+            "Provide hints that help understand the question and the code solution. Start with general hints and progress to more specific ones if needed.",
+        },
+      }
     },
-    required: ["name", "language", "description", "subunits"],
+    required: ["name", "language", "description", "subunits","hints","categories"],
   },
 });
 

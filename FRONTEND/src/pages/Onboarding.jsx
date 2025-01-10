@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import axios from "axios";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { api } from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -50,8 +48,6 @@ const questions = [
 
 export default function Onboarding() {
     const navigate = useNavigate();
-  const server_url = import.meta.env.VITE_SERVER_URL;
-    const {userData} = useContext(UserContext);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
 
@@ -76,8 +72,7 @@ export default function Onboarding() {
 
   const handleSubmit = () => {
     console.log(answers);
-    axios.post(`${server_url}/onboarding`, {
-        email: userData.email,
+    api.post(`/onboarding`, {
         userPreferences: answers,
     }).then((res)=>{
         if(res.data.status){
@@ -94,7 +89,7 @@ export default function Onboarding() {
   const canProceed = answers[currentQuestionData.id] !== undefined;
 
 return (
-    <div className="bg-[#0d1117] text-white min-h-[calc(100vh-10rem)] flex items-center justify-center p-4">
+    <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-[calc(100vh-10rem)] flex items-center justify-center p-4">
         <div className="w-full max-w-2xl space-y-6">
             <h1 className="text-2xl font-bold text-center">
                 Personalize Your Learning Experience

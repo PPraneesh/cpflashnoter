@@ -17,7 +17,7 @@ const {
   edit_cp,
   get_cp_category,
 } = require("../controllers/cp_controller");
-const { getRevise, updateRev } = require("../controllers/revise.controller");
+const { getRevise, updateRev, getAnalytics } = require("../controllers/revise.controller");
 
 router.get("/", (req, res) => {
   res.send("welcome to the backend of cpflashnoter");
@@ -57,4 +57,5 @@ router.put("/delete_public_cp", authenticateUser, delete_public_cp_controller);
 
 router.get("/rev",authenticateUser, getRevise)
 router.post("/sch_next_rev",authenticateUser,updateRev)
+router.get("/analytics",authenticateUser, getAnalytics)
 module.exports = router;
