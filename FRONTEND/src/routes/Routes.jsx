@@ -76,20 +76,20 @@ const Routes = () => {
               <Revision />
             </PrivateRoute>
           )
-        }
+        },
+        {
+          path:"/terms-and-conditions",
+          element: <TermsAndConditions />
+        },
+        {
+          path:"/privacy-policy",
+          element: <PrivacyPolicy />
+        },
+        {
+          path:"/contact",
+          element: <Contact />
+        },
       ],
-    },
-    {
-      path:"/terms-and-conditions",
-      element: <TermsAndConditions />
-    },
-    {
-      path:"/privacy-policy",
-      element: <PrivacyPolicy />
-    },
-    {
-      path:"/contact",
-      element: <Contact />
     },
     {
       path: "*",

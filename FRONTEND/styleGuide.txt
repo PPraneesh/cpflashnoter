@@ -6,25 +6,21 @@
 - Primary Background: bg-gradient-to-br from-gray-900 to-gray-800
 - Secondary Background: bg-gradient-to-br from-gray-800 to-gray-900
 - Tertiary Background: bg-gray-900/50
-- Hover Background (Blue): bg-blue-600/20 hover:bg-blue-600/30
-- Hover Background (Emerald): bg-emerald-600/20 hover:bg-emerald-600/30
+- Hover Background: bg-blue-600/20 hover:bg-blue-600/30
 
 ### Text Colors
 - Primary Text: text-gray-200 (Headings and important text)
 - Secondary Text: text-gray-300 (Body text)
 - Tertiary Text: text-gray-400 (Less important text)
 - Accent Text Blue: text-blue-400 (Interactive elements)
-- Accent Text Emerald: text-emerald-400 (Success states)
 - Placeholder Text: placeholder-gray-500
 
 ### Border Colors
 - Primary Border: border-gray-700/50 (Container borders)
 - Accent Border Blue: border-blue-500/50 (Interactive elements)
-- Accent Border Emerald: border-emerald-500/50 (Success states)
 
 ### Shadow Colors
 - Blue Shadow: shadow-blue-500/20
-- Emerald Shadow: shadow-emerald-500/20
 
 ## Typography
 
@@ -101,13 +97,6 @@ Primary Button:
 ```css
 px-4 py-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 
 border border-blue-500/50 shadow-lg shadow-blue-500/20 
-rounded-lg transition-all duration-200 disabled:opacity-50
-```
-
-Success Button:
-```css
-px-4 py-2 bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 
-border border-emerald-500/50 shadow-lg shadow-emerald-500/20 
 rounded-lg transition-all duration-200 disabled:opacity-50
 ```
 

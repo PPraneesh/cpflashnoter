@@ -88,33 +88,36 @@ export default function Header() {
         });
     }
   }, [userData?.email, idToken, setUserData]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <>
-      <header className="sticky top-0 z-50 bg-gradient-to-r from-gray-900 to-gray-800 text-white border-b border-gray-700/50">
+      <header className="fixed w-full z-50 bg-neutral-900 border-b border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 flex items-center">
               <img 
                 src="/logo.png" 
                 alt="Logo" 
-                className="h-8 w-auto sm:h-10 transition-transform duration-200 hover:scale-105"
+                className="h-8 w-auto mr-2"
               />
+              <span className="text-xl font-bold text-white">CPFlashNoter</span>
             </div>
 
             {/* Desktop Navigation */}
             {userData && (
-              <nav className="hidden md:flex items-center justify-center flex-1 px-8 space-x-6">
+              <nav className="hidden md:flex items-center space-x-6">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   return (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 text-sm font-medium
+                      className={`flex items-center px-4 py-2 rounded-md transition duration-150
                         ${isActive(item.path)
-                          ? "bg-blue-600/20 text-blue-400 border border-blue-500/50 "
-                          : "text-gray-300 hover:bg-gray-700/50 hover:text-blue-400"
+                          ? "bg-blue-600 text-white"
+                          : "text-gray-300 hover:text-white hover:bg-neutral-800"
                         }`}
                     >
                       <Icon className="w-4 h-4 mr-2" />
@@ -131,13 +134,12 @@ export default function Header() {
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center focus:outline-none group"
+                    className="flex items-center focus:outline-none"
                   >
                     <img
                       src={userData.photo}
                       alt={userData.name}
-                      className="w-9 h-9 rounded-full ring-2 ring-blue-500/50 transition-all duration-200 
-                        group-hover:ring-blue-400 group-hover:scale-105"
+                      className="w-9 h-9 rounded-full ring-2 ring-blue-500 hover:ring-blue-400 transition duration-150"
                     />
                   </button>
                   {isProfileOpen && <Profile userData={userData} onClose={() => setIsProfileOpen(false)} />}
@@ -145,49 +147,54 @@ export default function Header() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="flex items-center px-4 py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 
-                    hover:from-emerald-500 hover:to-emerald-600 text-white transition-all duration-200 
-                    shadow-lg shadow-emerald-900/30 hover:shadow-xl hover:scale-105 active:scale-95"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 flex items-center"
                 >
                   <FaGoogle className="w-4 h-4 mr-2" />
-                  <span className="text-sm font-medium">Sign in</span>
+                  <span>Sign in</span>
                 </button>
+              )}
+
+              {/* Mobile menu button */}
+              {userData && (
+                <div className="md:hidden ml-4">
+                  <button
+                    className="text-gray-400 hover:text-white focus:outline-none"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </button>
+                </div>
               )}
             </div>
           </div>
-        </div>
-      </header>
 
-      {/* Mobile Navigation */}
-      {userData && (
-        <>
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-r from-gray-900 to-gray-800 
-            border-t border-gray-700/50 backdrop-blur-lg bg-opacity-90">
-            <div className="flex justify-around items-center h-16">
+          {/* Mobile Navigation */}
+          {userData && isMobileMenuOpen && (
+            <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const active = isActive(item.path);
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200
-                      ${active 
-                        ? "text-blue-400 scale-105 transform" 
-                        : "text-gray-400 hover:text-blue-400"
-                      }`}
+                    className={`flex items-center px-3 py-2 rounded-md ${
+                      isActive(item.path)
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-300 hover:text-white hover:bg-neutral-800"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Icon className={`w-5 h-5 ${active ? "stroke-2" : "stroke-1"}`} />
-                    <span className={`text-xs mt-1 ${active ? "font-medium" : ""}`}>
-                      {item.label}
-                    </span>
+                    <Icon className="w-4 h-4 mr-2" />
+                    <span>{item.label}</span>
                   </Link>
                 );
               })}
             </div>
-          </nav>
-        </>
-      )}
+          )}
+        </div>
+      </header>
     </>
   );
 }
