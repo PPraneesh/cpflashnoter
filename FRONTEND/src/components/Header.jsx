@@ -92,21 +92,78 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed w-full z-50 bg-neutral-900 border-b border-neutral-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-8 w-auto mr-2"
-              />
-              <span className="text-xl font-bold text-white">CPFlashNoter</span>
-            </div>
+      {!userData ? (
+        // Landing page header when user is not logged in
+        <nav className="fixed w-full z-50 bg-neutral-900 border-b border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              {/* Logo */}
+              <div className="flex-shrink-0 flex items-center">
+                <span className="text-2xl font-bold text-white">CPFlashNoter</span>
+              </div>
 
-            {/* Desktop Navigation */}
-            {userData && (
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-8">
+                <a href="#features" className="text-gray-300 hover:text-white">Features</a>
+                <a href="#howItWorks" className="text-gray-300 hover:text-white">How it Works</a>
+                <a href="#pricing" className="text-gray-300 hover:text-white">Pricing</a>
+                <a href="#testimonials" className="text-gray-300 hover:text-white">Testimonials</a>
+                <button
+                  onClick={handleLogin}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 flex items-center"
+                >
+                  <FaGoogle className="w-4 h-4 mr-2" />
+                  <span>Sign in</span>
+                </button>
+              </div>
+
+              {/* Mobile menu button */}
+              <div className="md:hidden flex items-center">
+                <button
+                  className="text-gray-400 hover:text-white focus:outline-none"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <a href="#features" className="block text-gray-300 hover:text-white py-2">Features</a>
+              <a href="#howItWorks" className="block text-gray-300 hover:text-white py-2">How it Works</a>
+              <a href="#pricing" className="block text-gray-300 hover:text-white py-2">Pricing</a>
+              <a href="#testimonials" className="block text-gray-300 hover:text-white py-2">Testimonials</a>
+              <button
+                onClick={handleLogin}
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 flex items-center justify-center"
+              >
+                <FaGoogle className="w-4 h-4 mr-2" />
+                <span>Sign in</span>
+              </button>
+            </div>
+          )}
+        </nav>
+      ) : (
+        // Existing header when user is logged in
+        <header className="w-full z-50 bg-neutral-900 border-b border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              {/* Logo */}
+              <div className="flex-shrink-0 flex items-center">
+                <img 
+                  src="/logo.png" 
+                  alt="Logo" 
+                  className="h-8 w-auto mr-2"
+                />
+                <span className="text-xl font-bold text-white">CPFlashNoter</span>
+              </div>
+
+              {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-6">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
@@ -126,11 +183,8 @@ export default function Header() {
                   );
                 })}
               </nav>
-            )}
 
-            {/* Auth Button / Profile */}
-            <div className="flex items-center">
-              {userData ? (
+              <div className="flex items-center">
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -144,18 +198,8 @@ export default function Header() {
                   </button>
                   {isProfileOpen && <Profile userData={userData} onClose={() => setIsProfileOpen(false)} />}
                 </div>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 flex items-center"
-                >
-                  <FaGoogle className="w-4 h-4 mr-2" />
-                  <span>Sign in</span>
-                </button>
-              )}
 
-              {/* Mobile menu button */}
-              {userData && (
+                {/* Mobile menu button */}
                 <div className="md:hidden ml-4">
                   <button
                     className="text-gray-400 hover:text-white focus:outline-none"
@@ -166,35 +210,35 @@ export default function Header() {
                     </svg>
                   </button>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
 
-          {/* Mobile Navigation */}
-          {userData && isMobileMenuOpen && (
-            <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
-              {menuItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center px-3 py-2 rounded-md ${
-                      isActive(item.path)
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-300 hover:text-white hover:bg-neutral-800"
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Icon className="w-4 h-4 mr-2" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </header>
+            {/* Mobile Navigation */}
+            {isMobileMenuOpen && (
+              <div className="md:hidden px-2 pt-2 pb-3 space-y-1">
+                {menuItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`flex items-center px-3 py-2 rounded-md ${
+                        isActive(item.path)
+                          ? "bg-blue-600 text-white"
+                          : "text-gray-300 hover:text-white hover:bg-neutral-800"
+                      }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon className="w-4 h-4 mr-2" />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </header>
+      )}
     </>
   );
 }

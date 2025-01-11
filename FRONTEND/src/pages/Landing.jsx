@@ -6,51 +6,8 @@ const Landing = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (<>
-    <nav id="navbar" className="fixed w-full z-50 bg-neutral-900 border-b border-neutral-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-bold text-white">CPFlashNoter</span>
-          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-300 hover:text-white">Features</a>
-            <a href="#howItWorks" className="text-gray-300 hover:text-white">How it Works</a>
-            <a href="#pricing" className="text-gray-300 hover:text-white">Pricing</a>
-            <a href="#testimonials" className="text-gray-300 hover:text-white">Testimonials</a>
-            <a href="#login" className="text-gray-300 hover:text-white">Login</a>
-            <a href="#signup" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150">Get Started</a>
-          </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              id="mobile-menu-button"
-              className="text-gray-400 hover:text-white focus:outline-none"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <a href="#features" className="block text-gray-300 hover:text-white py-2">Features</a>
-          <a href="#howItWorks" className="block text-gray-300 hover:text-white py-2">How it Works</a>
-          <a href="#pricing" className="block text-gray-300 hover:text-white py-2">Pricing</a>
-          <a href="#testimonials" className="block text-gray-300 hover:text-white py-2">Testimonials</a>
-          <a href="#login" className="block text-gray-300 hover:text-white py-2">Login</a>
-          <a href="#signup" className="block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-150 text-center mt-4">Get Started</a>
-        </div>
-      )}
-    </nav>
 
       <section id="hero" className="pt-20 bg-neutral-900 min-h-[70vh] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
@@ -116,6 +73,158 @@ const Landing = () => {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
       </section>
+
+      <section id="features" className="py-20 bg-neutral-800">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Students Love CPFlashNoter</h2>
+        <p className="text-xl text-gray-300">Transform your DSA preparation with AI-powered features designed for success</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">AI-Powered Note Generation</h3>
+          <p className="text-gray-300">Create comprehensive DSA notes instantly with our AI assistant. No more manual note-taking hassles.</p>
+        </div>
+
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">Smart Revision Schedule</h3>
+          <p className="text-gray-300">Automatically scheduled revisions based on your learning patterns and confidence levels.</p>
+        </div>
+
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">Progress Tracking</h3>
+          <p className="text-gray-300">Monitor your understanding with detailed metrics and confidence scores for each topic.</p>
+        </div>
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-yellow-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">Interview Prep Mode</h3>
+          <p className="text-gray-300">Practice with random questions from your solved problems to stay interview-ready.</p>
+        </div>
+
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-red-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">Cross-Device Access</h3>
+          <p className="text-gray-300">Access your notes and revision schedule from any device, anytime, anywhere.</p>
+        </div>
+
+        <div className="bg-neutral-700 rounded-xl p-6 hover:bg-neutral-600 transition-all duration-300 animate__animated animate__fadeIn">
+          <div className="h-12 w-12 bg-indigo-500 rounded-lg flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-3">Two-Click Integration</h3>
+          <p className="text-gray-300">Simply copy your question and solution - let our AI handle the rest of the work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="howItWorks" className="py-20 bg-neutral-900">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">How CPFlashNoter Works</h2>
+        <p className="text-xl text-gray-300">Three simple steps to master your DSA preparation</p>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="relative bg-neutral-800 rounded-xl p-8 border border-neutral-700 animate__animated animate__fadeInLeft">
+          <div className="absolute -top-6 left-8 bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold text-white">1</div>
+          <div className="mt-4">
+            <h3 className="text-2xl font-bold text-white mb-4">Copy & Paste</h3>
+            <p className="text-gray-300 mb-6">Just copy your DSA question and solution into CPFlashNoter. That's all we need to get started.</p>
+            <div className="bg-neutral-700 rounded-lg p-4">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-neutral-600 rounded w-3/4"></div>
+                <div className="h-4 bg-neutral-600 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative bg-neutral-800 rounded-xl p-8 border border-neutral-700 animate__animated animate__fadeInUp">
+          <div className="absolute -top-6 left-8 bg-purple-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold text-white">2</div>
+          <div className="mt-4">
+            <h3 className="text-2xl font-bold text-white mb-4">AI Generates Notes</h3>
+            <p className="text-gray-300 mb-6">Our AI creates personalized, comprehensive notes with key concepts and approaches.</p>
+            <div className="bg-neutral-700 rounded-lg p-4">
+              <div className="space-y-2">
+                <div className="h-4 bg-purple-500/20 rounded w-full"></div>
+                <div className="h-4 bg-purple-500/20 rounded w-5/6"></div>
+                <div className="h-4 bg-purple-500/20 rounded w-4/6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative bg-neutral-800 rounded-xl p-8 border border-neutral-700 animate__animated animate__fadeInRight">
+          <div className="absolute -top-6 left-8 bg-green-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold text-white">3</div>
+          <div className="mt-4">
+            <h3 className="text-2xl font-bold text-white mb-4">Smart Revision</h3>
+            <p className="text-gray-300 mb-6">Follow your personalized revision schedule and track your progress.</p>
+            <div className="bg-neutral-700 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-16 text-center">
+        <a href="#signup" className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg animate__animated animate__pulse animate__infinite">
+          Start Your Journey
+          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
 
       <section id="aiPowered" className="py-20 bg-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
