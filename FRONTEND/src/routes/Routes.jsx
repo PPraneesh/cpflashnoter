@@ -10,6 +10,11 @@ import SharedQuestionPage from "../pages/SharedQuestionPage.jsx";
 import Preparation from "../pages/Preparation.jsx";
 import Onboarding from "../pages/Onboarding.jsx";
 import Revision from "../pages/Revision.jsx"
+
+import TermsAndConditions from "../pages/T&C.jsx";
+import PrivacyPolicy from "../pages/PrivacyPolicy.jsx";
+import Contact from "../pages/Contact.jsx";
+
 const Routes = () => {
   const router = createBrowserRouter([
     {
@@ -73,6 +78,18 @@ const Routes = () => {
           )
         }
       ],
+    },
+    {
+      path:"/terms-and-conditions",
+      element: <TermsAndConditions />
+    },
+    {
+      path:"/privacy-policy",
+      element: <PrivacyPolicy />
+    },
+    {
+      path:"/contact",
+      element: <Contact />
     },
     {
       path: "*",
