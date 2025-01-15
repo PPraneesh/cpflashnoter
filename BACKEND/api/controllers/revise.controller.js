@@ -6,32 +6,35 @@ async function getRevise(req, res) {
     let user_email = req.user.email;
     const userRef = db.collection("users").doc(user_email);
     const cpCollection = userRef.collection("cp");
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-
+    const userDoc = await userRef.get();
+    const userData = userDoc.data();
+    if(userData.tier == "expired"){
+        res.send({
+            status: false,
+            reason: "Please upgrade to premium to access this feature, your free trial has expired",
+        })
+    }else{
+    const currentDate =  Date.now();
     try {
         const snapshot = await cpCollection.get();
         let questionsToRevise = [];
         snapshot.forEach(doc => {
             let data = doc.data();
             if (data.revObj && data.revObj.nextRev) {
-                const nextRevDate = new Date(data.revObj.nextRev.toDate());
-                nextRevDate.setHours(0, 0, 0, 0);
+                const nextRevDate = data.revObj.nextRev._seconds * 1000;
                 if (nextRevDate <= currentDate) {
                     questionsToRevise.push({ id: doc.id, ...data });
                 }
             }
         });
-        res.status(200).json(questionsToRevise);
+        res.status(200).json({status: true, questions: questionsToRevise});
     } catch (error) {
         res.status(500).json({ error: error.message });
-    }
+    }}
 }
-
-
   
 async function updateRev(req, res) {
-    const user_email = req.user.email;
+    const {email} = req.user;
     const { 
         questionId, 
         timeSpent,  // Already in seconds from frontend
@@ -42,7 +45,7 @@ async function updateRev(req, res) {
         category = []
     } = req.body;
     
-    const userRef = db.collection("users").doc(user_email);
+    const userRef = db.collection("users").doc(email);
     const questionRef = userRef.collection("cp").doc(questionId);
 
     try {
@@ -54,9 +57,8 @@ async function updateRev(req, res) {
         const baseDelay = calculateBaseDelay(confidence, data.revObj?.revNum || 0);
         const nextRev = calculateNextRevision(baseDelay, data.revObj?.revNum || 0);
 
-        const localDate = new Date();
         // Converts to YYYY-MM-DD in local time
-        const dateKey = new Date().toISOString().split('T')[0]; 
+        const dateKey = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
         const batch = db.batch();
 
         // Store timestamps consistently
@@ -110,12 +112,15 @@ async function getAnalytics(req, res) {
         }
 
         const userData = doc.data();
+        const categoryDistributions = userData.categories || [];
         const analytics = userData.revisionAnalytics || {};
         const dailyActivity = analytics.dailyActivity || {};
         const categoryStatsObj = analytics.categoryStats || {};
 
         // Get all questions for this user
         const questionsSnapshot = await userRef.collection("cp").get();
+        // calculate the total number of questions
+        const numberOfQuestions = questionsSnapshot.size;
         const questions = [];
         questionsSnapshot.forEach(doc => {
             questions.push({
@@ -126,11 +131,12 @@ async function getAnalytics(req, res) {
 
         // Build recentQuestions from questions sorted by lastRev
         const recentQuestions = questions
-            .filter(q => q.revObj && q.revObj.lastRev)
+            .filter(q => q.revObj && q.revObj.lastRev && q.revObj.revNum >1)
             .sort((a, b) => b.revObj.lastRev.toDate() - a.revObj.lastRev.toDate())
             .slice(0, 5)
             .map(q => ({
                 questionId: q.id,
+                name: q.name,
                 categories: q.categories || [],
                 lastRevised: q.revObj.lastRev.toDate().toISOString(),
                 nextRevision: q.revObj.nextRev?.toDate()?.toISOString() || null,
@@ -149,7 +155,7 @@ async function getAnalytics(req, res) {
             totalTimeSpent: stats.totalTimeSpent || 0,
             averageConfidence: stats.averageConfidence || 0
         }));
-
+ 
         // Compute overall stats from dailyActivity
         const totalRevisions = Object.values(dailyActivity)
             .reduce((sum, day) => sum + (day.count || 0), 0);
@@ -162,6 +168,7 @@ async function getAnalytics(req, res) {
         const response = {
             dailyStats: dailyActivity,
             categoryStats: processedCategoryStats,
+            numberOfQuestions: numberOfQuestions,
             recentQuestions,
             overallStats: {
                 totalRevisions,
@@ -173,9 +180,10 @@ async function getAnalytics(req, res) {
                 currentStreak: 0,
                 longestStreak: 0,
                 lastRevisionDate: null
-            }
+            },
+            categoryDistributions: categoryDistributions
         };
-
+        console.log(response)
         res.status(200).json(response);
     } catch (error) {
         console.error("Error fetching analytics:", error);
@@ -201,16 +209,22 @@ function computeDailyConfidence(dailyActivity) {
 function calculateStreakUpdate(currentStreaks = {}, dateKey) {
     const today = new Date(dateKey);
     const lastRevision = currentStreaks.lastRevisionDate ? new Date(currentStreaks.lastRevisionDate) : null;
-    
     let streak = currentStreaks.currentStreak || 0;
     if (!lastRevision) {
         streak = 1;
     } else {
         const diffDays = Math.floor((today - lastRevision) / (1000 * 60 * 60 * 24));
-        if (diffDays <= 1) streak += 1;
-        else streak = 1;
+        if (diffDays === 0) {
+            // Do not update streak if the last revision was today
+            streak = currentStreaks.currentStreak;
+        } else if (diffDays === 1) {
+            // Increment streak if the last revision was yesterday
+            streak += 1;
+        } else {
+            // Reset streak if the last revision was not yesterday
+            streak = 1;
+        }
     }
-
     return {
         currentStreak: streak,
         longestStreak: Math.max(streak, currentStreaks.longestStreak || 0),
@@ -259,20 +273,6 @@ function createAnalyticsUpdate(dateKey, timeSpent, categories, metrics) {
     });
 
     return update;
-}
-
-function calculateAverageConfidence(categoryStats) {
-    let totalConfidence = 0;
-    let totalEntries = 0;
-
-    Object.values(categoryStats).forEach(cat => {
-        if (cat.averageConfidence) {
-            totalConfidence += cat.averageConfidence;
-            totalEntries++;
-        }
-    });
-
-    return totalEntries > 0 ? Math.round((totalConfidence / totalEntries) * 10) / 10 : 0;
 }
 
 module.exports = {

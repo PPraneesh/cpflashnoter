@@ -1,51 +1,34 @@
 import { api } from "../api/axios";
 const razorpay_key = import.meta.env.VITE_RAZORPAY_KEY_ID;
-const server_url = import.meta.env.VITE_SERVER_URL;
 
-const PAYMENT_AMOUNT = 50;
 
-export default async function paymentHandler(
+export default async function paymentHandlerOneTime(
   paymentData,
-  price,
   navigate,
-  context
 ) {
   try {
-    if (price != PAYMENT_AMOUNT) {
-      throw new Error("Invalid payment amount");
-    }
     await api
-      .post(
-        `${server_url}/payment`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get(`/payment`)
       .then((res) => {
         if (res.data.status) {
           // for register route, which saves data in database
-          var razorpayOptions = {
+          var   razorpayOptions = {
             key: razorpay_key,
-            amount: price * 100,
+            amount: 50 * 100,
             currency: "INR",
             name: "CPFLASHNOTER",
             description: "cpflashnoter premium",
             image:
-              "https://upload.wikimedia.org/wikipedia/en/4/47/VNRVJIETLogo.png",
+              "/logo.png",
             order_id: res.data.order_id,
             prefill: {
-              name: paymentData.payersContact.name,
-              email: paymentData.payersContact.email,
-              contact: paymentData.payersContact.mobileNumber,
+              email: paymentData.email
             },
             handler: async function (response) {
               try {
                 api
                   .post(
-                    `${server_url}/success`,
+                    `/success`,
                     {
                       response: response,
                       category: res.data.category,
@@ -82,13 +65,10 @@ export default async function paymentHandler(
               } catch (err) {
                 console.error(err);
               } finally {
-                context.setLoading(false);
+                // context.setLoading(false);
               }
             },
             notes: {
-              name: paymentData.payersContact.name,
-              email: paymentData.payersContact.email,
-              category: res.data.category,
               address: "VNR VJIET, Bachupally",
             },
             theme: {

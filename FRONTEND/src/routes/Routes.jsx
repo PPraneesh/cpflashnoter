@@ -1,19 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "../pages/Home";
 import Root from "../pages/Root.jsx";
 import QuestionPage from "../pages/QuestionPage.jsx";
 import PrivateRoute from "../context/PrivateRoute.jsx";
 import LandingPage from "../pages/Landing.jsx";
-import SavedQuestions from "../components/SavedQuestions.jsx";
+import SavedQuestions from "../pages/SavedQuestions.jsx";
 import PageNotFound from "../pages/PageNotFound.jsx";
 import SharedQuestionPage from "../pages/SharedQuestionPage.jsx";
 import Preparation from "../pages/Preparation.jsx";
 import Onboarding from "../pages/Onboarding.jsx";
 import Revision from "../pages/Revision.jsx"
-
+import Analytics from "../pages/Analytics.jsx";
 import TermsAndConditions from "../pages/T&C.jsx";
 import PrivacyPolicy from "../pages/PrivacyPolicy.jsx";
 import Contact from "../pages/Contact.jsx";
+import Dashboard from "../pages/Dashboard.jsx";
+import Generation from "../pages/Generation.jsx";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -30,10 +31,10 @@ const Routes = () => {
           element: <SharedQuestionPage />,
         },
         {
-          path: "/home",
+          path: "/generation",
           element: (
             <PrivateRoute>
-              <Home />
+              <Generation />
             </PrivateRoute>
           ),
         },
@@ -76,6 +77,22 @@ const Routes = () => {
               <Revision />
             </PrivateRoute>
           )
+        },
+        {
+          path:"/analytics",
+          element:(
+            <PrivateRoute>
+              <Analytics />
+            </PrivateRoute>
+          )
+        },
+        {
+          path:"/home",
+          element: (
+            <PrivateRoute>
+              <Dashboard short={true} />
+            </PrivateRoute>
+          ),
         },
         {
           path:"/terms-and-conditions",

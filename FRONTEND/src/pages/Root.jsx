@@ -8,7 +8,7 @@ export default function Root() {
     <AuthProvider>
         <div className='flex flex-col min-h-screen'>
             <Header />
-                <div className='flex-grow bg-gradient-to-br from-gray-900 to-gray-800'>
+                <div className='flex-grow bg-neutral-900'>
                     <Outlet />
                 </div>
             <Footer />

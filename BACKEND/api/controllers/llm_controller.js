@@ -1,5 +1,6 @@
 const db = require("../config/db"); // Assuming you're using Firebase
 const { ChatGroq } = require("@langchain/groq");
+const { tier } = require("../helper/tierDeterminer");
 
 const model = new ChatGroq({
   model: "llama-3.3-70b-versatile",
@@ -93,28 +94,25 @@ const structuredLlm = model.withStructuredOutput({
 
 const llm_controller = async (req, res) => {
   const { code, question, personalisedNotes } = req.body;
-  const user_email = req.user.email;
-  const userRef = db.collection("users").doc(user_email);
-
-  try {
-    const userDoc = await userRef.get();
-    if (userDoc.exists) {
-      let userData = userDoc.data();
-      let currentTime = Date.now();
-      let timeDiff = currentTime - userData.generations.last_gen;
-      let timeRemaining = 24 * 60 * 60 * 1000 - timeDiff; // 24 hours in milliseconds
-
-      // Reset generation count if more than 24 hours have passed since the last generation
-      if (timeDiff >= 24 * 60 * 60 * 1000) {
-        userData.generations.count = 5;
-      }
-      let userPreferences = "";
+  const {email,status} = req.user;
+  const userRef = db.collection("users").doc(email);
+  const userDoc = await userRef.get();
+  if(!userDoc.exists){
+    res.send({
+      status: false,
+      reason: "User does not exist",
+      userData: null,
+    }); 
+  }else{
+    let userData = userDoc.data();
+    const output = tier(userData);
+    userData = output.userData; 
+    let userPreferences = "";
       if (userData.userPreferences) {
         Object.entries(userData.userPreferences).forEach(([key, value]) => {
           userPreferences += value + ".\n";
         });
       }
-
       if (userData.generations.count > 0) {
         const prompt = `You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n 
         The following is a question from a competitive programming platform: \n
@@ -166,37 +164,20 @@ Remember, your goal is to create clear, informative notes that help understand b
         const result = await structuredLlm.invoke(finalPrompt);
         // Update the user's generations count and last generation time
         userData.generations.count -= 1;
-        userData.generations.last_gen = currentTime;
+        userData.generations.lastGen = { _seconds: Math.floor(Date.now() / 1000) };
 
-        await userRef.update({
-          generations: userData.generations,
-        });
+        await userRef.update(userData);
 
         res.send({ status: true, result: result, userDataStats: userData });
       } else {
         // Calculate the next available generation time
-        let nextGenTime = new Date(currentTime + timeRemaining);
         res.send({
           status: false,
-          reason: `try at this time: ${nextGenTime.toLocaleString()}`,
+          reason: `try at this time: ${new Date(userData.generations.lastGen._seconds * 1000 + 24 * 60 * 60 * 1000)}`,
           userData: userData,
         });
       }
-    } else {
-      res.send({
-        status: false,
-        reason: "User does not exist",
-        userData: null,
-      }); // work on this thing
-    }
-  } catch (error) {
-    console.error("Error in LLM processing:", error);
-    res.send({
-      status: false,
-      reason: "An error occurred while processing the code",
-      userData: null, // work on this thing
-    });
   }
-};
+}
 
 module.exports = { llm_controller };

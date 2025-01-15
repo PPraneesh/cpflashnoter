@@ -16,7 +16,7 @@ const SharedQuestionPage = () => {
         if (response.data.status) {
           setQuestionData(response.data.cp);
         } else {
-            toast.error("couldn't fetch the question");
+          toast.error("couldn't fetch the question");
           console.log(response.data.reason);
         }
       })
@@ -26,51 +26,51 @@ const SharedQuestionPage = () => {
   }, [SERVER_URL, cp_id]);
 
   return (
-    <div>
+    <div className="bg-neutral-900 min-h-screen">
       <div className="p-6">
-          <h1 className="text-2xl font-bold text-white mb-2">{questionData?.name}</h1>
+        <h1 className="text-2xl font-bold text-white mb-2">{questionData?.name}</h1>
 
-          <p className="text-white mb-4">{questionData?.description}</p>
+        <p className="text-neutral-400 mb-4">{questionData?.description}</p>
 
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
-            <p className="text-white bg-[#151b23] p-4 rounded-lg border border-white/20">
-              {questionData?.question}
-            </p>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
+          <p className="text-neutral-400 bg-neutral-800 p-4 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+            {questionData?.question}
+          </p>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-white mb-2">Code</h2>
+          <div className="bg-neutral-800 p-4 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+            <pre className="text-sm text-neutral-400 overflow-x-auto">{questionData?.code}</pre>
           </div>
+        </div>
 
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Code</h2>
-            <div className="bg-[#151b23] p-4 rounded-lg border border-white/20">
-              <pre className="text-sm text-white overflow-x-auto ">{questionData?.code}</pre>
-            </div>
-          </div>
+        <div className="mb-6">
+          <span className="px-2 py-1 bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 transition-all text-neutral-400 font-medium rounded">
+            Language: {questionData?.language}
+          </span>
+        </div>
 
-          <div className="mb-6">
-            <span className="px-2 py-1 bg-[#151b23] border border-white/20 text-white font-medium rounded">
-              Language: {questionData?.language}
-            </span>
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
-            {questionData?.subunits.map((subunit, index) => (
-              <div
-                key={index}
-                className="mb-4 bg-[#0d1117] p-4 rounded-lg border border-white/20"
-              >
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  {subunit.name}
-                </h3>
-                <p className="text-white mb-2">{subunit.description}</p>
-                <div className="bg-[#151b23] p-4 rounded-lg ">
-                  <pre className="text-sm text-white overflow-x-auto">
-                    {subunit.content}
-                  </pre>
-                </div>
+        <div>
+          <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
+          {questionData?.subunits.map((subunit, index) => (
+            <div
+              key={index}
+              className="mb-4 bg-neutral-700/50 p-4 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all"
+            >
+              <h3 className="text-lg font-semibold text-white mb-2">
+                {subunit.name}
+              </h3>
+              <p className="text-neutral-400 mb-2">{subunit.description}</p>
+              <div className="bg-neutral-800 p-4 rounded-lg">
+                <pre className="text-sm text-neutral-400 overflow-x-auto">
+                  {subunit.content}
+                </pre>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

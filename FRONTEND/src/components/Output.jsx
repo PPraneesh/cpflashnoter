@@ -9,14 +9,14 @@ export default function Output({ output }) {
   const [showCategories, setShowCategories] = useState(false);
 
   return (
-    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl p-4 md:p-6 border border-gray-700/50 transition-all duration-200">
-      <div className="flex flex-col md:flex-row gap-4 md:gap-0 mb-4 pb-4 border-b border-gray-700/50">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-200 flex-grow">Generated Notes</h2>
+    <div className="bg-neutral-800 rounded-lg shadow-xl p-4 md:p-6 border border-neutral-700/30 hover:border-neutral-600/50 transition-all duration-200">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 mb-4 pb-4 border-b border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+        <h2 className="text-xl md:text-2xl font-bold text-white flex-grow">Generated Notes</h2>
         <div className="flex flex-wrap gap-2">
-          <div className="bg-gray-900/50 border border-gray-700/50 px-3 py-1 rounded-lg text-sm text-gray-300">
+          <div className="bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 px-3 py-1 rounded-lg text-sm text-neutral-400">
             {userData?.generations?.count} generations left
           </div>
-          <div className="bg-gray-900/50 border border-gray-700/50 px-3 py-1 rounded-lg text-sm text-gray-300">
+          <div className="bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 px-3 py-1 rounded-lg text-sm text-neutral-400">
             {userData?.saves?.quests} saves left
           </div>
         </div>
@@ -27,28 +27,26 @@ export default function Output({ output }) {
       ) : output ? (
         <div className="space-y-6">
           <div>
-            <h3 className="text-xl font-semibold text-gray-200 mb-3">
-              {output.name}
-            </h3>
+            <h3 className="text-xl font-semibold text-white mb-3">{output.name}</h3>
             <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="px-3 py-1 bg-gray-900/50 border border-gray-700/50 text-gray-200 text-sm rounded-lg">
+              <span className="px-3 py-1 bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 text-white text-sm rounded-lg">
                 {output.language}
               </span>
               <button
                 onClick={() => setShowCategories(!showCategories)}
-                className="px-4 py-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/50 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/20 text-sm"
+                className="px-4 py-2 bg-blue-500/20 text-blue-500 hover:bg-blue-400/30 border border-blue-500/50 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/20 text-sm"
               >
                 Categories
               </button>
             </div>
 
             {showCategories && (
-              <div className="absolute mt-2 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50 rounded-lg p-4 shadow-xl z-10">
+              <div className="absolute mt-2 bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 rounded-lg p-4 shadow-xl z-10">
                 <div className="flex flex-col gap-2">
                   {output.categories?.map((cat, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg border border-blue-500/50"
+                      className="px-3 py-1 bg-blue-500/20 text-blue-500 hover:text-blue-400 rounded-lg border border-blue-500/50"
                     >
                       {cat}
                     </span>
@@ -57,22 +55,22 @@ export default function Output({ output }) {
               </div>
             )}
 
-            <p className="text-gray-300 mb-6">{output.description}</p>
+            <p className="text-neutral-400 mb-6">{output.description}</p>
 
             <div className="space-y-6">
               {output.subunits?.map((subunit, index) => (
                 <div
                   key={index}
-                  className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 md:p-6 border border-gray-700/50 rounded-lg shadow-lg"
+                  className="bg-neutral-700/50 p-4 md:p-6 border border-neutral-700/30 hover:border-neutral-600/50 rounded-lg shadow-lg"
                 >
-                  <h4 className="text-lg font-semibold text-gray-200 mb-2">
+                  <h4 className="text-lg font-semibold text-white mb-2">
                     {subunit.name}
                   </h4>
-                  <p className="text-gray-300 mb-4">
+                  <p className="text-neutral-400 mb-4">
                     {subunit.description}
                   </p>
-                  <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
-                    <pre className="text-gray-200 overflow-x-auto">
+                  <div className="bg-neutral-700/50 rounded-lg p-4 border border-neutral-700/30 hover:border-neutral-600/50">
+                    <pre className="text-white overflow-x-auto">
                       {subunit.content}
                     </pre>
                   </div>
@@ -83,7 +81,7 @@ export default function Output({ output }) {
         </div>
       ) : (
         <div className="text-center py-8">
-          <h1 className="text-xl font-semibold text-gray-200">
+          <h1 className="text-xl font-semibold text-white">
             Add question and code then click on generate notes button
           </h1>
         </div>

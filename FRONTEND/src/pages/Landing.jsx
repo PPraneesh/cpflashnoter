@@ -3,12 +3,7 @@ import { useState } from "react";
 
 const Landing = () => {
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (<>
-
-
-
       <section id="hero" className="pt-20 bg-neutral-900 min-h-[70vh] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -60,10 +55,10 @@ const Landing = () => {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="bg-neutral-600 h-8 rounded animate-pulse"></div>
-                  <div className="bg-neutral-600 h-24 rounded animate-pulse"></div>
-                  <div className="bg-neutral-600 h-12 rounded animate-pulse"></div>
-                  <div className="bg-blue-600 h-10 rounded animate-pulse"></div>
+                  <div className="bg-neutral-600 h-8 rounded"></div>
+                  <div className="bg-neutral-600 h-24 rounded"></div>
+                  <div className="bg-neutral-600 h-12 rounded"></div>
+                  <div className="bg-blue-600 h-10 rounded"></div>
                 </div>
               </div>
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-500 rounded-full blur-2xl opacity-20"></div>
@@ -157,7 +152,7 @@ const Landing = () => {
           <div className="absolute -top-6 left-8 bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold text-white">1</div>
           <div className="mt-4">
             <h3 className="text-2xl font-bold text-white mb-4">Copy & Paste</h3>
-            <p className="text-gray-300 mb-6">Just copy your DSA question and solution into CPFlashNoter. That's all we need to get started.</p>
+            <p className="text-gray-300 mb-6">Just copy your DSA question and solution into CPFlashNoter. That{"'"}s all we need to get started.</p>
             <div className="bg-neutral-700 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -750,7 +745,7 @@ const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-neutral-800 rounded-lg animate__animated animate__fadeIn">
+    <div className="bg-neutral-900 rounded-lg animate__animated animate__fadeIn">
       <button
         className="faq-button w-full px-6 py-4 text-left flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}

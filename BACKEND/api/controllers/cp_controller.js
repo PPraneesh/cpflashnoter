@@ -1,5 +1,6 @@
 const db = require("../config/db");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
+const { tier } = require("../helper/tierDeterminer");
 
 async function cp_controller(req, res) {
   let user_email = req.user.email;
@@ -10,19 +11,11 @@ async function cp_controller(req, res) {
     .then(async (doc) => {
       if (doc.exists) {
         let userData = doc.data();
-        let currentTime = Date.now();
-        let timeDiff = currentTime - userData.saves.last_save;
-        let timeRemaining = 24 * 60 * 60 * 1000 - timeDiff; // 24 hours in milliseconds
-
-        // Reset quests if more than 24 hours have passed since the last save
-        if (timeDiff >= 24 * 60 * 60 * 1000) {
-          userData.saves.quests = 3;
-        }
-
+        const output = tier(userData);
+        userData = output.userData;
         if (userData.saves.quests > 0) {
-          let uuid_code = uuidv4();
+            let uuid_code = crypto.randomBytes(16).toString("hex");
             let nextDay = new Date();
-            nextDay.setDate(nextDay.getDate() + 1);
             nextDay.setHours(0, 0, 0, 0);
 
             let cp = {
@@ -37,21 +30,26 @@ async function cp_controller(req, res) {
               lastRev: new Date()
             }
             };
-            let categories = cp.categories || []; // Add default empty array
-            // update categories in user data without duplicates
-            userData.categories = Array.from(new Set([...(userData.categories || []), ...categories]));
+            let categories = cp.categories || [];
+            // Initialize userData.categories as an array if it doesn't exist
+            userData.categories = userData.categories || [];
+            // Update category counts
+            categories.forEach(categoryName => {
+              let existingCategory = userData.categories.find(c => c.categoryName === categoryName);
+              if (existingCategory) {
+                existingCategory.count++;
+              } else {
+                userData.categories.push({ categoryName, count: 1 });
+              }
+            });
             let cpRef = userRef.collection("cp").doc(uuid_code);
             try {
             await cpRef.set(cp);
             userData.saves.quests -= 1;
-            userData.saves.last_save = currentTime;
-            
-            await userRef.update({ 
-              saves: userData.saves, 
-              categories: userData.categories 
-            });
-
+            userData.saves.lastSave = { _seconds: Math.floor(Date.now() / 1000) };
+            await userRef.update(userData);
             res.send({ status: true, userData: userData });
+
           } catch (error) {
             console.error("Error updating user data:", error);
             res.status(500).send({ status: false, reason: error.message });
@@ -90,10 +88,10 @@ async function get_cp(req, res) {
 }
 
 async function get_cp_category(req, res) {
-  let user_email = req.user.email;
+  let {email} = req.user;
   let category = req.body.category;
-  if (user_email) {
-    const userRef = db.collection("users").doc(user_email);
+  if (email && category) {
+    const userRef = db.collection("users").doc(email);
     const cpSnapshot = await userRef.collection("cp").where("categories", "array-contains", category).get();
     const cpList = cpSnapshot.docs.map((doc) => doc.data());
     return res.send({
@@ -104,16 +102,30 @@ async function get_cp_category(req, res) {
 }
 
 async function delete_cp_controller(req, res) {
-  let user_email = req.user.email;
+  let {email} = req.user;
   let cp_id = req.body.cp_id;
   
-  if (!user_email || !cp_id) {
+  if (!email || !cp_id) {
     return res.status(400).send({ status: false, reason: "Missing required parameters" });
   }
 
   try {
-    const userRef = db.collection("users").doc(user_email);
+    const userRef = db.collection("users").doc(email);
     const cpRef = userRef.collection("cp").doc(cp_id);
+    // upon deletion handle that categories which is in user data, find that category and decrement the count if count is 1 then remove that category from user data
+    const userData = (await userRef.get()).data();
+    const cpData = (await cpRef.get()).data();
+    const categories = cpData.categories || [];
+    categories.forEach(categoryName => {
+      let existingCategory = userData.categories.find(c => c.categoryName === categoryName);
+      if (existingCategory) {
+        existingCategory.count--;
+        if (existingCategory.count === 0) {
+          userData.categories = userData.categories.filter(c => c.categoryName !== categoryName);
+        }
+      }
+    });
+    await userRef.update(userData);
     await cpRef.delete();
     res.send({ status: true });
   } catch (error) {
@@ -122,9 +134,9 @@ async function delete_cp_controller(req, res) {
 }
 
 async function share_cp_controller(req, res) {
-  let user_email = req.user.email;
+  let {email} = req.user;
   let cp_id = req.body.cp_id;
-   const userRef = db.collection("users").doc(user_email);
+   const userRef = db.collection("users").doc(email);
   const cpRef = userRef.collection("cp").doc(cp_id);
   const publicCpRef = db.collection("public_cp").doc(cp_id);
    try {

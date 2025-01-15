@@ -1,166 +1,183 @@
-# Application Style Guide
+Background:bg-neutral-900
+Card Backgrounds: bg-neutral-800
+Secondary card (card on a card with bg-neutral-800): bg-neutral-700/50
 
-## Color Palette
+border style: border border-neutral-700/30 hover:border-neutral-600/50 transition-all
 
-### Background Colors
-- Primary Background: bg-gradient-to-br from-gray-900 to-gray-800
-- Secondary Background: bg-gradient-to-br from-gray-800 to-gray-900
-- Tertiary Background: bg-gray-900/50
-- Hover Background: bg-blue-600/20 hover:bg-blue-600/30
+Primary Text: text-white
+Secondary Text: text-neutral-400
 
-### Text Colors
-- Primary Text: text-gray-200 (Headings and important text)
-- Secondary Text: text-gray-300 (Body text)
-- Tertiary Text: text-gray-400 (Less important text)
-- Accent Text Blue: text-blue-400 (Interactive elements)
-- Placeholder Text: placeholder-gray-500
+Yellow: bg or text -yellow-500 hover: -yellow-400
+Red: 
+violet: text-purple-700 hover:text-purple-600
+blue: text-blue-500 hover:text-blue-400
+green: text-green-500 hover: text-green-400
 
-### Border Colors
-- Primary Border: border-gray-700/50 (Container borders)
-- Accent Border Blue: border-blue-500/50 (Interactive elements)
-
-### Shadow Colors
-- Blue Shadow: shadow-blue-500/20
-
-## Typography
-
-### Font Sizes
-- Extra Large: text-2xl (Major headings)
-- Large: text-xl (Section headings)
-- Medium: text-lg (Sub-headings)
-- Regular: text-md (Normal text)
-- Small: text-sm (Secondary text)
-- Extra Small: text-xs (Labels and badges)
-
-### Font Weights
-- Bold: font-bold
-- Semi Bold: font-semibold
-- Medium: font-medium
-- Normal: font-normal
-
-## Spacing
-
-### Padding
-- Container Padding: p-6
-- Button Padding: px-4 py-2
-- Small Element Padding: px-3 py-1
-- Extra Padding: p-2, p-3, p-4
-
-### Margins
-- Between Sections: space-y-6
-- Between Elements: gap-4, gap-6
-- Small Gaps: gap-2
-- Margin Bottom: mb-2, mb-3, mb-4
-
-## Borders
-
-### Border Radius
-- Large: rounded-lg (Containers)
-- Full: rounded-full (Toggle switches)
-
-### Border Widths
-- Default: border (1px)
-- Focus: ring-2 (Focus states)
-
-## Effects
-
-### Transitions
-- Duration: duration-200
-- Timing: ease-in-out
-- Properties: transition-all, transition-colors, transition-transform
-
-### Shadows
-- Large: shadow-lg
-- Extra Large: shadow-xl
-
-### Opacity
-- Semi-transparent: opacity-50
-- Disabled state: disabled:opacity-50
-
-## Layout
-
-### Grid
-- Mobile: grid-cols-1
-- Desktop: md:grid-cols-2
-- Gap: gap-6
-
-### Flexbox
-- Container: flex
-- Spacing: justify-between, justify-center, items-center
-- Direction: flex-col
-- Grow: flex-grow
-
-## Interactive Elements
-
-### Buttons
-Primary Button:
-```css
-px-4 py-2 bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 
-border border-blue-500/50 shadow-lg shadow-blue-500/20 
-rounded-lg transition-all duration-200 disabled:opacity-50
-```
-
-### Toggle Switch
-Container:
-```css
-w-12 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out
-bg-blue-500 shadow-lg shadow-blue-500/20
-```
-
-Thumb:
-```css
-w-4 h-4 rounded-full bg-white transform transition-transform duration-200 ease-in-out
-translate-x-6 (active) or translate-x-0 (inactive)
-```
-
-## Container Styles
-
-### Card Container
-```css
-bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg 
-shadow-lg p-6 border border-gray-700/50
-```
-
-### Input Container
-```css
-bg-gray-900/50 text-gray-200 w-full p-3 
-border border-gray-700/50 rounded-lg 
-focus:outline-none focus:ring-2 focus:ring-blue-500/50 
-focus:border-blue-500/50 transition-all duration-200
-```
-
-## Responsive Design
-
-### Breakpoints
-- Mobile First: Default styles
-- Tablet/Desktop: md:* (768px and above)
-
-### Mobile Navigation
-- Fixed bottom navigation
-- Simplified layout
-- Larger touch targets
-
-## Animation
-
-### Transitions
-- All transitions use duration-200
-- Smooth easing with ease-in-out
-- Transform transitions for movement
-- Color transitions for hover states
-
-### Hover Effects
-- Scale: hover:scale-105
-- Background color changes
-- Shadow intensity changes
-- Border color changes
-
-## Best Practices
-
-1. Maintain consistent spacing using the defined spacing scale
-2. Use semantic color names based on purpose
-3. Ensure sufficient color contrast for accessibility
-4. Apply consistent border radius across similar elements
-5. Use transitions for all interactive elements
-6. Maintain consistent padding/margin patterns
-7. Follow mobile-first responsive design
-8. Use shadows to create depth hierarchy
+{
+  dailyStats: {
+    '2025-01-13': {
+      averageConfidence: 3,
+      timeSpent: 171.75400000000002,
+      count: 15,
+      totalSwitches: 8,
+      hintsUsed: 8
+    },
+    '2025-01-14': {
+      totalSwitches: 6,
+      hintsUsed: 3,
+      averageConfidence: 2,
+      timeSpent: 123.88399999999999,
+      count: 2
+    }
+  },
+  categoryStats: [
+    {
+      category: 'Binary Search Trees',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Heaps',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Binary Trees',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Two Pointers',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Recursion & Backtracking',       
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Binary Search',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Linked List',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Greedy Algorithms',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Dynamic Programming',
+      totalRevisions: 2,
+      totalTimeSpent: 53.408,
+      averageConfidence: 1
+    },
+    {
+      category: 'Sliding Windows',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Stacks & Queues',
+      totalRevisions: 1,
+      totalTimeSpent: 47.356,
+      averageConfidence: 1
+    },
+    {
+      category: 'Unknown',
+      totalRevisions: 1,
+      totalTimeSpent: 6.183,
+      averageConfidence: 3
+    },
+    {
+      category: 'Arrays',
+      totalRevisions: 2,
+      totalTimeSpent: 57.763000000000005,
+      averageConfidence: 5
+    },
+    {
+      category: 'Strings',
+      totalRevisions: 7,
+      totalTimeSpent: 131.20100000000002,
+      averageConfidence: 5
+    },
+    {
+      category: 'None',
+      totalRevisions: 21,
+      totalTimeSpent: 158.254,
+      averageConfidence: 2
+    }
+  ],
+  numberOfQuestions: 5,
+  recentQuestions: [
+    {
+      questionId: '56958a1c89c6f2ee5015568e69db354b',
+      name: 'Competitive Programming Analysis',   
+      categories: [Array],
+      lastRevised: '2025-01-14T06:45:56.196Z',    
+      nextRevision: '2025-01-16T06:45:56.196Z',   
+      revisionCount: 2,
+      confidence: 2,
+      timeSpent: 11.475,
+      switches: 0,
+      usedHints: false,
+      shownHints: 0
+    },
+    {
+      questionId: '26e371899daa8e533d83589314f06765',
+      name: 'Analysis of Non-Valid Code Solution',
+      categories: [Array],
+      lastRevised: '2025-01-14T06:45:44.664Z',    
+      nextRevision: '2025-01-20T06:45:44.664Z',   
+      revisionCount: 2,
+      confidence: 5,
+      timeSpent: 6.497,
+      switches: 0,
+      usedHints: true,
+      shownHints: 1
+    },
+    {
+      questionId: '1c697a9cfeca855566a48c0bcc57a53e',
+      name: 'Incomplete Code Analysis',
+      categories: [Array],
+      lastRevised: '2025-01-14T06:45:31.644Z',    
+      nextRevision: '2025-01-20T06:45:31.643Z',   
+      revisionCount: 2,
+      confidence: 5,
+      timeSpent: 10.407,
+      switches: 0,
+      usedHints: false,
+      shownHints: 0
+    }
+  ],
+  overallStats: {
+    totalRevisions: 17,
+    totalTimeSpent: 295.63800000000003,
+    totalQuestions: 5,
+    averageConfidence: 2.9
+  },
+  streaks: {
+    currentStreak: 2,
+    longestStreak: 16,
+    lastRevisionDate: '2025-01-14'
+  },
+  categoryDistributions: [
+    { categoryName: 'None', count: 4 },
+    { categoryName: 'Arrays', count: 1 },
+    { categoryName: 'Strings', count: 1 }
+  ]
+}

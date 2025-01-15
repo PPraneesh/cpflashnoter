@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { XCircle } from "lucide-react";
-import { FaInfoCircle } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
@@ -14,161 +13,147 @@ export default function Profile({ userData, onClose }) {
 
   const makePrivate = async (questionId) => {
     try {
-      const response = await api.put("/delete_public_cp", {
-        cp_id: questionId,
-      });
-      
+      const response = await api.put("/delete_public_cp", { cp_id: questionId });
       if (response.data.status) {
         setUserData(response.data.userDataStats);
-        toast.success("Public link deleted successfully");
+        toast.success("Public link removed");
       } else {
-        toast.error("Couldn't delete");
-        console.log(response.data.reason);
+        toast.error("Couldn't remove link");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Couldn't delete", error);
+    } catch{
+      toast.error("Couldn't remove link");
     }
   };
 
+  const formatSeconds = (seconds) =>
+    new Date(seconds * 1000).toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl border border-gray-700/50 
-        w-full max-w-md mx-auto relative max-h-[calc(100vh-2rem)] flex flex-col">
-        <button 
-          onClick={onClose} 
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-200 
-            transition-colors duration-200 z-10"
+    <div className="fixed inset-0 bg-neutral-900 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="bg-neutral-800 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all w-full max-w-md mx-auto relative max-h-[calc(100vh-2rem)] flex flex-col">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-neutral-400 hover:text-neutral-300 transition-colors z-10"
         >
           <XCircle size={24} />
         </button>
 
-        {/* Header Section - Fixed */}
-        <div className="p-4 sm:p-6 border-b border-gray-700/50">
+        <div className="p-4 border-b border-neutral-700/30">
           <div className="flex items-center space-x-4">
             <img
               src={userData?.photo}
               alt={userData?.name}
-              className="w-16 h-16 rounded-full shadow-lg border-2 border-gray-700/50 flex-shrink-0"
+              className="w-16 h-16 rounded-full border-2 border-neutral-700/30 flex-shrink-0"
             />
-            <div className="min-w-0">
-              <h1 className="text-lg font-semibold text-gray-200 truncate">{userData?.name}</h1>
-              <p className="text-sm text-gray-400 truncate">{userData?.email}</p>
+            <div>
+              <h1 className="text-white text-lg font-semibold truncate">{userData?.name}</h1>
+              <p className="text-neutral-400 text-sm truncate">{userData?.email}</p>
             </div>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <h2 className="text-sm sm:text-base text-gray-300 font-medium">Generation Stats</h2>
-              <div className="bg-gray-900/50 rounded-lg p-3 space-y-2">
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-gray-400">Generations left</span>
-                  <span className="text-blue-400 font-medium">{userData?.generations?.count}</span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-gray-400">Revives at</span>
-                  <span className="text-gray-300">
-                    {new Date(userData?.generations?.last_gen).toLocaleString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                </div>
-              </div>
+        {/* Subscription Details */}
+        <div className="px-4 pt-3 text-center">
+          {userData?.tier === "premium" && userData.premium ? (
+            <div className="text-white text-sm">
+              Premium: {`Active until ${formatSeconds(userData.premium.endDate._seconds)}`}
             </div>
-
-            <div className="space-y-2">
-              <h2 className="text-sm sm:text-base text-gray-300 font-medium">Save Stats</h2>
-              <div className="bg-gray-900/50 rounded-lg p-3 space-y-2">
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-gray-400">Saves left</span>
-                  <span className="text-emerald-400 font-medium">{userData?.saves?.quests}</span>
-                </div>
-                <div className="flex justify-between text-sm sm:text-base">
-                  <span className="text-gray-400">Revives at</span>
-                  <span className="text-gray-300">
-                    {new Date(userData?.saves?.last_save).toLocaleString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                </div>
-              </div>
+          ) : userData?.tier === "expired" ? (
+            <div className="text-red-500 text-sm">Expired</div>
+          ) : userData?.tier === "free" && userData.freeTier ? (
+            <div className="text-white text-sm">
+              Free plan ends: {formatSeconds(userData.freeTier.endDate._seconds)}
             </div>
+          ) : null}
+        </div>
 
-            {userData?.publicLinks?.length > 0 && (
-              <div className="space-y-2">
-                <h2 className="text-sm sm:text-base text-gray-300 font-medium">Shared Links</h2>
-                <div className="space-y-2">
-                  {userData.publicLinks.map((link) => (
-                    <div 
-                      key={link.cp_id} 
-                      className="bg-gray-900/50 rounded-lg p-2 sm:p-3 flex flex-col sm:flex-row 
-                        justify-between items-start sm:items-center gap-2"
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Generation & Saves */}
+          <div className="bg-neutral-700/50 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
+            <div className="flex justify-between text-sm text-white">
+              <span>Generations left</span>
+              <span className="text-blue-500">{userData?.generations?.count}</span>
+            </div>
+            <div className="flex justify-between text-sm text-white">
+              <span>Last updated</span>
+              <span className="text-neutral-400">
+                {userData?.generations?.lastGen?._seconds
+                  ? formatSeconds(userData.generations.lastGen._seconds)
+                  : "--"}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm text-white mt-3">
+              <span>Saves left</span>
+              <span className="text-green-500">{userData?.saves?.quests}</span>
+            </div>
+            <div className="flex justify-between text-sm text-white">
+              <span>Last updated</span>
+              <span className="text-neutral-400">
+                {userData?.saves?.lastSave?._seconds
+                  ? formatSeconds(userData.saves.lastSave._seconds)
+                  : "--"}
+              </span>
+            </div>
+          </div>
+
+          {/* Public Links */}
+          {userData?.publicLinks?.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-white text-sm font-medium">Shared Links</h2>
+              {userData.publicLinks.map((link) => (
+                <div
+                  key={link.cp_id}
+                  className="bg-neutral-700/50 rounded-md p-3 border border-neutral-700/30 hover:border-neutral-600/50 transition-all flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <span className="text-neutral-400 text-xs truncate max-w-[180px]">{link.name}</span>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <Link
+                      to={`/home/questions/${link.cp_id}`}
+                      onClick={onClose}
+                      className="flex-1 sm:flex-none px-3 py-1 text-xs text-blue-500 hover:text-blue-400 border border-blue-500/40 rounded-lg transition-all text-center"
                     >
-                      <span className="text-xs sm:text-sm text-gray-300 truncate max-w-[200px]">
-                        {link.name}
-                      </span>
-                      <div className="flex gap-2 w-full sm:w-auto">
-                        <Link
-                          to="#"
-                          className="flex-1 sm:flex-none px-3 py-1 text-xs bg-blue-600/20 text-blue-400 
-                            hover:bg-blue-600/30 border border-blue-500/50 rounded-lg 
-                            transition-all duration-200 text-center"
-                          onClick={() => toast("it'll work very soon", { icon: <FaInfoCircle /> })}
-                        >
-                          Open
-                        </Link>
-                        <button
-                          onClick={() => makePrivate(link.cp_id)}
-                          className="flex-1 sm:flex-none px-3 py-1 text-xs bg-red-600/20 text-red-400 
-                            hover:bg-red-600/30 border border-red-500/50 rounded-lg 
-                            transition-all duration-200"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                      Open
+                    </Link>
+                    <button
+                      onClick={() => makePrivate(link.cp_id)}
+                      className="flex-1 sm:flex-none px-3 py-1 text-xs text-red-500 hover:text-red-400 border border-red-500/40 rounded-lg transition-all"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
+          )}
 
-            {userData?.userPreferences && (
-              <div className="space-y-2">
-                <h2 className="text-sm sm:text-base text-gray-300 font-medium">Preferences</h2>
-                <div className="bg-gray-900/50 rounded-lg p-3 space-y-2">
-                  {Object.entries(userData.userPreferences).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center">
-                      <span className="text-xs sm:text-sm text-gray-400">{key}</span>
-                      <span className="text-xs sm:text-sm text-gray-300">{value.toString()}</span>
-                    </div>
-                  ))}
+          {/* Preferences */}
+          {userData?.userPreferences && (
+            <div className="bg-neutral-700/50 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
+              <h2 className="text-white text-sm font-medium">Preferences</h2>
+              {Object.entries(userData.userPreferences).map(([key, value]) => (
+                <div key={key} className="flex justify-between text-sm">
+                  <span className="text-neutral-400">{key}</span>
+                  <span className="text-white">{value.toString()}</span>
                 </div>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Footer Section - Fixed */}
-        <div className="p-4 sm:p-6 border-t border-gray-700/50">
+        {/* Footer */}
+        <div className="p-4 border-t border-neutral-700/30">
           <button
             onClick={() => {
               onClose();
               logOut();
             }}
-            className="w-full px-4 py-2 bg-red-600/20 text-red-400 hover:bg-red-600/30 
-              border border-red-500/50 rounded-lg transition-all duration-200 
-              shadow-lg shadow-red-500/20 font-medium text-sm sm:text-base"
+            className="w-full px-4 py-2 text-red-500 hover:text-red-400 border border-red-500/40 rounded-lg transition-all"
           >
             Logout
           </button>
@@ -183,13 +168,21 @@ Profile.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     photo: PropTypes.string,
+    tier: PropTypes.string,
+    premium: PropTypes.shape({
+      startDate: PropTypes.shape({ _seconds: PropTypes.number }),
+      endDate: PropTypes.shape({ _seconds: PropTypes.number }),
+    }),
+    freeTier: PropTypes.shape({
+      endDate: PropTypes.shape({ _seconds: PropTypes.number }),
+    }),
     generations: PropTypes.shape({
       count: PropTypes.number,
-      last_gen: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      lastGen: PropTypes.shape({ _seconds: PropTypes.number }),
     }),
     saves: PropTypes.shape({
       quests: PropTypes.number,
-      last_save: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      lastSave: PropTypes.shape({ _seconds: PropTypes.number }),
     }),
     publicLinks: PropTypes.arrayOf(
       PropTypes.shape({
@@ -199,5 +192,5 @@ Profile.propTypes = {
     ),
     userPreferences: PropTypes.object,
   }),
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 };
