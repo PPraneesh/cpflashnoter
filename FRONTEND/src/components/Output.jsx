@@ -28,32 +28,33 @@ export default function Output({ output }) {
         <div className="space-y-6">
           <div>
             <h3 className="text-xl font-semibold text-white mb-3">{output.name}</h3>
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="px-3 py-1 bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 text-white text-sm rounded-lg">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="px-4 py-2 bg-neutral-700/50 text-white text-sm rounded-lg border border-neutral-700/30">
                 {output.language}
               </span>
-              <button
+              {/* <button
                 onClick={() => setShowCategories(!showCategories)}
-                className="px-4 py-2 bg-blue-500/20 text-blue-500 hover:bg-blue-400/30 border border-blue-500/50 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/20 text-sm"
+                className="px-4 py-2  text-white bg-blue-700 hover: rounded-lg transition-all duration-200 text-sm"
               >
                 Categories
-              </button>
+              </button> */}
             </div>
 
-            {showCategories && (
-              <div className="absolute mt-2 bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 rounded-lg p-4 shadow-xl z-10">
-                <div className="flex flex-col gap-2">
-                  {output.categories?.map((cat, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-500/20 text-blue-500 hover:text-blue-400 rounded-lg border border-blue-500/50"
-                    >
-                      {cat}
-                    </span>
-                  ))}
+            
+                <div>
+                  <h1 className="text-lg">Categories</h1>
+                  <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                    {output.categories?.map((cat, index) => (
+                      <div
+                        key={index}
+                        className="w-fit px-3 py-1 bg-blue-500/20 text-blue-500 hover:text-blue-400 rounded-lg border border-blue-500/50"
+                      >
+                        {cat}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+
 
             <p className="text-neutral-400 mb-6">{output.description}</p>
 

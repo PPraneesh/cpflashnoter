@@ -8,7 +8,7 @@ export default function Dashboard() {
             <h1 className="text-4xl font-semibold mb-4">Welcome back to cpflashnoter!</h1>
             <p className="mb-6">Choose an option to get started:</p>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Generate Notes Card */}
                 <div className="bg-neutral-800 border border-neutral-700/30 rounded-xl p-6 hover:border-neutral-600/50 transition-all">
                     <div className="h-8 w-8 lg:h-12 lg:w-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">

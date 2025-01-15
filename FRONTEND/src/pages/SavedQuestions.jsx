@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { VscEye } from "react-icons/vsc";
 import { UserContext } from "../context/UserContext"
+import BuyPremium from "../components/BuyPremium";
 
 
 function SavedQuestions() {
@@ -33,7 +34,7 @@ function SavedQuestions() {
         </div>
         <div className="md:mr-8">
           <select
-            className="w-full md:w-auto bg-neutral-800 text-white p-3 rounded-lg border border-neutral-700/30 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className="w-full md:w-auto bg-neutral-800 text-white p-3 rounded-lg border border-neutral-700/30 transition-all"
             name="category"
             id="category"
             onChange={(e) => setCategory(e.target.value)}
@@ -66,9 +67,6 @@ function SavedQuestions() {
                     <h3 className="text-xl font-semibold text-white mb-2 truncate">
                       {quest.name}
                     </h3>
-                    <span className="px-3 py-1 bg-neutral-700/50 text-white text-sm rounded-3xl border border-neutral-700/30">
-                        {quest.categories && quest.categories[0]}
-                      </span>
                     </div>
                     <p className="text-neutral-400 text-sm mb-4 line-clamp-2">
                       {quest.description}
@@ -113,6 +111,7 @@ function SavedQuestions() {
           )}
         </div>
       )}
+      <BuyPremium />
     </div>
   );
 }

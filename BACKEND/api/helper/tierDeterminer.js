@@ -10,7 +10,6 @@ const tier = (userData) => {
         const lastSaveDate = new Date(lastSave).setHours(0, 0, 0, 0);
         const lastGenDate = new Date(lastGen).setHours(0, 0, 0, 0);
         const today = new Date().setHours(0, 0, 0, 0);
-         console.log(lastSaveDate, lastGenDate, today)
         if (lastSaveDate < today || lastGenDate < today) {
             userData.saves.quests = 10;
             userData.generations.count = 10;
@@ -49,7 +48,6 @@ const tier = (userData) => {
     } 
     // No active tier - reset everything to 0
     else {
-        console.log("expired")
         userData.generations.count = 0;
         userData.saves.quests = 0;
         userData.saves.lastSave =  { _seconds: Math.floor(currentTime / 1000) };

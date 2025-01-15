@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 const Landing = () => {
-
+  const { handleLogin, loadLogin } = useContext(AuthContext);
   return (<>
+             {loadLogin != 0 && (
+        <div className="fixed inset-0 bg-[#0d1117]/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+          <span className="loader-login"></span>
+          {loadLogin == 1 && <><h1 className="text-xl text-white">Complete the login</h1>
+          <p className="text-xs text-white">If you are unable to login reload the page</p></>}
+          {loadLogin == 2 && <><h1 className="text-xl text-white">Redirecting you in a sec</h1>
+            <p className="text-xs text-white">If you are not redirected to home, reload the page</p></>}
+        </div>
+      )}
+
       <section id="hero" className="pt-20 bg-neutral-900 min-h-[70vh] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">

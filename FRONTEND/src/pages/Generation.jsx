@@ -62,7 +62,6 @@ export default function Generation() {
   const handleGeneration = async (e) => {
     e.preventDefault();
     if (question !== "" && code !== "// type your code...") {
-      setGenCount(genCount + 1);
       setGenNotes(true);
 
       try {
@@ -79,6 +78,7 @@ export default function Generation() {
               setUserData(response.data.userDataStats);
               localStorage.setItem("userData", JSON.stringify(response.data.userDataStats));
               toast.success("generated successfully");
+              setGenCount(genCount + 1);
             } else {
               toast.error(response.data.reason);
             }
@@ -113,14 +113,14 @@ export default function Generation() {
           <div className="flex gap-4">
             <button
               onClick={handleGeneration}
-              className="px-4 py-2 bg-neutral-800 text-blue-500 hover:text-blue-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
+              className="rounded-lg px-4 py-2 bg-neutral-800 text-blue-500 hover:text-blue-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
               disabled={genNotes}
             >
               {genNotes ? "Generating... " : "Generate Notes"}
             </button>
             <button
               onClick={save}
-              className="px-4 py-2 bg-neutral-800 text-green-500 hover:text-green-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
+              className="rounded-lg px-4 py-2 bg-neutral-800 text-green-500 hover:text-green-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
               disabled={saveCp}
             >
               {saveCp ? "saving.." : "Save it"}

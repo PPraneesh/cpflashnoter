@@ -11,13 +11,15 @@
 }
 .loader-login {
     color: #fff;
-    font-weight: bold;
-    font-size: 78px;
+    font-family: sans-serif;
+    /* font-weight: bold; */
+    font-size: 70px;
     opacity: 0.8;
   }
   .loader-login:before {
     content: "{";
     display: inline-block;
+    margin-right: 6px ;
     animation: pulse 0.4s alternate infinite ease-in-out;
   }
   .loader-login:after {

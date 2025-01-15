@@ -40,7 +40,6 @@ export default function Preparation() {
   const handleStart = () => {
     const index = Math.floor(Math.random() * userDataCp.length);
     const question = userDataCp[index];
-    console.log(userDataCp)
     setQuestionData(question);
     setIsRunning(true);
   };
