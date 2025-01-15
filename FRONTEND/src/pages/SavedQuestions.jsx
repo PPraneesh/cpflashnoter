@@ -67,7 +67,7 @@ function SavedQuestions() {
                       {quest.name}
                     </h3>
                     <span className="px-3 py-1 bg-neutral-700/50 text-white text-sm rounded-3xl border border-neutral-700/30">
-                        {quest.categories[0]}
+                        {quest.categories && quest.categories[0]}
                       </span>
                     </div>
                     <p className="text-neutral-400 text-sm mb-4 line-clamp-2">

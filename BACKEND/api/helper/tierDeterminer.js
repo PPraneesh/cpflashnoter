@@ -49,14 +49,14 @@ const tier = (userData) => {
     } 
     // No active tier - reset everything to 0
     else {
+        console.log("expired")
         userData.generations.count = 0;
         userData.saves.quests = 0;
         userData.saves.lastSave =  { _seconds: Math.floor(currentTime / 1000) };
         userData.generations.lastGen =  { _seconds: Math.floor(currentTime / 1000) };
         userData.tier = "expired"
         return { 
-            status: true, 
-            reason: "No active subscription",
+            status: true,
             userData: userData,
             newUser: false
         };

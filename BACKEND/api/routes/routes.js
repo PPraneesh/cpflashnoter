@@ -3,16 +3,15 @@ const router = express.Router();
 
 const { authenticateUser } = require("../middlewares/auth.middleware");
 
-const { llm_controller } = require("../controllers/llm_controller");
+const { llm_controller } = require("../controllers/llm.controller");
 
 const {
   handleUser,
   onboarding,
   getUserData,
-} = require("../controllers/user_controller");
+} = require("../controllers/userdata.controller");
 
 const {
-  cp_controller,
   get_cp,
   delete_cp_controller,
   share_cp_controller,
@@ -20,7 +19,8 @@ const {
   delete_public_cp_controller,
   edit_cp,
   get_cp_category,
-} = require("../controllers/cp_controller");
+  save_cp,
+} = require("../controllers/questions.controller");
 
 const {
   getRevise,
@@ -46,7 +46,7 @@ router.get("/get_user_data", authenticateUser, getUserData);
 router.post("/process_code", authenticateUser, llm_controller);
 
 
-router.post("/save_cp", authenticateUser, cp_controller);
+router.post("/save_cp", authenticateUser, save_cp);
 
 
 router.delete("/delete_cp", authenticateUser, delete_cp_controller);

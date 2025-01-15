@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const { tier } = require("../helper/tierDeterminer");
+const { userDataMasker } = require("../helper/dataMasker");
 
 async function handleUser(req, res) {
   const email = req.body.email;
@@ -40,7 +41,9 @@ async function handleUser(req, res) {
       }
 
       let userData = userDoc.data();
-      const output = tier(userData);
+      let output = tier(userData);
+      output.userData = userDataMasker(output.userData);
+      console.log(output.userData)
       await userRef.update(output.userData);
       res.send(output)
     }
@@ -75,11 +78,11 @@ async function getUserData(req, res) {
     }
     const userDataStats = userDoc.data();
     const output = tier(userDataStats);
+    output.userData = userDataMasker(output.userData);
+    console.log(output.userData)
     await userRef.update(output.userData);
     if(output.status)
     res.send({ status: true, userData: output.userData });
-    else
-    res.send({ status: false, reason: output.reason, userData: output.userData });
   } catch (error) {
     console.error("Error in getUpdatedData:", error);
     res.send({ status: false, reason: "Error in getUpdatedData" });
