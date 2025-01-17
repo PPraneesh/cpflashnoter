@@ -212,10 +212,10 @@ async function getAnalytics(req, res) {
             categoryDistributions
         };
         
-        res.status(200).json(response);
+        res.status(200).json({status: true,"analytics":response});
     } catch (error) {
         console.error("Error fetching analytics:", error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ status: false,error: error.message });
     }
 }
 

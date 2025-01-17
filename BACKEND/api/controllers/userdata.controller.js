@@ -1,13 +1,10 @@
 const db = require("../config/db");
 const { tier } = require("../helper/tierDeterminer");
 const { userDataMasker } = require("../helper/dataMasker");
-
 async function handleUser(req, res) {
   const email = req.body.email;
   const { name, photo } = req.body;
-  const currentTime = Date.now();
   const userRef = db.collection("users").doc(email);
-
   try {
     const doc = await userRef.get();
 
@@ -23,11 +20,11 @@ async function handleUser(req, res) {
         },
         saves: {
           quests: 3,
-          lastSave: new Date(currentTime),
+          lastSave: Date.now(),
         },
         generations: {
           count: 3,
-          lastGen: new Date(currentTime),
+          lastGen: Date.now(),
         },
       };
       await userRef.set(newUser);
@@ -81,7 +78,7 @@ async function getUserData(req, res) {
     await userRef.update(output.userData);
     output.userData = userDataMasker(output.userData);
     if(output.status)
-    res.send({ status: true, userData: output.userData });
+    res.send({ status: true, userData: output.userData, newUser: output.newUser });
   } catch (error) {
     console.error("Error in getUpdatedData:", error);
     res.send({ status: false, reason: "Error in getUpdatedData" });

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { XCircle } from "lucide-react";
 import PropTypes from "prop-types";
@@ -133,7 +134,7 @@ export default function Profile({ userData, onClose }) {
               <span>Last updated</span>
               <span className="text-neutral-400">
                 {userData?.generations?.lastGen
-                  ? formatSeconds(userData.generations.lastGen)
+                  ? formatSeconds(userData.generations.lastGen/1000)
                   : "--"}
               </span>
             </div>
@@ -145,7 +146,7 @@ export default function Profile({ userData, onClose }) {
               <span>Last updated</span>
               <span className="text-neutral-400">
                 {userData?.saves?.lastSave
-                  ? formatSeconds(userData.saves.lastSave)
+                  ? formatSeconds(userData.saves.lastSave/1000)
                   : "--"}
               </span>
             </div>
@@ -213,34 +214,34 @@ export default function Profile({ userData, onClose }) {
   );
 }
 
-Profile.propTypes = {
-  userData: PropTypes.shape({
-    name: PropTypes.string,
-    email: PropTypes.string,
-    photo: PropTypes.string,
-    tier: PropTypes.string,
-    premium: PropTypes.shape({
-      startDate: PropTypes.shape({ _seconds: PropTypes.number }),
-      endDate: PropTypes.shape({ _seconds: PropTypes.number }),
-    }),
-    freeTier: PropTypes.shape({
-      endDate: PropTypes.shape({ _seconds: PropTypes.number }),
-    }),
-    generations: PropTypes.shape({
-      count: PropTypes.number,
-      lastGen: PropTypes.shape({ _seconds: PropTypes.number }),
-    }),
-    saves: PropTypes.shape({
-      quests: PropTypes.number,
-      lastSave: PropTypes.shape({ _seconds: PropTypes.number }),
-    }),
-    publicLinks: PropTypes.arrayOf(
-      PropTypes.shape({
-        cp_id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-      })
-    ),
-    userPreferences: PropTypes.object,
-  }),
-  onClose: PropTypes.func.isRequired,
-};
+// Profile.propTypes = {
+//   userData: PropTypes.shape({
+//     name: PropTypes.string,
+//     email: PropTypes.string,
+//     photo: PropTypes.string,
+//     tier: PropTypes.string,
+//     premium: PropTypes.shape({
+//       startDate: PropTypes.number,
+//       endDate: PropTypes.number,
+//     }),
+//     freeTier: PropTypes.shape({
+//       endDate: PropTypes.shape({ _seconds: PropTypes.number }),
+//     }),
+//     generations: PropTypes.shape({
+//       count: PropTypes.number,
+//       lastGen: PropTypes.shape({ _seconds: PropTypes.number }),
+//     }),
+//     saves: PropTypes.shape({
+//       quests: PropTypes.number,
+//       lastSave: PropTypes.shape({ _seconds: PropTypes.number }),
+//     }),
+//     publicLinks: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         cp_id: PropTypes.string.isRequired,
+//         name: PropTypes.string.isRequired,
+//       })
+//     ),
+//     userPreferences: PropTypes.object,
+//   }),
+//   onClose: PropTypes.func.isRequired,
+// };

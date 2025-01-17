@@ -9,8 +9,8 @@ const tier = (userData) => {
         if (lastSaveDate < today || lastGenDate < today) {
             userData.saves.quests = 10;
             userData.generations.count = 10;
-            userData.saves.lastSave = new Date;
-            userData.generations.lastGen = new Date;
+            userData.saves.lastSave = Date.now();
+            userData.generations.lastGen = Date.now();
         }
 
         let userOnboarded = userData.userPreferences === undefined;
@@ -31,8 +31,8 @@ const tier = (userData) => {
         if (timeDiffSave >= 86400 || timeDiffGen >= 86400) {
             userData.saves.quests = 3;
             userData.generations.count = 3;
-            userData.saves.lastSave = new Date;
-            userData.generations.lastGen = new Date;
+            userData.saves.lastSave = Date.now();
+            userData.generations.lastGen = Date.now();
         }
         let userOnboarded = userData.userPreferences === undefined;
         userData.tier = "free"

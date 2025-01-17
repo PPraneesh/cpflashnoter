@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,10 +12,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { api } from "../api/axios";
 import CountUp from "react-countup";
 // Import icons individually to reduce bundle size
 import { LuCalendar } from "react-icons/lu";
+import { RiLoaderLine } from "react-icons/ri";
 import { HiOutlineExternalLink } from "react-icons/hi";
 
 ChartJS.register(
@@ -38,9 +39,7 @@ const scrollToElement = (id) => {
 };
 
 const Analytics = ({ short = false }) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {userAnalytics} = useContext(UserContext);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -67,9 +66,6 @@ const Analytics = ({ short = false }) => {
   };
   const { hash } = useLocation();
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
 
   useEffect(() => {
     if (hash && hash !== "#") {
@@ -79,32 +75,16 @@ const Analytics = ({ short = false }) => {
     }
   }, [hash]);
 
-  const fetchAnalytics = async () => {
-    try {
-      const response = await api.get("/analytics");
-      setData(response.data);
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching analytics:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  if (loading) {
+
+  if (userAnalytics === null) {
     return (
       <div className="flex items-center justify-center h-64 bg-[#121212]">
-        {/* <LuLoader2 className="w-8 h-8 animate-spin text-[#00b8a3]" /> */}
-        loder
+        <RiLoaderLine className="w-8 h-8 animate-spin text-[#00b8a3]" />
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-red-500 p-4">Error loading analytics: {error}</div>
-    );
-  }
 
   const getConfidenceColor = (confidence) => {
     if (confidence <= 2) return "text-red-500";
@@ -114,7 +94,7 @@ const Analytics = ({ short = false }) => {
 
   const activityData = getLast30Days().map((day) => ({
     ...day,
-    count: data.dailyStats[day.date]?.count || 0,
+    count: userAnalytics.dailyStats[day.date]?.count || 0,
   }));
 
   return (
@@ -142,7 +122,7 @@ const Analytics = ({ short = false }) => {
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
             <div className="flex flex-col items-center">
               <span className="text-5xl font-bold text-blue-500">
-                <CountUp end={data.overallStats.totalQuestions} />
+                <CountUp end={userAnalytics.overallStats.totalQuestions} />
               </span>
               <span className="text-lg text-white mb-1">Total Notes</span>
               <span className="text-sm text-neutral-400">Notes</span>
@@ -151,7 +131,7 @@ const Analytics = ({ short = false }) => {
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
             <div className="flex flex-col items-center">
               <span className="text-5xl font-bold text-purple-700">
-                <CountUp end={data.categoryDistributions.length} />
+                <CountUp end={userAnalytics.categoryDistributions.length} />
               </span>
               <span className="text-lg text-white mb-1">Topics</span>
               <span className="text-sm text-neutral-400">Total</span>
@@ -161,7 +141,7 @@ const Analytics = ({ short = false }) => {
             <div className="flex flex-col items-center">
               <span className="text-5xl font-bold text-green-500">
                 <CountUp
-                  end={data.overallStats.averageConfidence}
+                  end={userAnalytics.overallStats.averageConfidence}
                   decimals={1}
                 />
               </span>
@@ -172,7 +152,7 @@ const Analytics = ({ short = false }) => {
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
             <div className="flex flex-col items-center">
               <span className="text-5xl font-bold text-yellow-500">
-                <CountUp end={data.overallStats.totalRevisions} />
+                <CountUp end={userAnalytics.overallStats.totalRevisions} />
               </span>
               <span className="text-lg text-white mb-1">Total Revisions</span>
               <span className="text-sm text-neutral-400">Overall</span>
@@ -188,14 +168,14 @@ const Analytics = ({ short = false }) => {
               Topic Wise Notes Distribution
             </h3>
             <div className="space-y-4">
-              {data.categoryDistributions &&
-              data.categoryDistributions.length > 0 ? (
+              {userAnalytics.categoryDistributions &&
+              userAnalytics.categoryDistributions.length > 0 ? (
                 (() => {
-                  const total = data.categoryDistributions.reduce(
+                  const total = userAnalytics.categoryDistributions.reduce(
                     (acc, obj) => acc + obj.count,
                     0
                   );
-                  return data.categoryDistributions.map((cat) => {
+                  return userAnalytics.categoryDistributions.map((cat) => {
                     const percent = total
                       ? Math.round((cat.count / total) * 100)
                       : 0;
@@ -270,7 +250,7 @@ const Analytics = ({ short = false }) => {
               <div className="flex flex-col items-center">
                 <span className="text-5xl font-bold text-blue-400 mb-2">
                   <CountUp
-                    end={data.overallStats.totalTimeSpent / 60}
+                    end={userAnalytics.overallStats.totalTimeSpent / 60}
                     decimals={2}
                   />
                 </span>
@@ -283,7 +263,7 @@ const Analytics = ({ short = false }) => {
             <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
               <div className="flex flex-col items-center">
                 <span className="text-5xl font-bold text-purple-700 mb-2">
-                  <CountUp end={data.overallStats.totalQuestions} />
+                  <CountUp end={userAnalytics.overallStats.totalQuestions} />
                 </span>
                 <span className="text-lg text-white mb-1">Total Questions</span>
                 <span className="text-sm text-neutral-400">Revised</span>
@@ -292,7 +272,7 @@ const Analytics = ({ short = false }) => {
             <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
               <div className="flex flex-col items-center">
                 <span className="text-5xl font-bold text-blue-400 mb-2">
-                  <CountUp end={data.streaks.currentStreak} />
+                  <CountUp end={userAnalytics.streaks.currentStreak} />
                 </span>
                 <span className="text-lg text-white mb-1">Current Streak</span>
                 <span className="text-sm text-neutral-400">Keep going!</span>
@@ -301,7 +281,7 @@ const Analytics = ({ short = false }) => {
             <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
               <div className="flex flex-col items-center">
                 <span className="text-5xl font-bold text-yellow-500 mb-2">
-                  <CountUp end={data.streaks.longestStreak} />
+                  <CountUp end={userAnalytics.streaks.longestStreak} />
                 </span>
                 <span className="text-lg text-white mb-1">Longest Streak</span>
                 <span className="text-sm text-neutral-400">Longest yet!</span>
@@ -317,8 +297,8 @@ const Analytics = ({ short = false }) => {
               Recent Questions
             </h3>
             <div className="space-y-2">
-              {data.recentQuestions && data.recentQuestions.length > 0 ? (
-                data.recentQuestions.map((question) => (
+              {userAnalytics.recentQuestions && userAnalytics.recentQuestions.length > 0 ? (
+                userAnalytics.recentQuestions.map((question) => (
                   <div
                     key={question.questionId}
                     className="bg-neutral-700/30 border border-neutral-600/50 p-3 rounded transition-colors"

@@ -28,7 +28,7 @@ async function save_cp(req, res) {
             revObj: {
               revNum: 1,
               nextRev: nextRevision,
-              lastRev: new Date(),
+              lastRev: Date.now(),
             },
           };
           let categories = cp.categories || [];

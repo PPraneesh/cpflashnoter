@@ -18,6 +18,7 @@ export const setAuthGetters = (tokenGetter, refreshTokenGetter) => {
   
 api.interceptors.request.use(
   async (config) => {
+    console.log("used",config.url)
     try {
       const token = await getIdToken();
       if (token) {

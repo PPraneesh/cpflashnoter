@@ -9,6 +9,7 @@ const UserProvider = ({children})=>{
     const [initialLoad, setInitialLoad] = useState(false);
     const [deleteActionState, setDeleteActionState] = useState(true);
     const [category, setCategory] = useState("all");
+    const [userAnalytics, setUserAnalytics] = useState(null);
 
       useEffect(() => {
         if (userData) {
@@ -27,6 +28,8 @@ const UserProvider = ({children})=>{
         setInitialLoad,
         category,
         setCategory,
+        userAnalytics,
+        setUserAnalytics,
         deleteActionState,
         setDeleteActionState
     }

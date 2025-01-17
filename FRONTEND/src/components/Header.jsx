@@ -3,11 +3,15 @@ import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import { Home, BookOpen, Brain, RefreshCw } from "lucide-react";
 import Profile from "./Profile";
 import { api } from "../api/axios";
 import { toast } from "react-hot-toast";
-import { FaInfoCircle } from "react-icons/fa";
+import { PiStarFourBold } from "react-icons/pi";
+import { LuNotebookPen } from "react-icons/lu";
+import { LuBrain } from "react-icons/lu";
+import { TbBrandGoogleAnalytics } from "react-icons/tb";
+import { RiLoopRightLine } from "react-icons/ri";
+
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +24,7 @@ export default function Header() {
     category,
     initialLoad,
     setInitialLoad,
+    setUserAnalytics
   } = useContext(UserContext);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -28,11 +33,11 @@ export default function Header() {
   const isActive = (path) => location.pathname === path;
 
   const menuItems = [
-    { path: "/home", label: "Home", icon: Home },
-    { path: "/home/questions", label: "Questions", icon: BookOpen },
-    { path: "/prep", label: "Prep", icon: Brain },
-    { path: "/rev", label: "Rev", icon: RefreshCw },
-    {path:"/analytics", label:"Analytics", icon: FaInfoCircle}
+    { path: "/generation", label: "Generate", icon: PiStarFourBold },
+    { path: "/home/questions", label: "Questions", icon: LuNotebookPen },
+    { path: "/prep", label: "Prep", icon: LuBrain },
+    { path: "/rev", label: "Rev", icon: RiLoopRightLine },
+    {path:"/analytics", label:"Analytics", icon: TbBrandGoogleAnalytics}
   ];
 
   useEffect(() => {
@@ -69,7 +74,7 @@ export default function Header() {
       };
       fetchCp();
     }
-  }, [initialLoad, category, idToken, setInitialLoad, setUserDataCp, userData?.email]);
+  }, [idToken, initialLoad]);
 
   useEffect(() => {
     if (userData?.email && idToken) {
@@ -77,8 +82,12 @@ export default function Header() {
         .get("/get_user_data")
         .then((res) => {
           if (res.data.status) {
+            console.log(res.data)
             setUserData(res.data.userData);
             localStorage.setItem("userData", JSON.stringify(res.data.userData));
+            if(res.data.newUser){
+              navigate("/onboarding")
+            }
           } else {
             toast.error(res.data.reason);
           }
@@ -89,6 +98,17 @@ export default function Header() {
     }
   }, [userData?.email, idToken, setUserData]);
 
+  useEffect(()=>{
+    if(idToken){
+    api.get("/analytics")
+    .then((res)=>{
+      if(res.data.status){
+      setUserAnalytics(res.data.analytics)
+      }else{
+        toast.error(res.data.reason)
+      }
+    })}
+  },[idToken])
   return (
     <>
       {!userData ? (
@@ -162,12 +182,14 @@ export default function Header() {
         </nav>
       ) : (
         <header className="w-full z-50 bg-neutral-900 border-b border-neutral-700/30 hover:border-neutral-600/50 transition-all">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <div className="flex-shrink-0 flex items-center">
-                <img src="/logo.png" alt="Logo" className="h-8 w-auto mr-2" />
-                <span className="text-xl font-bold text-white">CPFlashNoter</span>
-              </div>
+              <Link to="/home">
+                <div className="flex-shrink-0 flex items-center">
+                  <img src="/logo.png" alt="Logo" className="h-8 w-auto mr-2" />
+                  <span className="text-xl font-bold text-white">CPFlashNoter</span>
+                </div>
+              </Link>
               <nav className="hidden md:flex items-center space-x-6">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
@@ -181,7 +203,7 @@ export default function Header() {
                           : "text-neutral-400 hover:text-white hover:bg-neutral-700/50"
                       }`}
                     >
-                      <Icon className="w-4 h-4 mr-2" />
+                      <Icon className="w-5 h-5 mr-2" />
                       <span>{item.label}</span>
                     </Link>
                   );
