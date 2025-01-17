@@ -78,8 +78,8 @@ async function getUserData(req, res) {
     }
     const userDataStats = userDoc.data();
     const output = tier(userDataStats);
-    output.userData = userDataMasker(output.userData);
     await userRef.update(output.userData);
+    output.userData = userDataMasker(output.userData);
     if(output.status)
     res.send({ status: true, userData: output.userData });
   } catch (error) {

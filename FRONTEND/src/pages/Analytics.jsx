@@ -125,7 +125,7 @@ const Analytics = ({ short = false }) => {
     >
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-semibold text-white">Quick Analytics</h3>
+          <h3 className="text-2xl font-semibold text-white">Quick Analytics</h3>
           <p className="text-neutral-400">Your learning progress at a glance</p>
         </div>
         {short && (
@@ -145,7 +145,7 @@ const Analytics = ({ short = false }) => {
                 <CountUp end={data.overallStats.totalQuestions} />
               </span>
               <span className="text-lg text-white mb-1">Total Notes</span>
-              <span className="text-sm text-neutral-400">notes</span>
+              <span className="text-sm text-neutral-400">Notes</span>
             </div>
           </div>
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
@@ -183,7 +183,7 @@ const Analytics = ({ short = false }) => {
 
       {!short && (
         <>
-          <div className="bg-neutral-800 rounded-lg p-6">
+          <div className="bg-neutral-800 rounded-lg p-6 border border-neutral-700">
             <h3 className="text-white text-xl font-semibold mb-4 flex items-center gap-2">
               Topic Wise Notes Distribution
             </h3>
@@ -238,7 +238,7 @@ const Analytics = ({ short = false }) => {
             </div>
           </div>
 
-          <div className="bg-neutral-800 p-6 rounded-lg">
+          <div className="bg-neutral-800 p-6 rounded-lg border border-neutral-700">
             <h3 className="text-white text-xl font-semibold mb-4 flex items-center gap-2">
               Last Week Revision Activity
             </h3>

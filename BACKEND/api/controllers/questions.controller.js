@@ -50,9 +50,7 @@ async function save_cp(req, res) {
           try {
             await cpRef.set(cp);
             userData.saves.quests -= 1;
-            userData.saves.lastSave = {
-              _seconds: Math.floor(Date.now() / 1000),
-            };
+            userData.saves.lastSave = Date.now();
 
             //update the data
             await userRef.update(userData);
@@ -64,6 +62,8 @@ async function save_cp(req, res) {
             res.status(500).send({ status: false, reason: error.message });
           }
         } else {
+          const currentTime = Date.now();
+          const timeRemaining = 24 * 60 * 60 * 1000 - (currentTime - userData.saves.lastSave);
           let nextSaveTime = new Date(currentTime + timeRemaining);
           res.send({
             status: false,
@@ -165,7 +165,7 @@ async function share_cp_controller(req, res) {
     let cp = doc.data();
     cp.isPublic = true;
     const data = await userRef.get();
-    const userData = data.data();
+    let userData = data.data();
 
     let publicLinks = userData.publicLinks || [];
     publicLinks = [...publicLinks, { cp_id: cp_id, name: cp.name }];
@@ -211,7 +211,7 @@ async function delete_public_cp_controller(req, res) {
       cpRef.set(cp);
 
       const userDoc = await userRef.get();
-      const userData = userDoc.data();
+      let userData = userDoc.data();
       let publicLinks = userData.publicLinks || [];
       publicLinks = publicLinks.filter((link) => link.cp_id !== cp_id);
       await userRef.update({ publicLinks: publicLinks });

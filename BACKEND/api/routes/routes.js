@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { authenticateUser } = require("../middlewares/auth.middleware");
 
-const { llm_controller } = require("../controllers/llm.controller");
+const { notes_generator, generatePrepAnalysis } = require("../controllers/llm.controller");
 
 const {
   handleUser,
@@ -43,8 +43,8 @@ router.post("/get_cp_category", authenticateUser, get_cp_category);
 
 router.get("/get_user_data", authenticateUser, getUserData);
 
-router.post("/process_code", authenticateUser, llm_controller);
-
+router.post("/process_code", authenticateUser, notes_generator);
+router.post("/prep_analysis",authenticateUser, generatePrepAnalysis);
 
 router.post("/save_cp", authenticateUser, save_cp);
 

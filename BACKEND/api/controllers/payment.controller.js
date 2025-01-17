@@ -51,18 +51,18 @@ const payment_success_handler = async (req,res)=>{
                     if (doc.exists) {
                         const userDataStats = doc.data();
                         userDataStats.premium = {
-                            startDate: new Date(),
+                            startDate:  new Date(),
                             endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
                             paymentId: payment_id,
                             orderId: order_id
                         };
                         userDataStats.saves = {
                             quests: 10,
-                            lastSave: { _seconds: Math.floor(Date.now() / 1000) },
+                            lastSave: Date.now(),
                         };
                         userDataStats.generations = {
                             count: 10,
-                            lastGen: { _seconds: Math.floor(Date.now() / 1000) },
+                            lastGen: Date.now(),
                         };
 
                         await userRef.update(userDataStats);

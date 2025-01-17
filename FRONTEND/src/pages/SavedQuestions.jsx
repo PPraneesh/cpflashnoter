@@ -9,7 +9,6 @@ import BuyPremium from "../components/BuyPremium";
 function SavedQuestions() {
   const { userData, userDataCp, setCategory, category, initialLoad } = useContext(UserContext);
 
-  console.log(userDataCp)
   const handleLinkClick = (event) => {
     if (event.button === 1 || event.ctrlKey || event.metaKey) {
       event.preventDefault();

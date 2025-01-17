@@ -7,7 +7,7 @@ export default function BuyPremium() {
     const { userData } = useContext(UserContext);
     const navigate = useNavigate();
    return(<>
-    {userData.tier === "premium" && 
+    {userData.tier !== "premium" && 
         <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/20 rounded-xl p-6 my-8">
          <div className="flex items-center justify-between">
              <div className="mr-4">
