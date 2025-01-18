@@ -15,6 +15,8 @@ import PrivacyPolicy from "../pages/PrivacyPolicy.jsx";
 import Contact from "../pages/Contact.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Generation from "../pages/Generation.jsx";
+import Success from "../pages/Success.jsx";
+import Failure from "../pages/Failure.jsx";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -93,6 +95,14 @@ const Routes = () => {
               <Dashboard short={true} />
             </PrivateRoute>
           ),
+        },
+        {
+          path:"/success",
+          element: <Success />
+        },
+        {
+          path:"/failure",
+          element: <Failure />
         },
         {
           path:"/terms-and-conditions",

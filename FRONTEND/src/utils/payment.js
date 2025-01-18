@@ -45,14 +45,16 @@ export default async function paymentHandlerOneTime(
                   .then((res) => {
                     if (res.data.status) {
                       navigate("/success", {
-                        state: { data: response, success: true },
+                        state: { data: response, success: true, order_id: response.razorpay_order_id, payment_id: response.razorpay_payment_id },
                       });
                     } else {
                       navigate("/failure", {
                         state: {
                           error:
                             "Error in backend, please contact support for further assistance",
+                            order_id : response.razorpay_order_id,
                         },
+
                       });
                     }
                   })

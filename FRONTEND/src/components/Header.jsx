@@ -41,9 +41,9 @@ export default function Header() {
   ];
 
   useEffect(() => {
-    if (location.pathname.slice(0, 6) === "/share") return;
-    if (userData) navigate("/home");
-    else navigate("/");
+    // if (location.pathname.slice(0, 6) === "/share") return;
+    // if (userData) navigate("/home");
+    // else navigate("/");
   }, []);
 
   useEffect(() => {
