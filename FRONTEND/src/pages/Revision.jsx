@@ -169,7 +169,7 @@ const Revision = () => {
                 </pre>
               </div>
             ) : (
-              <div className="text-sm whitespace-pre">{currentQuestion.question}</div>
+              <div className="text-sm whitespace-break-spaces">{currentQuestion.question}</div>
             )}
           </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingContext } from "../context/LoadingContext";
 import { UserContext } from "../context/UserContext";
 import Code from "../components/Code";
@@ -14,7 +14,7 @@ export default function Generation() {
   const [genCount, setGenCount] = useState(0);
   const { setUserData } = useContext(UserContext);
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (location.hash === "#generate") {
       document.getElementById("generate")?.scrollIntoView();
@@ -41,6 +41,7 @@ export default function Generation() {
             if (response.data.status) {
               toast.success("saved your notes : )");
               setUserData(response.data.userData);
+              navigate('/home/questions')
             } else {
               toast.error(response.data.reason);
             }
