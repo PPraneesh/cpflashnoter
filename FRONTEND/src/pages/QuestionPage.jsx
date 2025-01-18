@@ -156,7 +156,6 @@ const Question = () => {
         cp_id: questionData.id,
       })
       .then((response) => {
-        console.log(response.data)
         if (response.data.status) {
           setIsPublic(false);
           setUserData(response.data.userDataStats);
@@ -176,7 +175,6 @@ const Question = () => {
         cp_id: questionData.id,
       })
       .then((response) => {
-        console.log(response.data);
         if (response.data.status) {
           setIsPublic(true);
           toast.success("Public link created successfully");

@@ -3,7 +3,7 @@ const { getFirestore } = require("firebase-admin/firestore");
 require("dotenv").config();
 
 const serviceAccountKey = {
-    "type":process.env.F_type,
+"type":process.env.F_type, 
 "project_id":process.env.F_project_id,
 "private_key_id":process.env.F_private_key_id,
 "private_key":process.env.F_private_key.replace(/\\n/g, '\n'),

@@ -23,7 +23,6 @@ const Revision = () => {
 
   const startTimeRef = useRef(null);
   const switchesRef = useRef(0);
-  console.log(currentQuestionIndex)
   useEffect(() => {
     api.get('/rev')
       .then(res => {

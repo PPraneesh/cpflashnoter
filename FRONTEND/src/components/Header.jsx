@@ -82,7 +82,6 @@ export default function Header() {
         .get("/get_user_data")
         .then((res) => {
           if (res.data.status) {
-            console.log(res.data)
             setUserData(res.data.userData);
             localStorage.setItem("userData", JSON.stringify(res.data.userData));
             if(res.data.newUser){

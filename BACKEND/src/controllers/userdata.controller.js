@@ -40,7 +40,6 @@ async function handleUser(req, res) {
       let userData = userDoc.data();
       let output = tier(userData);
       output.userData = userDataMasker(output.userData);
-      console.log(output.userData)
       await userRef.update(output.userData);
       res.send(output)
     }

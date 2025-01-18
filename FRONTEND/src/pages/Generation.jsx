@@ -41,7 +41,6 @@ export default function Generation() {
             if (response.data.status) {
               toast.success("saved your notes : )");
               setUserData(response.data.userData);
-              console.log(response.data);
             } else {
               toast.error(response.data.reason);
             }
@@ -74,7 +73,6 @@ export default function Generation() {
           .then((response) => {
             if (response.data.status) {
               setOutput(response.data.result);
-              console.log(response.data.result);
               setUserData(response.data.userDataStats);
               localStorage.setItem("userData", JSON.stringify(response.data.userDataStats));
               toast.success("generated successfully");
