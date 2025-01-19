@@ -26,7 +26,7 @@ const Landing = () => {
               <p className="text-xl text-gray-300 mb-8">
                 Never forget your DSA solutions again. Create smart notes, follow automated revision schedules, and ace your technical interviews with confidence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div onClick={handleLogin} className="flex flex-col sm:flex-row gap-4">
                 <Link href="#signup" className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg">
                   Get Started Free
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
@@ -84,7 +84,7 @@ const Landing = () => {
       <section id="features" className="py-20 bg-neutral-800">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Students Love CPFlashNoter</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Why Students Love CPNoter</h2>
         <p className="text-xl text-gray-300">Transform your DSA preparation with AI-powered features designed for success</p>
       </div>
 
@@ -155,7 +155,7 @@ const Landing = () => {
   <section id="howItWorks" className="py-20 bg-neutral-900">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">How CPFlashNoter Works</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">How CPNoter Works</h2>
         <p className="text-xl text-gray-300">Three simple steps to master your DSA preparation</p>
       </div>
 
@@ -164,7 +164,7 @@ const Landing = () => {
           <div className="absolute -top-6 left-8 bg-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold text-white">1</div>
           <div className="mt-4">
             <h3 className="text-2xl font-bold text-white mb-4">Copy & Paste</h3>
-            <p className="text-gray-300 mb-6">Just copy your DSA question and solution into CPFlashNoter. That{"'"}s all we need to get started.</p>
+            <p className="text-gray-300 mb-6">Just copy your DSA question and solution into CPNoter. That{"'"}s all we need to get started.</p>
             <div className="bg-neutral-700 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -223,12 +223,12 @@ const Landing = () => {
       </div>
 
       <div className="mt-16 text-center">
-        <a href="#signup" className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg animate__animated animate__pulse animate__infinite">
+        <button onClick={handleLogin} className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg animate__animated animate__pulse animate__infinite">
           Start Your Journey
           <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>
-        </a>
+        </button>
       </div>
     </div>
   </section>
@@ -415,7 +415,7 @@ const Landing = () => {
                 </div>
                 <div className="mt-4 grid grid-cols-7 gap-2">
                   {Array(28).fill().map((_, i) => (
-                    <div key={i} className="w-full h-8 bg-neutral-700 rounded-sm" style={{ opacity: Math.random() }}></div>
+                    <div key={i} className="w-full h-8 bg-green-700 rounded-sm" style={{ opacity: Math.random() }}></div>
                   ))}
                 </div>
               </div>
@@ -519,12 +519,12 @@ const Landing = () => {
               </div>
 
               <div className="mt-8">
-                <a href="#signup" className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 w-full">
+                <button onClick={handleLogin} className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 w-full">
                   Try Prep Mode Now
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -557,7 +557,7 @@ const Landing = () => {
 
         <div className="mb-8">
           <div className="text-4xl font-bold text-white mb-2">₹0</div>
-          <p className="text-gray-400">Forever free</p>
+          <p className="text-gray-400">Free for 1st month</p>
         </div>
 
         <ul className="space-y-4 mb-8">
@@ -565,7 +565,7 @@ const Landing = () => {
             <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
             </svg>
-            5 Notes Generation/month
+            3 Notes Generation/day
           </li>
           <li className="flex items-center text-gray-300">
             <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -577,11 +577,17 @@ const Landing = () => {
             <svg className="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
             </svg>
-            5 Prep Mode Questions/month
+            5 Prep Mode Questions/day
+          </li>
+          <li className="flex items-center text-gray-300">
+            <svg className="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span className="text-gray-400">Basic Analytics</span>
           </li>
         </ul>
 
-        <a href="#signup" className="block text-center px-6 py-3 bg-neutral-700 text-white rounded-lg hover:bg-neutral-600 transition duration-150">
+        <a onClick={handleLogin} className="block text-center px-6 py-3 bg-neutral-700 text-white rounded-lg hover:bg-neutral-600 transition duration-150">
           Get Started Free
         </a>
       </div>
@@ -634,12 +640,6 @@ const Landing = () => {
             </svg>
             Advanced Analytics
           </li>
-          <li className="flex items-center text-white">
-            <svg className="w-5 h-5 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            Priority Support
-          </li>
         </ul>
 
         <a href="#signup" className="block text-center px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition duration-150">
@@ -653,9 +653,9 @@ const Landing = () => {
 </>
       <FAQSection />
 
-      <section id="cta" className="py-20 bg-neutral-800 relative overflow-hidden">
+      <section id="cta" className="py-20 bg-neutral-900 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br bg-neutral-800"></div>
+          <div className="absolute inset-0 bg-gradient-to-br bg-neutral-900"></div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center max-w-3xl mx-auto">
@@ -663,21 +663,20 @@ const Landing = () => {
               Ready to Transform Your DSA Journey?
             </h2>
             <p className="text-xl text-gray-300 mb-8 animate__animated animate__fadeInUp animate__delay-1s">
-              Join thousands of students who{"'"}ve improved their interview preparation with CPFlashNoter.
               Start with our free tier today!
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12 animate__animated animate__fadeInUp animate__delay-2s">
-              <Link to="#signup" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg group">
+              <Link onClick={handleLogin} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-150 text-lg group">
                 Get Started Free
                 <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </Link>
-              <Link to="#demo" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-gray-600 text-white font-medium rounded-lg hover:border-gray-400 transition duration-150 text-lg">
+              {/* <Link to="#demo" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-gray-600 text-white font-medium rounded-lg hover:border-gray-400 transition duration-150 text-lg">
                 Watch Demo
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
@@ -686,29 +685,15 @@ const Landing = () => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
       </section>
 
-      <footer id="footer" className="bg-neutral-900 pt-20 pb-10">
+      <footer id="footer" className="bg-neutral-900 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             {/* Company Info */}
             <div className="col-span-1 md:col-span-2">
-              <div className="text-2xl font-bold text-white mb-4">CPFlashNoter</div>
+              <div className="text-2xl font-bold text-white mb-4">CPNoter</div>
               <p className="text-gray-400 mb-6">Revolutionizing DSA preparation with AI-powered notes and smart revision system.</p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.016 18.6h-2.472v-3.9c0-.923-.016-2.11-1.285-2.11-1.285 0-1.481 1.004-1.481 2.042v3.968H9.306V9.6h2.372v1.088h.033c.33-.624 1.137-1.284 2.34-1.284 2.504 0 2.965 1.648 2.965 3.792v5.404zM7.2 8.512a1.44 1.44 0 11.001-2.88 1.44 1.44 0 01-.001 2.88zM5.964 18.6h2.472V9.6H5.964v9z"/>
-                  </svg>
-                </a>
+
               </div>
             </div>
 
@@ -718,8 +703,8 @@ const Landing = () => {
               <ul className="space-y-2">
                 <li><a href="#features" className="text-gray-400 hover:text-white transition-colors">Features</a></li>
                 <li><a href="#pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#demo" className="text-gray-400 hover:text-white transition-colors">Demo</a></li>
-                <li><a href="#testimonials" className="text-gray-400 hover:text-white transition-colors">Testimonials</a></li>
+                {/* <li><a href="#demo" className="text-gray-400 hover:text-white transition-colors">Demo</a></li>
+                <li><a href="#testimonials" className="text-gray-400 hover:text-white transition-colors">Testimonials</a></li> */}
               </ul>
             </div>
 
@@ -728,23 +713,10 @@ const Landing = () => {
               <h3 className="text-white font-semibold mb-4">Support</h3>
               <ul className="space-y-2">
                 <li><a href="#faq" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
+                {/* <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Documentation</a></li> */}
+                <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Me</Link></li>
+                {/* <li><Link tp="#" className="text-gray-400 hover:text-white transition-colors">Help Center</a></li> */}
               </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-neutral-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-gray-400 mb-4 md:mb-0">
-                © 2024 CPFlashNoter. All rights reserved.
-              </div>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Cookie Policy</a>
-              </div>
             </div>
           </div>
         </div>

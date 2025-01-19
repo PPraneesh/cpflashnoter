@@ -16,8 +16,8 @@ export default async function paymentHandlerOneTime(
             key: razorpay_key,
             amount: 50 * 100,
             currency: "INR",
-            name: "CPFLASHNOTER",
-            description: "cpflashnoter premium",
+            name: "CPNOTER",
+            description: "cpnoter premium",
             image:
               "/logo.png",
             order_id: res.data.order_id,

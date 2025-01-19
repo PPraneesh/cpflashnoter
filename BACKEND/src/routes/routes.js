@@ -31,7 +31,7 @@ const {
 const { payment_controller, payment_success_handler } = require("../controllers/payment.controller");
 
 router.get("/", (req, res) => {
-  res.send("welcome to the backend of cpflashnoter");
+  res.send("welcome to the backend of cpnoter");
 });
 
 

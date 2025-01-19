@@ -5,7 +5,7 @@ import BuyPremium from "../components/BuyPremium";
 export default function Dashboard() {
     return (
         <div className="p-6 bg-neutral-900 text-[#E0E0E0]">
-            <h1 className="text-4xl font-semibold mb-4">Welcome back to cpflashnoter!</h1>
+            <h1 className="text-4xl font-semibold mb-4">Welcome back to cpnoter!</h1>
             <p className="mb-6">Choose an option to get started:</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -128,7 +128,7 @@ export default function Header() {
             <div className="flex justify-between items-center h-16">
               <div className="flex-shrink-0 flex items-center">
                 <span className="text-2xl font-bold text-white">
-                  CPFlashNoter
+                  CPNoter
                 </span>
               </div>
               <div className="hidden md:flex items-center space-x-8">
@@ -150,15 +150,10 @@ export default function Header() {
                 >
                   Pricing
                 </a>
-                <a
-                  href="#testimonials"
-                  className="text-neutral-400 hover:text-white"
-                >
-                  Testimonials
-                </a>
+
                 <button
                   onClick={handleLogin}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400 transition duration-150 flex items-center"
+                  className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-700/70 transition duration-150 flex items-center"
                 >
                   <FaGoogle className="w-4 h-4 mr-2" />
                   <span>Sign in</span>
@@ -228,9 +223,8 @@ export default function Header() {
             <div className="flex items-center justify-between h-16">
               <Link to="/home">
                 <div className="flex-shrink-0 flex items-center">
-                  <img src="/logo.png" alt="Logo" className="h-8 w-auto mr-2" />
                   <span className="text-xl font-bold text-white">
-                    CPFlashNoter
+                    CPNoter
                   </span>
                 </div>
               </Link>
@@ -284,7 +278,7 @@ export default function Header() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex flex-col items-center space-y-1 px-2 py-1 ${
+                    className={`w-8 flex flex-col items-center space-y-1 px-2 py-1 ${
                       isActive(item.path)
                         ? "text-blue-500"
                         : "text-neutral-400 hover:text-blue-400"

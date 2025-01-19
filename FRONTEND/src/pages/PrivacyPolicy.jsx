@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
 
       <h2 className="text-xl font-semibold">Information We Collect</h2>
       <p className="text-gray-300">
-        We collect data about how you use CPFlashNoter, such as your preferences, note customization patterns, and general app usage behavior.
+        We collect data about how you use CPNoter, such as your preferences, note customization patterns, and general app usage behavior.
       </p>
 
       <h2 className="text-xl font-semibold">How We Use Information</h2>

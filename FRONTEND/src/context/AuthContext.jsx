@@ -117,7 +117,7 @@ const AuthProvider = ({ children }) => {
 
         // navigate based on the new user or not
         if (response.data.newUser) {
-          toast.success("Welcome to CPFlashNoter : )");
+          toast.success("Welcome to CPNoter : )");
           navigate("/onboarding");
         } else {
           navigate("/home");
