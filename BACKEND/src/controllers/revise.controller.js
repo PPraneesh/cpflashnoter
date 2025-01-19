@@ -139,12 +139,17 @@ async function getAnalytics(req, res) {
     const userRef = db.collection("users").doc(user_email);
 
     try {
-        const doc = await userRef.get();
-        if (!doc.exists) {
+        // Parallel fetch of user doc and questions
+        const [userDoc, questionsSnapshot] = await Promise.all([
+            userRef.get(),
+            userRef.collection("cp").get()
+        ]);
+
+        if (!userDoc.exists) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const userData = doc.data();
+        const userData = userDoc.data();
         const categoryDistributions = userData.categories || [];
         const analytics = userData.revisionAnalytics || {};
         const dailyActivity = analytics.dailyActivity || {};
@@ -154,74 +159,76 @@ async function getAnalytics(req, res) {
             averageConfidence: 0
         };
 
-        // Get last 7 days of activity
-        const last7DaysActivity = getLast7DaysActivity(dailyActivity);
+        // Use Map for O(1) lookups
+        const dailyActivityMap = new Map(Object.entries(dailyActivity));
+        const last7DaysActivity = getLast7DaysActivity(dailyActivityMap);
 
         const categoryStatsObj = analytics.categoryStats || {};
-        const questionsSnapshot = await userRef.collection("cp").get();
         const numberOfQuestions = questionsSnapshot.size;
-        const questions = [];
-        questionsSnapshot.forEach(doc => {
-            questions.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
 
-        const recentQuestions = questions
-            .filter(q => q.revObj && q.revObj.lastRev && q.revObj.revNum > 1)
-            .sort((a, b) => b.revObj.lastRev.toDate() - a.revObj.lastRev.toDate())
-            .slice(0, 5)
-            .map(q => ({
-                questionId: q.id,
-                name: q.name,
-                categories: q.categories || [],
-                lastRevised: q.revObj.lastRev.toDate().toISOString(),
-                nextRevision: q.revObj.nextRev?.toDate()?.toISOString() || null,
-                revisionCount: q.revObj.revNum || 0,
-                confidence: q.revObj.confidence || 0,
-                timeSpent: q.revObj.timeSpent || 0,
-                switches: q.revObj.switches || 0,
-                usedHints: q.revObj.usedHints || false,
-                shownHints: q.revObj.shownHints || 0
-            }));
+        // Optimize questions processing
+        const recentQuestions = processQuestions(questionsSnapshot);
 
-        const processedCategoryStats = Object.entries(categoryStatsObj).map(([category, stats]) => ({
-            category,
-            totalRevisions: stats.totalRevisions || 0,
-            totalTimeSpent: stats.totalTimeSpent || 0,
-            averageConfidence: stats.averageConfidence || 0
-        }));
+        const processedCategoryStats = processCategoryStats(categoryStatsObj);
 
-        const response = {
-            dailyStats: last7DaysActivity,
-            categoryStats: processedCategoryStats,
+        const response = buildResponse({
+            last7DaysActivity,
+            processedCategoryStats,
             numberOfQuestions,
             recentQuestions,
-            overallStats: {
-                totalRevisions: lifetimeStats.totalRevisions,
-                totalTimeSpent: lifetimeStats.totalTimeSpent,
-                totalQuestions: numberOfQuestions,
-                averageConfidence: lifetimeStats.averageConfidence
-            },
-            streaks: analytics.streaks || {
-                currentStreak: 0,
-                longestStreak: 0,
-                lastRevisionDate: null
-            },
+            lifetimeStats,
+            analytics,
             categoryDistributions
-        };
-        
-        res.status(200).json({status: true,"analytics":response});
+        });
+
+        res.status(200).json({ status: true, analytics: response });
     } catch (error) {
         console.error("Error fetching analytics:", error);
-        res.status(500).json({ status: false,error: error.message });
+        res.status(500).json({ status: false, error: error.message });
     }
 }
 
-// Helper functions remain mostly unchanged
-function getLast7DaysActivity(dailyActivity) {
-    const last7Days = {};
+function processQuestions(questionsSnapshot) {
+    const questions = [];
+    questionsSnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.revObj?.lastRev && data.revObj.revNum > 1) {
+            questions.push({
+                id: doc.id,
+                ...data
+            });
+        }
+    });
+
+    return questions
+        .sort((a, b) => b.revObj.lastRev.toDate() - a.revObj.lastRev.toDate())
+        .slice(0, 5)
+        .map(q => ({
+            questionId: q.id,
+            name: q.name,
+            categories: q.categories || [],
+            lastRevised: q.revObj.lastRev.toDate().toISOString(),
+            nextRevision: q.revObj.nextRev?.toDate()?.toISOString() || null,
+            revisionCount: q.revObj.revNum || 0,
+            confidence: q.revObj.confidence || 0,
+            timeSpent: q.revObj.timeSpent || 0,
+            switches: q.revObj.switches || 0,
+            usedHints: q.revObj.usedHints || false,
+            shownHints: q.revObj.shownHints || 0
+        }));
+}
+
+function processCategoryStats(categoryStatsObj) {
+    return Object.entries(categoryStatsObj).map(([category, stats]) => ({
+        category,
+        totalRevisions: stats.totalRevisions || 0,
+        totalTimeSpent: stats.totalTimeSpent || 0,
+        averageConfidence: stats.averageConfidence || 0
+    }));
+}
+
+function getLast7DaysActivity(dailyActivityMap) {
+    const last7Days = new Map();
     const today = new Date();
     
     for (let i = 0; i < 7; i++) {
@@ -229,17 +236,46 @@ function getLast7DaysActivity(dailyActivity) {
         date.setDate(date.getDate() - i);
         const dateKey = date.toISOString().split('T')[0];
         
-        last7Days[dateKey] = dailyActivity[dateKey] || {
+        last7Days.set(dateKey, dailyActivityMap.get(dateKey) || {
             count: 0,
             timeSpent: 0,
             totalSwitches: 0,
             hintsUsed: 0,
             averageConfidence: 0,
             date: dateKey
-        };
+        });
     }
     
-    return last7Days;
+    return Object.fromEntries(last7Days);
+}
+
+function buildResponse({
+    last7DaysActivity,
+    processedCategoryStats,
+    numberOfQuestions,
+    recentQuestions,
+    lifetimeStats,
+    analytics,
+    categoryDistributions
+}) {
+    return {
+        dailyStats: last7DaysActivity,
+        categoryStats: processedCategoryStats,
+        numberOfQuestions,
+        recentQuestions,
+        overallStats: {
+            totalRevisions: lifetimeStats.totalRevisions,
+            totalTimeSpent: lifetimeStats.totalTimeSpent,
+            totalQuestions: numberOfQuestions,
+            averageConfidence: lifetimeStats.averageConfidence
+        },
+        streaks: analytics.streaks || {
+            currentStreak: 0,
+            longestStreak: 0,
+            lastRevisionDate: null
+        },
+        categoryDistributions
+    };
 }
 
 async function cleanupOldAnalytics(userRef) {
@@ -252,12 +288,10 @@ async function cleanupOldAnalytics(userRef) {
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         const cutoffDate = thirtyDaysAgo.toISOString().split('T')[0];
         
-        const updatedDailyActivity = {};
-        Object.entries(dailyActivity)
-            .filter(([date]) => date >= cutoffDate)
-            .forEach(([date, data]) => {
-                updatedDailyActivity[date] = data;
-            });
+        const updatedDailyActivity = Object.fromEntries(
+            Object.entries(dailyActivity)
+                .filter(([date]) => date >= cutoffDate)
+        );
             
         await userRef.update({
             'revisionAnalytics.dailyActivity': updatedDailyActivity

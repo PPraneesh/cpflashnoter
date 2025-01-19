@@ -24,7 +24,7 @@ export default function Header() {
     category,
     initialLoad,
     setInitialLoad,
-    setUserAnalytics
+    setUserAnalytics,
   } = useContext(UserContext);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -37,22 +37,54 @@ export default function Header() {
     { path: "/home/questions", label: "Questions", icon: LuNotebookPen },
     { path: "/prep", label: "Prep", icon: LuBrain },
     { path: "/rev", label: "Rev", icon: RiLoopRightLine },
-    {path:"/analytics", label:"Analytics", icon: TbBrandGoogleAnalytics}
+    { path: "/analytics", label: "Analytics", icon: TbBrandGoogleAnalytics },
   ];
 
   useEffect(() => {
-
     if (location.pathname.slice(0, 6) === "/share") return;
-    else if (userData) {
-    navigate("/home");
-  } else {
-    navigate("/");
-  }
+    else if (location.pathname == "/" && userData) {
+      navigate("/home");
+    } else if (!userData) {
+      navigate("/");
+    }
   }, []);
 
   useEffect(() => {
+    if (userData?.email && idToken) {
+      api
+        .get("/get_user_data")
+        .then((res) => {
+          if (res.data.status) {
+            setUserData(res.data.userData);
+            localStorage.setItem("userData", JSON.stringify(res.data.userData));
+            if (res.data.newUser) {
+              navigate("/onboarding");
+            }
+          } else {
+            toast.error(res.data.reason);
+          }
+        })
+        .catch(() => {
+          toast.error("Couldn't fetch your data");
+        });
+    }
+  }, [userData?.email, idToken, setUserData]);
+
+  useEffect(() => {
+    if (idToken) {
+      api.get("/analytics").then((res) => {
+        if (res.data.status) {
+          setUserAnalytics(res.data.analytics);
+        } else {
+          toast.error(res.data.reason);
+        }
+      });
+    }
+  }, [idToken]);
+
+  useEffect(() => {
     setInitialLoad(true);
-  }, [userData?.saves, userData?.publicLinks, deleteActionState, category, setInitialLoad]);
+  }, [category]);
 
   useEffect(() => {
     if (initialLoad && idToken) {
@@ -78,41 +110,15 @@ export default function Header() {
       };
       fetchCp();
     }
-  }, [idToken, initialLoad]);
-
-  useEffect(()=>{
-    if(idToken){
-    api.get("/analytics")
-    .then((res)=>{
-      if(res.data.status){
-      setUserAnalytics(res.data.analytics)
-      }else{
-        toast.error(res.data.reason)
-      }
-    })}
-  },[idToken])
-  
-  useEffect(() => {
-    if (userData?.email && idToken) {
-      api
-        .get("/get_user_data")
-        .then((res) => {
-          if (res.data.status) {
-            setUserData(res.data.userData);
-            localStorage.setItem("userData", JSON.stringify(res.data.userData));
-            if(res.data.newUser){
-              navigate("/onboarding")
-            }
-          } else {
-            toast.error(res.data.reason);
-          }
-        })
-        .catch(() => {
-          toast.error("Couldn't fetch your data");
-        });
-    }
-  }, [userData?.email, idToken, setUserData]);
-
+  }, [
+    idToken,
+    initialLoad,
+    setInitialLoad,
+    userData?.saves,
+    userData?.publicLinks,
+    deleteActionState,
+    category,
+  ]);
 
   return (
     <>
@@ -121,19 +127,33 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex-shrink-0 flex items-center">
-                <span className="text-2xl font-bold text-white">CPFlashNoter</span>
+                <span className="text-2xl font-bold text-white">
+                  CPFlashNoter
+                </span>
               </div>
               <div className="hidden md:flex items-center space-x-8">
-                <a href="#features" className="text-neutral-400 hover:text-white">
+                <a
+                  href="#features"
+                  className="text-neutral-400 hover:text-white"
+                >
                   Features
                 </a>
-                <a href="#howItWorks" className="text-neutral-400 hover:text-white">
+                <a
+                  href="#howItWorks"
+                  className="text-neutral-400 hover:text-white"
+                >
                   How it Works
                 </a>
-                <a href="#pricing" className="text-neutral-400 hover:text-white">
+                <a
+                  href="#pricing"
+                  className="text-neutral-400 hover:text-white"
+                >
                   Pricing
                 </a>
-                <a href="#testimonials" className="text-neutral-400 hover:text-white">
+                <a
+                  href="#testimonials"
+                  className="text-neutral-400 hover:text-white"
+                >
                   Testimonials
                 </a>
                 <button
@@ -155,7 +175,12 @@ export default function Header() {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -163,16 +188,28 @@ export default function Header() {
           </div>
           {isMobileMenuOpen && (
             <div className="md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#features" className="block text-neutral-400 hover:text-white py-2">
+              <a
+                href="#features"
+                className="block text-neutral-400 hover:text-white py-2"
+              >
                 Features
               </a>
-              <a href="#howItWorks" className="block text-neutral-400 hover:text-white py-2">
+              <a
+                href="#howItWorks"
+                className="block text-neutral-400 hover:text-white py-2"
+              >
                 How it Works
               </a>
-              <a href="#pricing" className="block text-neutral-400 hover:text-white py-2">
+              <a
+                href="#pricing"
+                className="block text-neutral-400 hover:text-white py-2"
+              >
                 Pricing
               </a>
-              <a href="#testimonials" className="block text-neutral-400 hover:text-white py-2">
+              <a
+                href="#testimonials"
+                className="block text-neutral-400 hover:text-white py-2"
+              >
                 Testimonials
               </a>
               <button
@@ -192,7 +229,9 @@ export default function Header() {
               <Link to="/home">
                 <div className="flex-shrink-0 flex items-center">
                   <img src="/logo.png" alt="Logo" className="h-8 w-auto mr-2" />
-                  <span className="text-xl font-bold text-white">CPFlashNoter</span>
+                  <span className="text-xl font-bold text-white">
+                    CPFlashNoter
+                  </span>
                 </div>
               </Link>
               <nav className="hidden md:flex items-center space-x-6">
@@ -227,7 +266,10 @@ export default function Header() {
                     />
                   </button>
                   {isProfileOpen && (
-                    <Profile userData={userData} onClose={() => setIsProfileOpen(false)} />
+                    <Profile
+                      userData={userData}
+                      onClose={() => setIsProfileOpen(false)}
+                    />
                   )}
                 </div>
               </div>
@@ -243,7 +285,9 @@ export default function Header() {
                     key={item.path}
                     to={item.path}
                     className={`flex flex-col items-center space-y-1 px-2 py-1 ${
-                      isActive(item.path) ? "text-blue-500" : "text-neutral-400 hover:text-blue-400"
+                      isActive(item.path)
+                        ? "text-blue-500"
+                        : "text-neutral-400 hover:text-blue-400"
                     }`}
                   >
                     <Icon className="w-5 h-5" />

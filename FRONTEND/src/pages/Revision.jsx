@@ -139,7 +139,7 @@ const Revision = () => {
 
   return (
     <div className="bg-neutral-900 min-h-screen text-white">
-      <div className="max-w-3xl mx-auto p-4 space-y-8">
+      <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Main Card */}
         <div className="bg-neutral-800 border border-neutral-700/30 rounded-xl p-6 space-y-4">
           {/* Question Header */}

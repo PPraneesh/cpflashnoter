@@ -6,7 +6,6 @@ import Code from "../components/Code";
 import Question from "../components/Question";
 import Output from "../components/Output";
 import toast from "react-hot-toast";
-import { FaInfoCircle } from "react-icons/fa";
 import { api } from "../api/axios";
 
 export default function Generation() {
@@ -24,7 +23,7 @@ export default function Generation() {
   const [question, setQuestion] = useState("");
   const [code, setCode] = useState("// type your code...");
   const [output, setOutput] = useState(null);
-  const [personalisedNotes, setPersonalisedNotes] = useState(true);
+  const [personalisedNotes, setPersonalisedNotes] = useState(false);
 
   const save = async (e) => {
     e.preventDefault();
@@ -93,13 +92,10 @@ export default function Generation() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-900">
-      <h1
-        onClick={() => toast("scroll down", { icon: <FaInfoCircle /> })}
-        className="text-xl ml-6 w-fit mt-4 text-white border border-neutral-700/30 hover:border-neutral-600/50 transition-all p-2 rounded-lg bg-neutral-700/50"
-      >
-        Generate new notes
-      </h1>
+    <div className="bg-neutral-900">
+        <h1 className="px-6 pt-6 text-2xl md:text-3xl font-semibold text-white">
+        Generate Notes
+        </h1>
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         <div className="space-y-6">
           <Question
@@ -109,24 +105,24 @@ export default function Generation() {
             setPersonalisedNotes={setPersonalisedNotes}
           />
           <Code code={code} setCode={setCode} />
-          <div className="flex gap-4">
+        </div>
+        <Output output={output} />
+          <div className="grid grid-cols-2 gap-4">
             <button
               onClick={handleGeneration}
-              className="rounded-lg px-4 py-2 bg-neutral-800 text-blue-500 hover:text-blue-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
+              className="rounded-lg px-4 py-2 bg-blue-800 hover:bg-blue-700 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
               disabled={genNotes}
             >
-              {genNotes ? "Generating... " : "Generate Notes"}
+              {genNotes ? "Generating... " : output ? "Regenerate Notes" : "Generate Notes"}
             </button>
             <button
               onClick={save}
-              className="rounded-lg px-4 py-2 bg-neutral-800 text-green-500 hover:text-green-400 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
+              className="rounded-lg px-4 py-2 bg-green-600 hover:bg-green-500/90 border border-neutral-700/30 hover:border-neutral-600/50 transition-all disabled:opacity-50"
               disabled={saveCp}
             >
-              {saveCp ? "saving.." : "Save it"}
+              {saveCp ? "saving.." : "Save"}
             </button>
           </div>
-        </div>
-        <Output output={output} />
       </div>
     </div>
   );

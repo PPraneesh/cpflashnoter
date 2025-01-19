@@ -79,7 +79,7 @@ const Analytics = ({ short = false }) => {
 
   if (userAnalytics === null) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[#121212]">
+      <div className="flex items-center justify-center h-64">
         <RiLoaderLine className="w-8 h-8 animate-spin text-[#00b8a3]" />
       </div>
     );
