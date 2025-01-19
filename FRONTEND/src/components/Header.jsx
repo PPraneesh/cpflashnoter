@@ -41,9 +41,13 @@ export default function Header() {
   ];
 
   useEffect(() => {
+
     if (location.pathname.slice(0, 6) === "/share") return;
-    if (userData) navigate("/home");
-    else navigate("/");
+    else if (userData) {
+    navigate("/home");
+  } else {
+    navigate("/");
+  }
   }, []);
 
   useEffect(() => {
@@ -76,6 +80,18 @@ export default function Header() {
     }
   }, [idToken, initialLoad]);
 
+  useEffect(()=>{
+    if(idToken){
+    api.get("/analytics")
+    .then((res)=>{
+      if(res.data.status){
+      setUserAnalytics(res.data.analytics)
+      }else{
+        toast.error(res.data.reason)
+      }
+    })}
+  },[idToken])
+  
   useEffect(() => {
     if (userData?.email && idToken) {
       api
@@ -97,17 +113,7 @@ export default function Header() {
     }
   }, [userData?.email, idToken, setUserData]);
 
-  useEffect(()=>{
-    if(idToken){
-    api.get("/analytics")
-    .then((res)=>{
-      if(res.data.status){
-      setUserAnalytics(res.data.analytics)
-      }else{
-        toast.error(res.data.reason)
-      }
-    })}
-  },[idToken])
+
   return (
     <>
       {!userData ? (

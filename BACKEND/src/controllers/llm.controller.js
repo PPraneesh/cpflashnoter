@@ -10,26 +10,29 @@ const model = new ChatGroq({
 
 const structuredNotesLlm = model.withStructuredOutput({
   name: "code_analysis",
-  description:
-    "Analyze and explain the given code in relation to the provided question.",
+  description: "Perform thorough, self-questioning analysis of code while maintaining high reliability. Express uncertainty when needed and avoid making assumptions.",
   parameters: {
     title: "Code Analysis",
     type: "object",
     properties: {
       name: {
         type: "string",
-        description:
-          "Create a clear, informative title for the entire code solution that reflects the problem it solves.",
+        description: "Create a clear, informative title that accurately reflects the problem. If uncertain about any aspect, use more general terms.",
       },
       language: {
         type: "string",
-        description:
-          "Specify the programming language used, including version if relevant (e.g., 'Python', 'C++').",
+        description: "Specify only the programming language that is explicitly visible in the code. If version information is not clearly evident, omit it.",
       },
       description: {
         type: "string",
-        description:
-          "Provide a comprehensive overview of the entire code: 1) The problem it solves, 2) The overall approach or algorithm used, 3) Time and space complexity analysis, 4) Any assumptions made, and 5) Potential areas for improvement or alternative approaches.",
+        description: `Provide a thorough analysis following these steps:
+          1. Start with observable facts about the code
+          2. Question each assumption before making it
+          3. Explicitly state any uncertainties
+          4. Analyze complexity only if the algorithm is clearly identifiable
+          5. List improvements only for clearly suboptimal patterns
+          6. Express any doubts about the analysis
+          Format: Begin with clear observations, then progress to more complex analysis, marking uncertain elements with explicit notes.`,
       },
       subunits: {
         type: "array",
@@ -38,71 +41,55 @@ const structuredNotesLlm = model.withStructuredOutput({
           properties: {
             name: {
               type: "string",
-              description:
-                "Provide a concise, descriptive name for this code subunit that reflects its main function or purpose.",
+              description: "Provide a factual, observation-based name. Use functional descriptions rather than assuming intent.",
             },
             content: {
               type: "string",
-              description:
-                "Insert the exact same code content of this subunit, preserving all formatting and comments. make sure that give output code has \n so that it can be displayed nicely",
+              description: "Extract the exact code content, preserving all formatting and ensuring proper newline (\\n) characters for display. Do not modify or 'improve' the code.",
             },
             description: {
               type: "string",
-              description:
-                "Explain in detail: 1) What this subunit does, 2) How it contributes to solving the overall problem, 3) Any key algorithms or data structures used, 4) Its inputs and outputs, and 5) Any potential optimizations or limitations.",
+              description: `Analyze each subunit through careful steps:
+                1. List observable behaviors without interpretation
+                2. Question each assumption about functionality
+                3. Describe clear input-output relationships
+                4. Note any ambiguities or uncertainties
+                5. Only state optimizations for clear inefficiencies
+                Format: Start with concrete observations, then progress to analysis, clearly marking any uncertainties.`,
             },
           },
           required: ["name", "content", "description"],
         },
-        description:
-          "Break down the code into logical, self-contained subunits. Each subunit should represent a distinct step or function in the overall solution.",
       },
       categories: {
         type: "array",
         items: {
           type: "string",
           enum: [
-            "Arrays",
-            "Two Pointers",
-            "Sliding Windows",
-            "Binary Search",
-            "Strings",
-            "Linked List",
-            "Recursion & Backtracking",
-            "Stacks & Queues",
-            "Heaps",
-            "Greedy Algorithms",
-            "Binary Trees",
-            "Binary Search Trees",
-            "Dynamic Programming",
+            "Arrays", "Two Pointers", "Sliding Windows", "Binary Search",
+            "Strings", "Linked List", "Recursion & Backtracking",
+            "Stacks & Queues", "Heaps", "Greedy Algorithms",
+            "Binary Trees", "Binary Search Trees", "Dynamic Programming"
           ],
         },
-        description:
-          "The categories of algorithms or data structures that this problem focuses on. Take only from enum values, don't deviate from the list.",
+        description: "Only include categories that are definitively present in the code. Return an empty array if uncertain about any classifications. Better to omit than to miscategorize.",
       },
       hints: {
         type: "array",
         items: {
           type: "string",
-          description:
-            "Provide hints that help understand the question and the code solution. Start with general hints and progress to more specific ones if needed.",
+          description: "Provide only hints that are directly observable from the code structure. Start with fundamental observations and progress to more specific insights. Mark any speculative hints clearly.",
         },
       },
     },
-    required: [
-      "name",
-      "language",
-      "description",
-      "subunits",
-      "hints",
-      "categories",
-    ],
+    required: ["name", "language", "description", "subunits", "hints"],
   },
 });
 
+
 const notes_generator = async (req, res) => {
   const { code, question, personalisedNotes } = req.body;
-  const { email, status } = req.user;
+  const { email } = req.user;
   const userRef = db.collection("users").doc(email);
   const userDoc = await userRef.get();
   if (!userDoc.exists) {
@@ -122,58 +109,114 @@ const notes_generator = async (req, res) => {
       });
     }
     if (userData.generations.count > 0) {
-      const prompt = `You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes. \n 
-        The following is a question from a competitive programming platform: \n
-        <given_question>
-        ${question}
-        </given_question> 
-        Analyze the following code solution:
-         <given_code>
-          ${code} 
-          </given_code> 
-        <instructions> 
-        1. Carefully read the question and the code. 
-        2. Analyze how the code solves the given problem.
-        3. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.
-        4. Focus on clarity, accuracy, and educational value in your explanations.
-        5. Include insights on algorithm choice, time/space complexity, and any clever techniques used. 
-        </instructions>
-         Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly.`;
+      const prompt = `You are an expert code analyst who employs extremely thorough, self-questioning reasoning. Your approach mirrors human stream-of-consciousness thinking, characterized by continuous exploration, self-doubt, and iterative analysis.
 
-      const personalisedPrompt = `You are an expert competitive programming analyst and educator. Your task is to analyze and explain the given code in relation to the provided question, creating clear and insightful notes tailored to the user's learning preferences. \n 
-
-The following is a question from a competitive programming platform: \n
-<given_question>
-${question}
-</given_question>
-
-<user_preferences>
-${userPreferences}
-</user_preferences>
-
-Analyze the following code solution:
-<given_code>
-${code}
-</given_code>
-
-<instructions>
-1. Carefully read the question, code, and user preferences.
-2. Adapt your explanation style based on the user's preferences (e.g., level of detail, preferred learning methods, areas of focus).
-3. Analyze how the code solves the given problem.
-4. For each subunit and the overall solution, provide detailed explanations as specified in the output structure.
-5. Focus on clarity, accuracy, and educational value in your explanations.
-6. Include insights on algorithm choice, time/space complexity, and any clever techniques used.
-7. Highlight specific aspects that align with the user's interests and learning goals.
-</instructions>
-
-Remember, your goal is to create clear, informative notes that help understand both the problem and its solution thoroughly, while ensuring the explanations resonate with the user's learning style and preferences.`;
+      <given_question>
+      ${question}
+      </given_question>
+      
+      <given_code>
+      ${code}
+      </given_code>
+      
+      <analysis_principles>
+      1. EXPLORATION OVER CONCLUSION
+      - Never rush to conclusions
+      - Keep exploring until understanding emerges naturally
+      - Question every assumption and inference
+      - Express uncertainty freely when present
+      
+      2. DEPTH OF REASONING
+      - Engage in extensive contemplation
+      - Express thoughts in natural, conversational internal monologue
+      - Break down complex thoughts into simple, atomic steps
+      - Embrace uncertainty and revision of previous thoughts
+      
+      3. THINKING PROCESS
+      - Use short, simple sentences that mirror natural thought patterns
+      - Express uncertainty and internal debate freely
+      - Show work-in-progress thinking
+      - Acknowledge and explore dead ends
+      - Frequently backtrack and revise
+      
+      4. RELIABILITY FOCUS
+      - Express uncertainty rather than make assumptions
+      - Return empty/null for any classifications you're not completely certain about
+      - Clearly mark speculative interpretations
+      - Prioritize accuracy over completeness
+      </analysis_principles>
+      
+      <instructions>
+      1. Begin with observable facts only
+      2. Question each inference before making it
+      3. Express uncertainty explicitly
+      4. Build understanding iteratively
+      5. Return to and revise earlier conclusions
+      6. Mark any speculative interpretations clearly
+      7. Omit any classifications you're not certain about
+      </instructions>
+      
+      Remember: Your goal is thorough understanding through careful exploration, not quick answers. Express uncertainty freely and maintain high reliability in your analysis.`;
+      
+      const personalisedPrompt = `You are an expert code analyst who employs extremely thorough, self-questioning reasoning while adapting to individual learning needs. Your approach combines careful analysis with personalized explanation.
+      
+      <given_question>
+      ${question}
+      </given_question>
+      
+      <user_preferences>
+      ${userPreferences}
+      </user_preferences>
+      
+      <given_code>
+      ${code}
+      </given_code>
+      
+      <analysis_principles>
+      1. EXPLORATION WITH ADAPTATION
+      - Never rush to conclusions
+      - Adapt explanation style to user preferences
+      - Question every assumption while maintaining accessibility
+      - Express uncertainty in a way that aligns with user's learning style
+      
+      2. DEPTH WITH RELEVANCE
+      - Engage in extensive contemplation
+      - Focus on aspects most relevant to user's interests
+      - Break down concepts according to user's preferred learning pace
+      - Balance thorough analysis with user's preferred level of detail
+      
+      3. THINKING PROCESS
+      - Mirror natural thought patterns while considering user's background
+      - Express uncertainty in a way that aids learning
+      - Show work-in-progress thinking aligned with user's goals
+      - Acknowledge and explore dead ends constructively
+      
+      4. RELIABILITY FOCUS
+      - Express uncertainty rather than make assumptions
+      - Adapt technical depth to user's level while maintaining accuracy
+      - Clearly mark speculative interpretations
+      - Prioritize accuracy over completeness
+      </analysis_principles>
+      
+      <instructions>
+      1. Begin with observations at user's technical level
+      2. Question each inference while maintaining clarity
+      3. Express uncertainty in an educational manner
+      4. Build understanding at user's preferred pace
+      5. Focus on aspects matching user's interests
+      6. Mark speculative interpretations clearly
+      7. Omit any unclear classifications
+      </instructions>
+      
+      Remember: Your goal is to combine thorough analysis with personalized learning while maintaining high reliability. Never sacrifice accuracy for accessibility.`;
+      
 
       const finalPrompt = personalisedNotes ? personalisedPrompt : prompt;
       const result = await structuredNotesLlm.invoke(finalPrompt);
       // Update the user's generations count and last generation time
       userData.generations.count -= 1;
       userData.generations.lastGen = Date.now();
-
+      console.log(result)
       await userRef.update(userData);
       userData = userDataMasker(userData);
       res.send({ status: true, result: result, userDataStats: userData });
