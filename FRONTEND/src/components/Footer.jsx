@@ -6,7 +6,7 @@ export default function Footer() {
  <div className="mx-6">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="text-gray-400 mb-4 md:mb-0">
-                © 2024 CPNoter. All rights reserved.
+                © 2025 CPNoter. All rights reserved.
               </div>
               <div className="flex space-x-6">
                 <Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
