@@ -25,6 +25,7 @@ export default function Header() {
     initialLoad,
     setInitialLoad,
     setUserAnalytics,
+    saveActionState
   } = useContext(UserContext);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -82,12 +83,10 @@ export default function Header() {
     }
   }, [idToken]);
 
-  useEffect(() => {
-    setInitialLoad(true);
-  }, [category]);
+
 
   useEffect(() => {
-    if (initialLoad && idToken) {
+    if (idToken) {
       const fetchCp = async () => {
         try {
           const config = { headers: { Authorization: `Bearer ${idToken}` } };
@@ -114,8 +113,7 @@ export default function Header() {
     idToken,
     initialLoad,
     setInitialLoad,
-    userData?.saves,
-    userData?.publicLinks,
+    saveActionState,
     deleteActionState,
     category,
   ]);

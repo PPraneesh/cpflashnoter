@@ -10,6 +10,8 @@ const UserProvider = ({children})=>{
     const [deleteActionState, setDeleteActionState] = useState(true);
     const [category, setCategory] = useState("all");
     const [userAnalytics, setUserAnalytics] = useState(null);
+    const [saveActionState, setSaveActionState] = useState(true);
+    const [revActionState, setRevActionState] = useState(true);
 
       useEffect(() => {
         if (userData) {
@@ -31,7 +33,11 @@ const UserProvider = ({children})=>{
         userAnalytics,
         setUserAnalytics,
         deleteActionState,
-        setDeleteActionState
+        setDeleteActionState,
+        saveActionState,
+        setSaveActionState,
+        revActionState,
+        setRevActionState
     }
     return <UserContext.Provider value={userDataValue}>{children}</UserContext.Provider>;
 }

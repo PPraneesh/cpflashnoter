@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
-import { XCircle } from "lucide-react";
-import PropTypes from "prop-types";
+import { X } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { api } from "../api/axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import BuyPremium from "./BuyPremium";
+import NotificationToggle from "./NotificationToggle";
 
 export default function Profile({ userData, onClose }) {
   const { logOut } = useContext(AuthContext);
@@ -44,7 +44,7 @@ export default function Profile({ userData, onClose }) {
           onClick={onClose}
           className="absolute top-3 right-3 text-neutral-400 hover:text-neutral-300 transition-colors z-10"
         >
-          <XCircle size={24} />
+          <X size={24} />
         </button>
 
         <div className="p-4 border-b border-neutral-700/30">
@@ -99,9 +99,9 @@ export default function Profile({ userData, onClose }) {
             : "Expired"}
               </span>
             </div>
-
+                  <NotificationToggle />
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
                 <span className="text-neutral-300">Start Date</span>
                 <span className="text-white">
             {userData?.tier === "premium"
@@ -109,7 +109,7 @@ export default function Profile({ userData, onClose }) {
               : "--"}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
                 <span className="text-neutral-300">End Date</span>
                 <span className="text-white">
             {userData?.tier === "premium"
@@ -123,7 +123,7 @@ export default function Profile({ userData, onClose }) {
           <BuyPremium />
 
             {/* Generation & Saves */}
-          <div className="bg-neutral-700/50 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
+          <div className="bg-neutral-700/30 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
             <div className="flex justify-between text-sm text-white">
               <span>Generations left</span>
               <span className="text-blue-500">
@@ -158,7 +158,7 @@ export default function Profile({ userData, onClose }) {
               {userData.publicLinks.map((link) => (
                 <div
                   key={link.cp_id}
-                  className="bg-neutral-700/50 rounded-md p-3 border border-neutral-700/30 hover:border-neutral-600/50 transition-all flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                  className="bg-neutral-700/30 rounded-md p-3 border border-neutral-700/30 hover:border-neutral-600/50 transition-all flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span className="text-neutral-400 text-xs truncate max-w-[180px]">
                     {link.name}
@@ -185,7 +185,7 @@ export default function Profile({ userData, onClose }) {
 
           {/* Preferences */}
           {userData?.userPreferences && (
-            <div className="bg-neutral-700/50 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
+            <div className="bg-neutral-700/30 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
               <h2 className="text-white text-sm font-medium">Preferences</h2>
               {Object.entries(userData.userPreferences).map(([key, value]) => (
                 <div key={key} className="flex justify-between text-sm">
@@ -197,7 +197,6 @@ export default function Profile({ userData, onClose }) {
           )}
         </div>
 
-        {/* Footer */}
         <div className="p-4 border-t border-neutral-700/30">
           <button
             onClick={() => {

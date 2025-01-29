@@ -11,7 +11,7 @@ import { api } from "../api/axios";
 export default function Generation() {
   const location = useLocation();
   const [genCount, setGenCount] = useState(0);
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, saveActionState, setSaveActionState } = useContext(UserContext);
   const { saveCp, setSaveCp, genNotes, setGenNotes } = useContext(LoadingContext);
   const navigate = useNavigate()
   useEffect(() => {
@@ -38,6 +38,7 @@ export default function Generation() {
           })
           .then((response) => {
             if (response.data.status) {
+              setSaveActionState(!saveActionState)
               toast.success("saved your notes : )");
               setUserData(response.data.userData);
               navigate('/home/questions')

@@ -6,7 +6,7 @@ import {
   getAuth,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../services/Auth";
+import { auth } from "../services/firebaseConfig";
 import { api } from "../api/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

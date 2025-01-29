@@ -30,6 +30,8 @@ const {
 
 const { payment_controller, payment_success_handler } = require("../controllers/payment.controller");
 
+const { notification_controller} = require("../controllers/notification.controller");
+
 router.get("/", (req, res) => {
   res.send("welcome to the backend of cpnoter");
 });
@@ -61,4 +63,6 @@ router.get("/analytics", authenticateUser, getAnalytics);
 
 router.get("/payment", authenticateUser, payment_controller);
 router.post("/success", authenticateUser, payment_success_handler);
+
+router.post("/notification_token", authenticateUser, notification_controller);
 module.exports = router;
