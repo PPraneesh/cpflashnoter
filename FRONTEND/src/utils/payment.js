@@ -14,7 +14,7 @@ export default async function paymentHandlerOneTime(
           // for register route, which saves data in database
           var   razorpayOptions = {
             key: razorpay_key,
-            amount: 50 * 100,
+            amount: 59 * 100,
             currency: "INR",
             name: "CPNOTER",
             description: "cpnoter premium",

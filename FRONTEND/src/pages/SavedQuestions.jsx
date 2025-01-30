@@ -104,7 +104,7 @@ function SavedQuestions() {
           ) : (
             <div className="text-center p-8 bg-neutral-800 rounded-xl border border-neutral-700/30">
               <h1 className="text-xl font-medium text-white">
-                No saved questions at all,<br/>  Generate and save your notes!
+                No saved questions<br/>  Generate and save your notes!
               </h1>
             </div>
           )}

@@ -1,5 +1,5 @@
 import { api } from "../api/axios";
-import { messaging, getToken } from "../services/firebaseConfig";
+import { messaging, getToken, deleteToken } from "../services/firebaseConfig";
 
 const requestPermission = async () => {
   try {
@@ -32,4 +32,13 @@ const requestPermission = async () => {
   }
 };
 
-export default requestPermission;
+const removeNotificationToken = async (currentToken) => {
+  try {
+    await deleteToken(messaging, currentToken);
+    await api.get("/remove_notification_token");
+  }
+  catch (error) {
+    console.error("Error deleting notification token:", error);
+  }
+}
+export {requestPermission, removeNotificationToken};

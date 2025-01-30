@@ -105,7 +105,7 @@ const Analytics = ({ short = false }) => {
     >
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-2xl font-semibold text-white">Quick Analytics</h3>
+          <h3 className="text-2xl md:text-3xl font-semibold text-white">Quick Analytics</h3>
           <p className="text-neutral-400">Your learning progress at a glance</p>
         </div>
         {short && (

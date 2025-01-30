@@ -30,7 +30,7 @@ const {
 
 const { payment_controller, payment_success_handler } = require("../controllers/payment.controller");
 
-const { notification_controller} = require("../controllers/notification.controller");
+const { notification_controller, remove_notification_token} = require("../controllers/notification.controller");
 
 router.get("/", (req, res) => {
   res.send("welcome to the backend of cpnoter");
@@ -65,4 +65,5 @@ router.get("/payment", authenticateUser, payment_controller);
 router.post("/success", authenticateUser, payment_success_handler);
 
 router.post("/notification_token", authenticateUser, notification_controller);
+router.get("/remove_notification_token", authenticateUser, remove_notification_token);
 module.exports = router;

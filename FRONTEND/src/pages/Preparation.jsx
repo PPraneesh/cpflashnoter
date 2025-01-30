@@ -184,10 +184,10 @@ export default function Preparation() {
   };
 
   return (
-    <div className="bg-neutral-900 min-h-screen text-white">
+    <div className="bg-neutral-900 text-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-neutral-700/30">
-        <h1 className="text-3xl font-bold">Get Prepped</h1>
+        <h1 className="text-2xl md:text-3xl font-semibold">Get Prepped</h1>
         <div className="bg-neutral-800 border border-neutral-700/30 rounded-xl p-3 flex items-center gap-2">
           <Timer className="w-6 h-6 text-blue-500 hover:text-blue-400 transition-all" />
           <span className="text-2xl font-mono">{formatTime(time)}</span>
@@ -197,7 +197,7 @@ export default function Preparation() {
       {/* Category Selection */}
       {!isRunning && (
         <div className="p-4 max-w-2xl mx-auto">
-          <label className="block text-sm font-medium text-white mb-2">
+          <label className="block md:text-md text-lg font-medium text-white mb-2">
             Which topic do you want to prepare?
           </label>
           <select

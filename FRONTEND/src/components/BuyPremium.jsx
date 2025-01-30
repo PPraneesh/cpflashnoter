@@ -12,7 +12,7 @@ export default function BuyPremium() {
          <div className="flex items-center justify-between">
              <div className="mr-4">
                  <h3 className="text-lg font-medium text-white mb-2">Upgrade to Premium</h3>
-                 <p className="text-neutral-300">Get unlimited generations, revisions, and prep sessions for just ₹50/month</p>
+                 <p className="text-neutral-300">Get unlimited generations, revisions, and prep sessions for just ₹59/month</p>
              </div>
              <button className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors" onClick={()=>{paymentHandlerOneTime({email:"parshipraneesh8@gmail.com"},navigate)}}>
                  Upgrade Now

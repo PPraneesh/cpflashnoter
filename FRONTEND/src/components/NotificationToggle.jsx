@@ -1,14 +1,16 @@
 import { useState } from "react";
-import requestPermission from "../utils/notifications";
+import {requestPermission, removeNotificationToken} from "../utils/notifications";
 
-const NotificationToggle = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
+const NotificationToggle = (Props) => {
+  const value = Props.fcmToken.token =="" ? false : true 
+  const [isEnabled, setIsEnabled] = useState(value);
 
   const toggleNotifications = () => {
     if (!isEnabled) {
       requestPermission();
     } else {
       console.log("Notifications turned off.");
+      removeNotificationToken(Props.fcmToken.token);
     }
     setIsEnabled(!isEnabled);
   };

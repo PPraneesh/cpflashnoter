@@ -10,6 +10,7 @@ import BuyPremium from "./BuyPremium";
 import NotificationToggle from "./NotificationToggle";
 
 export default function Profile({ userData, onClose }) {
+  console.log(userData);
   const { logOut } = useContext(AuthContext);
   const { setUserData } = useContext(UserContext);
   const makePrivate = async (questionId) => {
@@ -65,64 +66,64 @@ export default function Profile({ userData, onClose }) {
           </div>
         </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-semibold text-white mb-1">
-            {userData?.tier === "premium"
-              ? "Premium Plan"
-              : userData?.tier === "free"
-              ? "Free Plan"
-              : "Expired Plan"}
-                </h2>
-                <p className="text-sm text-neutral-400">
-            {userData?.tier === "premium"
-              ? "Active subscription"
-              : userData?.tier === "free"
-              ? "Free plan"
-              : "Subscription expired"}
-                </p>
-              </div>
-              <span
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
-            userData?.tier === "premium"
-              ? "bg-blue-500/20 text-blue-400"
-              : userData?.tier === "free"
-              ? "bg-green-500/20 text-green-400"
-              : "bg-red-500/20 text-red-400"
-                }`}
-              >
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-1">
                 {userData?.tier === "premium"
-            ? "Current Plan"
-            : userData?.tier === "free"
-            ? "Free Plan"
-            : "Expired"}
+                  ? "Premium Plan"
+                  : userData?.tier === "free"
+                  ? "Free Plan"
+                  : "Expired Plan"}
+              </h2>
+              <p className="text-sm text-neutral-400">
+                {userData?.tier === "premium"
+                  ? "Active subscription"
+                  : userData?.tier === "free"
+                  ? "Free plan"
+                  : "Subscription expired"}
+              </p>
+            </div>
+            <span
+              className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                userData?.tier === "premium"
+                  ? "bg-blue-500/20 text-blue-400"
+                  : userData?.tier === "free"
+                  ? "bg-green-500/20 text-green-400"
+                  : "bg-red-500/20 text-red-400"
+              }`}
+            >
+              {userData?.tier === "premium"
+                ? "Current Plan"
+                : userData?.tier === "free"
+                ? "Free Plan"
+                : "Expired"}
+            </span>
+          </div>
+          <NotificationToggle fcmToken={userData.fcmToken} />
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+              <span className="text-neutral-300">Start Date</span>
+              <span className="text-white">
+                {userData?.tier === "premium"
+                  ? formatSeconds(userData?.premium?.startDate._seconds)
+                  : "--"}
               </span>
             </div>
-                  <NotificationToggle />
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
-                <span className="text-neutral-300">Start Date</span>
-                <span className="text-white">
-            {userData?.tier === "premium"
-              ? formatSeconds(userData?.premium?.startDate._seconds)
-              : "--"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
-                <span className="text-neutral-300">End Date</span>
-                <span className="text-white">
-            {userData?.tier === "premium"
-              ? formatSeconds(userData?.premium?.endDate._seconds)
-              : userData?.tier === "free"
-              ? formatSeconds(userData?.freeTier?.endDate._seconds)
-              : "--"}
-                </span>
-              </div>
+            <div className="flex justify-between items-center p-3 bg-neutral-700/30 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+              <span className="text-neutral-300">End Date</span>
+              <span className="text-white">
+                {userData?.tier === "premium"
+                  ? formatSeconds(userData?.premium?.endDate._seconds)
+                  : userData?.tier === "free"
+                  ? formatSeconds(userData?.freeTier?.endDate._seconds)
+                  : "--"}
+              </span>
             </div>
+          </div>
           <BuyPremium />
 
-            {/* Generation & Saves */}
+          {/* Generation & Saves */}
           <div className="bg-neutral-700/30 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all space-y-2">
             <div className="flex justify-between text-sm text-white">
               <span>Generations left</span>
@@ -134,7 +135,7 @@ export default function Profile({ userData, onClose }) {
               <span>Last updated</span>
               <span className="text-neutral-400">
                 {userData?.generations?.lastGen
-                  ? formatSeconds(userData.generations.lastGen/1000)
+                  ? formatSeconds(userData.generations.lastGen / 1000)
                   : "--"}
               </span>
             </div>
@@ -146,7 +147,7 @@ export default function Profile({ userData, onClose }) {
               <span>Last updated</span>
               <span className="text-neutral-400">
                 {userData?.saves?.lastSave
-                  ? formatSeconds(userData.saves.lastSave/1000)
+                  ? formatSeconds(userData.saves.lastSave / 1000)
                   : "--"}
               </span>
             </div>

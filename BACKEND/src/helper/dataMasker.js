@@ -14,6 +14,7 @@ function userDataMasker(userData){
         saves: userData.saves,
         tier: userData.tier,
         userPreferences: userData.userPreferences ? userData.userPreferences : {},
+        fcmToken: userData.fcmToken,
     }
 
     return output;

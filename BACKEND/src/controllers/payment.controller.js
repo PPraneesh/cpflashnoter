@@ -10,7 +10,7 @@ return `rt_${timestamp}_${random}`;
 const payment_controller = async (req, res) => {
     const user_email = req.user.email;
     const options = {
-        amount: 50 * 100,
+        amount: 59 * 100,
         currency: "INR",
         receipt: generateCompactTimestamp(), 
       };

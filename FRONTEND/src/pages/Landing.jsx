@@ -611,7 +611,7 @@ const Landing = () => {
         </div>
 
         <div className="mb-8">
-          <div className="text-4xl font-bold text-white mb-2">₹50</div>
+          <div className="text-4xl font-bold text-white mb-2">₹59</div>
           <p className="text-blue-200">per month</p>
         </div>
 

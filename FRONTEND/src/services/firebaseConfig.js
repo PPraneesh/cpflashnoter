@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken, onMessage, deleteToken } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 
 const apiKey = import.meta.env.VITE_apiKey;
@@ -25,4 +25,4 @@ const auth = getAuth(app);
 const messaging = getMessaging(app);
 
 
-export { auth, messaging, getToken, onMessage };
+export { auth, messaging, getToken, onMessage, deleteToken };
