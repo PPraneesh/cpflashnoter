@@ -254,7 +254,7 @@ export default function Header() {
                     <img
                       src={userData.photo}
                       alt={userData.name}
-                      className="w-9 h-9 rounded-full ring-2 ring-blue-500 hover:ring-blue-400 transition duration-150"
+                      className="w-9 h-9 rounded-full border-2 border-neutral-600 transition duration-150"
                     />
                   </button>
                   {isProfileOpen && (
