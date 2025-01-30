@@ -18,7 +18,7 @@ export default function Question({ question, setQuestion, personalisedNotes, set
         </button>
       </div>
       <textarea
-        placeholder="Enter your question here..."
+        placeholder="Paste your question here..."
         value={question}
         className="bg-neutral-700/50 text-white w-full h-32 p-3 border border-neutral-700/30 rounded-lg resize-none  placeholder-neutral-400 transition-all duration-200 outline-none focus:outline-neutral-500/50"
         onChange={(e) => setQuestion(e.target.value)}

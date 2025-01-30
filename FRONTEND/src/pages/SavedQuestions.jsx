@@ -102,9 +102,9 @@ function SavedQuestions() {
               ))}
             </div>
           ) : (
-            <div className="text-center p-8 bg-neutral-800 rounded-xl border border-neutral-700/30">
+            <div className=" min-h-[50vh] flex flex-col items-center justify-center text-center p-8 rounded-xl">
               <h1 className="text-xl font-medium text-white">
-                No saved questions<br/>  Generate and save your notes!
+                No saved questions<br/>  <Link className="text-blue-500 hover:underline" to="/generation">Generate</Link> and save your notes!
               </h1>
             </div>
           )}

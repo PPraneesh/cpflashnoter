@@ -9,7 +9,7 @@ export default function Output({ output }) {
 
   return (
   <div className="">  
-      <div className="bg-neutral-800 rounded-lg shadow-xl p-4 md:p-6 border border-neutral-700/30 hover:border-neutral-600/50 transition-all duration-200 h-screen overflow-y-scroll">
+      <div className="bg-neutral-800 rounded-lg shadow-xl p-4 md:p-6 border border-neutral-700/30 hover:border-neutral-600/50 transition-all duration-200 md:h-screen overflow-y-scroll">
         <div className="flex flex-col md:flex-row gap-4 md:gap-0 mb-4 pb-4 border-b border-neutral-700/30 hover:border-neutral-600/50 transition-all">
           <h2 className="text-xl md:text-2xl font-bold text-white flex-grow">Generated Notes</h2>
           <div className="flex flex-wrap gap-2">
@@ -76,9 +76,9 @@ export default function Output({ output }) {
             </div>
           </div>
         ) : (
-          <div className="text-center py-8">
+          <div className="text-center py-8 min-h-[30vh] md:min-h-[80vh] flex flex-col items-center justify-center">
             <h1 className="text-xl text-white">
-              Add question and code then click on generate notes button
+              Add question and code <br/>then click on generate notes button
             </h1>
           </div>
         )}

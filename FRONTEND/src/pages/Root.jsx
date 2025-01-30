@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {AuthProvider} from "../context/AuthContext";
 import { PWAInstaller } from '../components/PWInstaller'
+import ScrollToTop from '../components/ScrollToTop';
 
 export default function Root() {
     return (<>
@@ -14,6 +15,7 @@ export default function Root() {
                     <Outlet />
                 </div>
             <Footer />
+            <ScrollToTop />
     </div>
     </AuthProvider>
     </>);

@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import Code from "../components/Code";
 import { Timer } from "lucide-react";
-import { api } from '../api/axios';
+import { api } from "../api/axios";
 
 export function AnalysisOverlay({ data, onClose }) {
   if (!data) return null;
@@ -51,7 +51,12 @@ export function AnalysisOverlay({ data, onClose }) {
                 <span className="text-sm text-neutral-400">Out of 10</span>
               </div>
             </div>
-            <p className="text-white mt-4">Summary: <span className="text-neutral-400">{data.overallAssessment.summary}</span></p>
+            <p className="text-white mt-4">
+              Summary:{" "}
+              <span className="text-neutral-400">
+                {data.overallAssessment.summary}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -61,18 +66,28 @@ export function AnalysisOverlay({ data, onClose }) {
           <div className="bg-neutral-700/50 p-4 rounded-xl mb-2 text-white">
             <p className="text-xl">Strengths:</p>
             <ul className="list-disc list-inside mb-2 text-neutral-400">
-              {data.detailedFeedback.strengths.length > 0 ? (data.detailedFeedback.strengths.map((item, idx) => (
-                <li className="text-neutral-400" key={idx}>{item}</li>
-              ))): <p className="text-neutral-400">None</p>}
+              {data.detailedFeedback.strengths.length > 0 ? (
+                data.detailedFeedback.strengths.map((item, idx) => (
+                  <li className="text-neutral-400" key={idx}>
+                    {item}
+                  </li>
+                ))
+              ) : (
+                <p className="text-neutral-400">None</p>
+              )}
             </ul>
             <p className="text-xl">Improvements:</p>
             <ul className="list-disc list-inside mb-2">
               {data.detailedFeedback.improvements.map((item, idx) => (
-                <li className="text-neutral-400" key={idx}>{item}</li>
+                <li className="text-neutral-400" key={idx}>
+                  {item}
+                </li>
               ))}
             </ul>
             <p className="text-xl">Suggestions: </p>
-            <span className="text-neutral-400">{data.detailedFeedback.suggestions}</span>
+            <span className="text-neutral-400">
+              {data.detailedFeedback.suggestions}
+            </span>
           </div>
         </div>
 
@@ -104,7 +119,8 @@ export function AnalysisOverlay({ data, onClose }) {
 }
 
 export default function Preparation() {
-  const { userData, userDataCp, category, setCategory } = useContext(UserContext);
+  const { userData, userDataCp, category, setCategory } =
+    useContext(UserContext);
   const [questionData, setQuestionData] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
   const [time, setTime] = useState(0);
@@ -131,7 +147,9 @@ export default function Preparation() {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const handleCategoryChange = (e) => {
@@ -152,7 +170,7 @@ export default function Preparation() {
     setIsRunning(false);
     try {
       await api
-        .post('/prep_analysis', {
+        .post("/prep_analysis", {
           problemRestatement,
           approach,
           pseudoCode,
@@ -169,7 +187,7 @@ export default function Preparation() {
           console.log(err);
         });
     } catch (error) {
-      console.error('Error getting analysis:', error);
+      console.error("Error getting analysis:", error);
     } finally {
       setIsLoading(false); // NEW
     }
@@ -186,8 +204,16 @@ export default function Preparation() {
   return (
     <div className="bg-neutral-900 text-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-neutral-700/30">
-        <h1 className="text-2xl md:text-3xl font-semibold">Get Prepped</h1>
+      <div className="px-6 pt-6 flex items-center justify-between p-4 border-b border-neutral-700/30">
+        <div className="">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            Get Prepped
+          </h1>
+          <p className="text-neutral-400">
+            Prepare for interviews effectively with Key Insights 
+          </p>
+        </div>
+
         <div className="bg-neutral-800 border border-neutral-700/30 rounded-xl p-3 flex items-center gap-2">
           <Timer className="w-6 h-6 text-blue-500 hover:text-blue-400 transition-all" />
           <span className="text-2xl font-mono">{formatTime(time)}</span>
@@ -237,7 +263,9 @@ export default function Preparation() {
               {questionData.name}
             </h2>
             <div className="bg-neutral-700/50 border border-neutral-700/30 rounded-xl p-4">
-              <p className="whitespace-pre-wrap text-lg">{questionData.question}</p>
+              <p className="whitespace-pre-wrap text-lg">
+                {questionData.question}
+              </p>
             </div>
           </div>
 
@@ -290,7 +318,8 @@ export default function Preparation() {
                   className="w-full md:w-auto px-6 py-2 bg-green-500 hover:bg-green-400 text-white rounded-lg transition-all"
                   disabled={isLoading} // NEW
                 >
-                  {isLoading ? "Loading..." : "Complete Preparation"} {/* NEW */}
+                  {isLoading ? "Loading..." : "Complete Preparation"}{" "}
+                  {/* NEW */}
                 </button>
               ) : (
                 showButtons &&
@@ -335,10 +364,14 @@ export default function Preparation() {
                   {questionData.name}
                 </h1>
               </div>
-              <p className="text-white mb-4 whitespace-pre-wrap">{questionData.description}</p>
+              <p className="text-white mb-4 whitespace-pre-wrap">
+                {questionData.description}
+              </p>
 
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Question
+                </h2>
                 <p className="text-white bg-neutral-800 p-4 rounded-lg border border-neutral-700/30 whitespace-pre-wrap">
                   {questionData.question}
                 </p>
@@ -360,7 +393,9 @@ export default function Preparation() {
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Subunits
+                </h2>
                 {questionData.subunits?.map((subunit, index) => (
                   <div
                     key={index}
@@ -385,17 +420,13 @@ export default function Preparation() {
 
       {/* Analysis Overlay */}
       {showAnalysis && (
-        <AnalysisOverlay 
-          data={analysisData}
-          onClose={handleCloseAnalysis}
-        />
+        <AnalysisOverlay data={analysisData} onClose={handleCloseAnalysis} />
       )}
-    {isLoading && (
-      <div className="fixed inset-0 z-50 bg-neutral-900/80 flex items-center justify-center">
-        <span className="text-white text-xl">Loading...</span>
-      </div>
-    )}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 bg-neutral-900/80 flex items-center justify-center">
+          <span className="text-white text-xl">Loading...</span>
+        </div>
+      )}
     </div>
-
   );
 }

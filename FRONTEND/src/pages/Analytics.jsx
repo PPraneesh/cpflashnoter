@@ -39,7 +39,7 @@ const scrollToElement = (id) => {
 };
 
 const Analytics = ({ short = false }) => {
-  const {userAnalytics} = useContext(UserContext);
+  const { userAnalytics } = useContext(UserContext);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -66,7 +66,6 @@ const Analytics = ({ short = false }) => {
   };
   const { hash } = useLocation();
 
-
   useEffect(() => {
     if (hash && hash !== "#") {
       setTimeout(() => {
@@ -75,16 +74,13 @@ const Analytics = ({ short = false }) => {
     }
   }, [hash]);
 
-
-
   if (userAnalytics === null) {
     return (
       <div className="flex items-center justify-center h-64">
-        <RiLoaderLine className="w-8 h-8 animate-spin text-[#00b8a3]" />
+        <RiLoaderLine className="w-8 h-8 animate-spin text-[#ffffff8e]" />
       </div>
     );
   }
-
 
   const getConfidenceColor = (confidence) => {
     if (confidence <= 2) return "text-red-500";
@@ -100,24 +96,26 @@ const Analytics = ({ short = false }) => {
   return (
     <div
       className={`bg-neutral-900 rounded-lg space-y-6${
-        short ? " py-6" : " p-6"
+        short ? " pt-6" : " p-6"
       }`}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col justify-between md:items-center md:flex-row gap-4">
         <div>
-          <h3 className="text-2xl md:text-3xl font-semibold text-white">Quick Analytics</h3>
+          <h3 className="text-2xl md:text-3xl font-semibold text-white">
+            Quick Analytics
+          </h3>
           <p className="text-neutral-400">Your learning progress at a glance</p>
         </div>
         {short && (
           <Link
             to="/analytics"
-            className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center"
+            className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition-colors w-[100%] h-fit md:w-auto flex justify-center"
           >
-            View Full Analytics
+            <p className="text-center">View Full Analytics</p>
           </Link>
         )}
       </div>
-      <div className="md:col-span-2 lg:col-span-3 rounded-xl hover:border-neutral-600 transition-all">
+      <div className="sm:col-span-2 lg:col-span-3 rounded-xl hover:border-neutral-600 transition-all">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-6">
             <div className="flex flex-col items-center">
@@ -297,7 +295,8 @@ const Analytics = ({ short = false }) => {
               Recent Questions
             </h3>
             <div className="space-y-2">
-              {userAnalytics.recentQuestions && userAnalytics.recentQuestions.length > 0 ? (
+              {userAnalytics.recentQuestions &&
+              userAnalytics.recentQuestions.length > 0 ? (
                 userAnalytics.recentQuestions.map((question) => (
                   <div
                     key={question.questionId}

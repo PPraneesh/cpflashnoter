@@ -21,7 +21,7 @@ export default function Generation() {
   }, [location]);
 
   const [question, setQuestion] = useState("");
-  const [code, setCode] = useState("// type your code...");
+  const [code, setCode] = useState("// Paste your code here \n// click on Generate Notes");
   const [output, setOutput] = useState(null);
   const [personalisedNotes, setPersonalisedNotes] = useState(false);
 
@@ -94,9 +94,14 @@ export default function Generation() {
 
   return (
     <div className="bg-neutral-900">
-        <h1 className="px-6 pt-6 text-2xl md:text-3xl font-semibold text-white">
-        Generate Notes
-        </h1>
+        <div className="px-6 pt-6 ">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+          Generate Notes
+          </h1>
+          <p className="text-neutral-400">
+          Paste your question and code to generate notes
+          </p>
+        </div>
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         <div className="space-y-6">
           <Question
@@ -106,8 +111,6 @@ export default function Generation() {
             setPersonalisedNotes={setPersonalisedNotes}
           />
           <Code code={code} setCode={setCode} />
-        </div>
-        <Output output={output} />
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={handleGeneration}
@@ -124,6 +127,8 @@ export default function Generation() {
               {saveCp ? "saving.." : "Save"}
             </button>
           </div>
+        </div>
+        <Output output={output} />
       </div>
     </div>
   );
