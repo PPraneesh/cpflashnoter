@@ -67,12 +67,12 @@ const Success = () => {
                     </div>
 
                     {/* Back to Dashboard Button */}
-                    <Link 
-                        to="/home" 
+                    <a 
+                        href="/home" 
                         className="w-full bg-yellow-500 hover:bg-yellow-400 text-neutral-900 font-medium py-3 rounded-lg transition-colors"
                     >
                         Go to Home
-                    </Link>
+                    </a>
 
                     {/* Support Link */}
                     <p className="text-neutral-400 text-sm">
