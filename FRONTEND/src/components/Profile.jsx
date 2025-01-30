@@ -10,7 +10,6 @@ import BuyPremium from "./BuyPremium";
 import NotificationToggle from "./NotificationToggle";
 
 export default function Profile({ userData, onClose }) {
-  console.log(userData);
   const { logOut } = useContext(AuthContext);
   const { setUserData } = useContext(UserContext);
   const makePrivate = async (questionId) => {
