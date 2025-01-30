@@ -16,7 +16,7 @@ const NotificationToggle = (Props) => {
   };
 
   return (
-    <div className="bg-neutral-800 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
+    <div className="bg-neutral-700/30 p-3 rounded-md border border-neutral-700/30 hover:border-neutral-600/50 transition-all">
       <div className="flex items-center justify-between text-white">
         <span>Notifications</span>
         <label className="relative inline-flex items-center cursor-pointer">
