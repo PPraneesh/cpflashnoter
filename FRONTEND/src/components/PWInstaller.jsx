@@ -4,7 +4,7 @@ import { useEffect, useState, useContext } from 'react'
 
 export const PWAInstaller = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
   const [timeLeft, setTimeLeft] = useState(20)
   // const {userData} = useContext(UserContext);
   useEffect(() => {
