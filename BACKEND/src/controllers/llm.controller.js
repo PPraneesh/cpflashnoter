@@ -10,7 +10,7 @@ const model = new ChatGroq({
 
 const structuredNotesLlm = model.withStructuredOutput({
   name: "code_analysis",
-  description: "Perform thorough, self-questioning analysis of code while maintaining high reliability. Express uncertainty when needed and avoid making assumptions.",
+  description: "Perform thorough, self-questioning analysis of code while maintaining high reliability. Avoid making assumptions.",
   parameters: {
     title: "Code Analysis",
     type: "object",
@@ -25,17 +25,11 @@ const structuredNotesLlm = model.withStructuredOutput({
       },
       description: {
         type: "string",
-        description: `Provide a thorough analysis following these steps:
-          1. Start with observable facts about the code
-          2. Question each assumption before making it
-          3. Explicitly state any uncertainties
-          4. Analyze complexity only if the algorithm is clearly identifiable
-          5. List improvements only for clearly suboptimal patterns
-          6. Express any doubts about the analysis
-          Format: Begin with clear observations, then progress to more complex analysis, marking uncertain elements with explicit notes.`,
+        description: "This field should provide a detailed and in depth explanation of what the question states, what is the problem that is to be solved, what is the approach chosen by the user to solve the problem. The description should kind of answer all these questions.",
       },
       subunits: {
         type: "array",
+        description: "Break down the code into subunits for detailed analysis. Each subunit should be a distinct part of the code that can be analyzed separately. All the subunits should make up the entire code.",
         items: {
           type: "object",
           properties: {
@@ -45,17 +39,11 @@ const structuredNotesLlm = model.withStructuredOutput({
             },
             content: {
               type: "string",
-              description: "Extract the exact code content, preserving all formatting and ensuring proper newline (\\n) characters for display. Do not modify or 'improve' the code.",
+              description: "Paste the exact part of code which you are going to explain, Try to Preserve all formatting and ensuring proper newline (\\n) characters for display. If you feel the code can be formatted in a better way, do it. Do not modify or 'improve' the code, You can just format it.",
             },
             description: {
               type: "string",
-              description: `Analyze each subunit through careful steps:
-                1. List observable behaviors without interpretation
-                2. Question each assumption about functionality
-                3. Describe clear input-output relationships
-                4. Note any ambiguities or uncertainties
-                5. Only state optimizations for clear inefficiencies
-                Format: Start with concrete observations, then progress to analysis, clearly marking any uncertainties.`,
+              description: "Analyze each subunit and provide a detailed and in-depth explanation on how the code is solving the given question. You need to tell everything about how this subunit is contributing to solve the question. You should not give a naive explanation, If required you can explain line by line.",
             },
           },
           required: ["name", "content", "description"],
@@ -72,13 +60,13 @@ const structuredNotesLlm = model.withStructuredOutput({
             "Binary Trees", "Binary Search Trees", "Dynamic Programming"
           ],
         },
-        description: "Only include categories that are definitively present in the code. Return an empty array if uncertain about any classifications. Better to omit than to miscategorize.",
+        description: "Only include categories that are definitively present in the code. Return an empty array if uncertain about any classifications.",
       },
       hints: {
         type: "array",
         items: {
           type: "string",
-          description: "Provide only hints that are directly observable from the code structure. Start with fundamental observations and progress to more specific insights. Mark any speculative hints clearly.",
+          description: "Provide only hints that are directly observable from the code structure. Start with fundamental observations and progress to more specific insights.",
         },
       },
     },
@@ -88,7 +76,7 @@ const structuredNotesLlm = model.withStructuredOutput({
 
 
 const notes_generator = async (req, res) => {
-  const { code, question, personalisedNotes } = req.body;
+  const { code, question, personalisedNotes, } = req.body;
   const { email } = req.user;
   const userRef = db.collection("users").doc(email);
   const userDoc = await userRef.get();
@@ -109,7 +97,7 @@ const notes_generator = async (req, res) => {
       });
     }
     if (userData.generations.count > 0) {
-      const prompt = `You are an expert code analyst who employs extremely thorough, self-questioning reasoning. Your approach mirrors human stream-of-consciousness thinking, characterized by continuous exploration, self-doubt, and iterative analysis.
+      const prompt = `You are an expert code analyst. Whose task is to analyse the given question and evaluate how the given code is solving the question. You have both the question and answer, you just need to understand the code and think how it is solving the given question. After this you need to return the ouptut in a structured way as mentioned.
 
       <given_question>
       ${question}
@@ -119,41 +107,11 @@ const notes_generator = async (req, res) => {
       ${code}
       </given_code>
       
-      <analysis_principles>
-      1. EXPLORATION OVER CONCLUSION
-      - Never rush to conclusions
-      - Keep exploring until understanding emerges naturally
-      - Question every assumption and inference
-      - Express uncertainty freely when present
-      
-      2. DEPTH OF REASONING
-      - Engage in extensive contemplation
-      - Express thoughts in natural, conversational internal monologue
-      - Break down complex thoughts into simple, atomic steps
-      - Embrace uncertainty and revision of previous thoughts
-      
-      3. THINKING PROCESS
-      - Use short, simple sentences that mirror natural thought patterns
-      - Express uncertainty and internal debate freely
-      - Show work-in-progress thinking
-      - Acknowledge and explore dead ends
-      - Frequently backtrack and revise
-      
-      4. RELIABILITY FOCUS
-      - Express uncertainty rather than make assumptions
-      - Return empty/null for any classifications you're not completely certain about
-      - Clearly mark speculative interpretations
-      - Prioritize accuracy over completeness
-      </analysis_principles>
-      
       <instructions>
-      1. Begin with observable facts only
-      2. Question each inference before making it
-      3. Express uncertainty explicitly
-      4. Build understanding iteratively
-      5. Return to and revise earlier conclusions
-      6. Mark any speculative interpretations clearly
-      7. Omit any classifications you're not certain about
+      1. Begin understanding the question and how the code is solving the given question
+      2. For a question there can be many ways to solve, but the output which you are giving should only focus on how the given code is solving the question.
+      3. You need to divide the code into subunits and explain each subunit in detail and how it is solving the question.
+      4. Explain the each subunit in detail.
       </instructions>
       
       Remember: Your goal is thorough understanding through careful exploration, not quick answers. Express uncertainty freely and maintain high reliability in your analysis.`;
@@ -216,7 +174,6 @@ const notes_generator = async (req, res) => {
       // Update the user's generations count and last generation time
       userData.generations.count -= 1;
       userData.generations.lastGen = Date.now();
-      console.log(result)
       await userRef.update(userData);
       userData = userDataMasker(userData);
       res.send({ status: true, result: result, userDataStats: userData });

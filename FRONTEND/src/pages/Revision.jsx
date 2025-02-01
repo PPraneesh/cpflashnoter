@@ -112,17 +112,36 @@ const Revision = () => {
   };
 
   if (loading) {
-    return (
-      <div className="bg-neutral-900 min-h-screen flex items-center justify-center text-white">
+    return (<>
+       <div className="px-4 md:px-6 py-6">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            Revision
+          </h1>
+          <p className="text-neutral-400">
+          Concepts that have been practiced so far
+          </p>
+        </div>
+      <div className="bg-neutral-900 h-[50vh] flex items-center justify-center text-white">
         Loading...
       </div>
+      </>
     );
   }
   if (error) {
     return (
-      <div className="bg-neutral-900 min-h-screen flex items-center justify-center p-4 text-red-400">
+      <>
+          <div className="px-4 md:px-6 py-6">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            Revision
+          </h1>
+          <p className="text-neutral-400">
+          Concepts that have been practiced so far
+          </p>
+        </div>
+      <div className="bg-neutral-900 h-[50vh] flex items-center justify-center p-4 text-red-400">
         {error}
       </div>
+      </>
     );
   }
   if (!currentQuestion) {
@@ -163,12 +182,12 @@ const Revision = () => {
   return (
     <div className="bg-neutral-900 min-h-screen text-white">
       <div className="max-w-7xl mx-auto p-4 space-y-8">
-        <div>
+      <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-white">
-            Your Notes
+            Revision
           </h1>
           <p className="text-neutral-400">
-            Access and manage your DSA notes collection
+          Concepts that have been practiced so far
           </p>
         </div>
         <div className="bg-neutral-800 border border-neutral-700/30 rounded-xl p-6 space-y-4">

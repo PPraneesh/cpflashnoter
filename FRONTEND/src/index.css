@@ -40,16 +40,16 @@
   height: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: #18181b; /* bg-neutral-900 */
-  border-radius: 6px;
+  background: #18181b27; /* bg-neutral-900 */
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #27272a; /* bg-neutral-800 */
+  background-color: #222225ce; /* bg-neutral-800 */
   border-radius: 6px;
-  border: 3px solid #18181b; /* Matches track */
+  border: 2px solid #00000090; /* Matches track */
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #3f3f46; /* bg-neutral-700 */
+  background-color: #242428; /* bg-neutral-700 */
 }
 
 body{
