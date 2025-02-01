@@ -1,5 +1,5 @@
 import { api } from "../api/axios";
-const razorpay_key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+const razorpay_key = import.meta.env.VITE_RAZORPAY_KEY_ID1;
 
 
 export default async function paymentHandlerOneTime(
