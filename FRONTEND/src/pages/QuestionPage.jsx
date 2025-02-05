@@ -31,7 +31,7 @@ const PublicMaking = ({
       <div className="relative bg-neutral-800 p-6 rounded-lg border border-neutral-700/30 hover:border-neutral-600/50 w-full max-w-md shadow-xl transition-all duration-200">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-neutral-400 hover:text-neutral-200 transition-colors duration-200"
+          className="absolute right-4 top-4 text-neutral-300 hover:text-neutral-200 transition-colors duration-200"
         >
           <X className="w-5 h-5" />
         </button>
@@ -41,7 +41,7 @@ const PublicMaking = ({
         {isPublic ? (
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm text-neutral-400">Share link</label>
+              <label className="text-sm text-neutral-300">Share link</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -66,7 +66,7 @@ const PublicMaking = ({
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-neutral-400 text-center">
+            <p className="text-neutral-300 text-center">
               Share your notes with others by creating a public link.
             </p>
             <button
@@ -243,7 +243,7 @@ const Question = () => {
               </button>
               {showCategories && (
                 <div className="absolute right-0 mt-2 bg-neutral-800 border border-neutral-700/30 hover:border-neutral-600/50 rounded p-4 z-10 min-w-[200px]">
-                  <div className="flex flex-col gap-2 text-neutral-400">
+                  <div className="flex flex-col gap-2 text-neutral-300">
                     {categories?.map((cat, index) => (
                       <span
                         key={index}
@@ -290,7 +290,7 @@ const Question = () => {
           </div>
         </div>
 
-        <p className="text-neutral-400 text-lg">{description}</p>
+        <p className="text-neutral-300 text-lg">{description}</p>
 
         <div className="space-y-8">
           <section className="bg-neutral-800 rounded border border-neutral-700/30 hover:border-neutral-600/50 p-6">
@@ -303,7 +303,7 @@ const Question = () => {
                 className="w-full bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 text-white p-4 rounded min-h-[120px]"
               />
             ) : (
-              <p className="text-neutral-400 whitespace-pre-wrap">{question}</p>
+              <p className="text-neutral-300 whitespace-pre-wrap">{question}</p>
             )}
           </section>
 
@@ -314,7 +314,7 @@ const Question = () => {
             </pre>
           </section>
 
-          <div className="inline-flex items-center px-3 py-1 bg-neutral-700/50 rounded border border-neutral-700/30 text-sm text-neutral-400">
+          <div className="inline-flex items-center px-3 py-1 bg-neutral-700/50 rounded border border-neutral-700/30 text-sm text-neutral-300">
             Language: <span className="ml-1 text-blue-500">{language}</span>
           </div>
 
@@ -347,7 +347,7 @@ const Question = () => {
                 ) : (
                   <>
                     <h3 className="text-lg font-semibold mb-4">{subunit.name}</h3>
-                    <p className="text-neutral-400 mb-4">{subunit.description}</p>
+                    <p className="text-neutral-300 mb-4">{subunit.description}</p>
                     <pre className="bg-neutral-700/50 p-4 rounded border border-neutral-700/30 text-white overflow-x-auto">
                       <code>{subunit.content}</code>
                     </pre>
@@ -355,6 +355,56 @@ const Question = () => {
                 )}
               </div>
             ))}
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-xl font-semibold">Flow Explanation</h2>
+            <div className="bg-neutral-800 rounded border border-neutral-700/30 hover:border-neutral-600/50 p-6">
+            {isEditing ? (
+        <textarea
+          name="flowExplanation"
+          value={formData.flowExplanation}
+          onChange={handleInputChange}
+          className="w-full bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 text-white p-4 rounded min-h-[120px]"
+        />
+      ) : questionData.flowExplanation ? (
+        <p className="text-neutral-300 whitespace-pre-wrap">{questionData.flowExplanation}</p>
+      ) : (
+        <div className="text-neutral-300 text-center p-4">
+          <p>No flow explanation available. Generate the notes again</p>
+        </div>
+      )}
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-xl font-semibold">Concept Application</h2>
+            <div className="bg-neutral-800 rounded border border-neutral-700/30 hover:border-neutral-600/50 p-6">
+              {isEditing ? (
+                <textarea
+                  name="conceptApplication"
+                  value={formData.conceptApplication}
+                  onChange={handleInputChange}
+                  className="w-full bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 text-white p-4 rounded min-h-[120px]"
+                />
+              ) : (
+                <p className="text-neutral-300 whitespace-pre-wrap">{questionData.conceptApplication}</p>
+              )}
+                    {isEditing ? (
+        <textarea
+          name="conceptApplication"
+          value={formData.conceptApplication}
+          onChange={handleInputChange}
+          className="w-full bg-neutral-700/50 border border-neutral-700/30 hover:border-neutral-600/50 text-white p-4 rounded min-h-[120px]"
+        />
+      ) : questionData.conceptApplication ? (
+        <p className="text-neutral-300 whitespace-pre-wrap">{questionData.conceptApplication}</p>
+      ) : (
+        <div className="text-neutral-300 text-center p-4">
+          <p>No concpet Application available. Generate the notes again</p>
+        </div>
+      )}
+            </div>
           </section>
         </div>
       </div>
