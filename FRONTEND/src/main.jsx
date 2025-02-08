@@ -17,6 +17,19 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+window.navigator.serviceWorker.getRegistration().then((registration) => {
+  if (registration) {
+    if(registration.active.scriptURL.includes('firebase-messaging-sw.js')) {
+      registration.unregister().then((success) => {
+        if (success) {
+          window.location.reload();
+        }
+      });
+    }else{
+      registration.update();
+    }
+  }
+});
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
