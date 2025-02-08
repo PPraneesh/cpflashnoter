@@ -23,7 +23,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: payload.notification.body || "Stay ahead with daily DSA revision!",
     icon: "/logo.png",  // Add your app logo here
-    badge: "/logo.png",  // Small icon for the status bar
+    badge: "/logo-96x96.png",  // Small icon for the status bar
     // image: payload.notification.image || "/icons/banner.png", // Banner image
     actions: [
       { action: "open_app", title: "Open CPNoter" },
