@@ -5,7 +5,7 @@ const { tier } = require("../helper/tierDeterminer");
 const { userDataMasker } = require("../helper/dataMasker");
 
 const model = new ChatGoogleGenerativeAI({
-  modelName:"gemini-2.0-flash-exp",
+  modelName:"gemini-2.0-flash",
   apiKey: process.env.GEMINI_API_KEY
 })
 // const model = new ChatGroq({
@@ -24,10 +24,14 @@ const codeFlowAgent = async(question, code) => {
   <Code>
   ${code}
   </Code>`;
-
+  try{
   const response = await model.invoke(prompt);
   const content = response.content;
   return content
+  }catch(error){
+    console.log(error);
+    return null;
+  }
 }
 
 const conceptExplainerAgent = async(question,code) => {
@@ -39,10 +43,14 @@ const conceptExplainerAgent = async(question,code) => {
   <Code>
   ${code}
   </Code>`;
-
+  try{
   const response = await model.invoke(prompt);
   const content = response.content;
   return content;
+  }catch(error){
+    console.log(error);
+    return null;
+  }
 }
 
 
