@@ -26,11 +26,27 @@ const SharedQuestionPage = () => {
   }, [SERVER_URL, cp_id]);
 
   return (
-    <div className="bg-neutral-900 min-h-screen">
+    <div className="bg-neutral-900 min-h-screen pt-16">
       <div className="p-6">
         <h1 className="text-2xl font-bold text-white mb-2">{questionData?.name}</h1>
 
         <p className="text-neutral-400 mb-4">{questionData?.description}</p>
+
+        {questionData?.categories && (
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Categories</h2>
+            <div className="flex flex-wrap gap-2">
+              {questionData.categories.map((cat, index) => (
+                <div
+                  key={index}
+                  className="px-4 py-2 bg-blue-600/20 text-blue-400 hover:text-blue-300 rounded-lg border border-blue-500/40"
+                >
+                  {cat}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-white mb-2">Question</h2>
@@ -52,7 +68,7 @@ const SharedQuestionPage = () => {
           </span>
         </div>
 
-        <div>
+        <div className="mb-6">
           <h2 className="text-xl font-semibold text-white mb-2">Subunits</h2>
           {questionData?.subunits.map((subunit, index) => (
             <div
@@ -71,9 +87,31 @@ const SharedQuestionPage = () => {
             </div>
           ))}
         </div>
+
+        {questionData?.flowExplanation && (
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Code Flow</h2>
+            <div className="bg-neutral-700/40 p-6 border border-neutral-600/40 hover:border-neutral-500/50 rounded-lg shadow-lg">
+              <div className="whitespace-pre-line text-neutral-300">
+                {questionData.flowExplanation}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {questionData?.conceptApplication && (
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Concept Application</h2>
+            <div className="bg-neutral-700/40 p-6 border border-neutral-600/40 hover:border-neutral-500/50 rounded-lg shadow-lg">
+              <div className="whitespace-pre-line text-neutral-300">
+                {questionData.conceptApplication}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default SharedQuestionPage;
+export default SharedQuestionPage
